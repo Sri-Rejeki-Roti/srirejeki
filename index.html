@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRI REJEKI — Dashboard</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<meta name="theme-color" content="#0f9b8e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sri Rejeki">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: #fef9ef; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 15%, rgba(15,155,142,0.09) 0, transparent 50%),
+    radial-gradient(circle at 90% 85%, rgba(255,183,3,0.12) 0, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255,107,157,0.04) 0, transparent 60%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+body.fade-out {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body, body.fade-out { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+:root {
+  --primary: #0f9b8e;
+  --primary-dark: #0b756c;
+  --primary-light: #e3f9f5;
+  --accent: #ffb703;
+  --bg: #fef9ef;
+  --card: #ffffff;
+  --border: #ece4d3;
+  --text: #2b2620;
+  --text-muted: #8a8071;
+  --success: #0a9d5c;
+  --danger: #e8485f;
+  --danger-bg: #fdeaec;
+  --radius: 22px;
+  --shadow: 0 8px 32px rgba(43,38,32,0.10);
+  --shadow-hover: 0 16px 48px rgba(15,155,142,0.18);
+}
+
+.header {
+  padding: 32px 32px 0;
+  text-align: center;
+}
+.logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.logo-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(15,155,142,0.30);
+}
+.app-name {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.app-name span { color: var(--accent); }
+.tagline {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.grid-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 32px 40px;
+}
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 780px;
+  width: 100%;
+}
+.module-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 40px 28px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  border-radius: var(--radius);
+}
+.module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+.module-card:hover::before { opacity: 1; }
+.module-card:active { transform: translateY(-2px); }
+
+.card-watermark {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  bottom: -28px;
+  right: -28px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.module-card:hover .card-watermark { opacity: 0.14; transform: rotate(6deg) scale(1.05); }
+
+.card-kasir { border-top: 4px solid #0f9b8e; }
+.card-kasir::before { background: linear-gradient(135deg, rgba(15,155,142,0.04), transparent); }
+.card-kasir:hover { border-color: #0f9b8e; }
+.icon-kasir { background: linear-gradient(135deg, #0f9b8e, #0b756c); }
+
+.card-owner { border-top: 4px solid #f59e0b; }
+.card-owner::before { background: linear-gradient(135deg, rgba(245,158,11,0.05), transparent); }
+.card-owner:hover { border-color: #f59e0b; }
+.icon-owner { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+.card-master { border-top: 4px solid #6366f1; }
+.card-master::before { background: linear-gradient(135deg, rgba(99,102,241,0.05), transparent); }
+.card-master:hover { border-color: #6366f1; }
+.icon-master { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+
+.card-payroll { border-top: 4px solid #ec4899; }
+.card-payroll::before { background: linear-gradient(135deg, rgba(236,72,153,0.05), transparent); }
+.card-payroll:hover { border-color: #ec4899; }
+.icon-payroll { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+.card-icon-wrap {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.card-icon-wrap svg { width: 28px; height: 28px; }
+
+.card-title {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.card-kasir .card-title { color: #0b756c; }
+.card-owner .card-title { color: #92400e; }
+.card-master .card-title { color: #3730a3; }
+.card-payroll .card-title { color: #9d174d; }
+
+.footer {
+  text-align: center;
+  padding: 0 32px 28px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── MODAL LOGIN ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(43,38,32,0.55);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  min-height: 380px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  animation: modalPop 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.95) translateY(10px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal h3 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal-sub {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  background: white;
+  transition: border-color 0.15s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(15,155,142,0.1);
+}
+
+/* ── CUSTOM DROPDOWN ── */
+.custom-select-wrap { position: relative; }
+.custom-select-btn {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  background: white;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  user-select: none;
+}
+.custom-select-btn.has-value { color: var(--text); }
+.custom-select-btn:focus, .custom-select-btn.open {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(15,155,142,0.1);
+}
+.custom-select-btn .caret {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+}
+.custom-select-btn.open .caret {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(15,155,142,0.15);
+  z-index: 200;
+  overflow: hidden;
+  animation: dropdownPop 0.15s ease;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.custom-select-dropdown.open { display: block; }
+
+@keyframes dropdownPop {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.custom-select-dropdown::-webkit-scrollbar { width: 6px; }
+.custom-select-dropdown::-webkit-scrollbar-track { background: transparent; }
+.custom-select-dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+.custom-option {
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  transition: background 0.1s;
+}
+.custom-option:hover { background: var(--primary-light); color: var(--primary-dark); }
+.custom-option.selected { background: var(--primary-light); color: var(--primary); }
+.custom-option.placeholder { color: var(--text-muted); font-weight: 500; }
+.custom-option .opt-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+  opacity: 0;
+}
+.custom-option.selected .opt-dot { opacity: 1; }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-cancel-modal {
+  flex: 1;
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.btn-cancel-modal:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.btn-confirm-modal {
+  flex: 2;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-confirm-modal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15,155,142,0.35);
+}
+
+/* ── ERROR MESSAGE WRAPPER (STABIL) ── */
+#login-error-wrap {
+  position: relative;
+  min-height: 48px;
+  margin-bottom: 4px;
+}
+
+#login-error {
+  display: none;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  background: var(--danger-bg);
+  border-radius: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2b2620;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  font-family: 'Inter', sans-serif;
+}
+#toast.show { opacity: 1; }
+
+/* ── DEVICE LOCK BADGE ── */
+.module-card { position: relative; }
+.device-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: rgba(43,38,32,0.07);
+  color: var(--text-muted);
+  z-index: 2;
+  letter-spacing: 0.2px;
+}
+.module-card.device-locked {
+  filter: grayscale(0.55);
+  opacity: 0.55;
+}
+.module-card.device-locked .device-badge {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.module-card.device-ok .device-badge {
+  background: rgba(10,157,92,0.10);
+  color: var(--success);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .header { padding: 56px 20px 0; }
+  .app-name { font-size: 26px; }
+  .logo-icon { width: 46px; height: 46px; border-radius: 14px; }
+  .grid-wrap { padding: 24px 16px 32px; }
+  .module-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 420px; }
+  .module-card { padding: 28px 16px; gap: 12px; }
+  .card-icon-wrap { width: 48px; height: 48px; border-radius: 14px; }
+  .card-icon-wrap svg { width: 24px; height: 24px; }
+  .card-title { font-size: 18px; }
+  .card-watermark { width: 110px; height: 110px; }
+}
+
+@media (max-width: 380px) {
+  .module-grid { gap: 8px; }
+  .module-card { padding: 22px 12px; }
+  .card-icon-wrap { width: 42px; height: 42px; border-radius: 12px; }
+  .card-icon-wrap svg { width: 21px; height: 21px; }
+  .card-title { font-size: 16px; }
+  .card-watermark { width: 90px; height: 90px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-wrap">
+    <div class="logo-icon">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 18C5 13 9 8 15 8C21 8 25 13 25 18C25 20 23.5 21.5 22 21.5H8C6.5 21.5 5 20 5 18Z" fill="white" fill-opacity="0.9"/>
+        <path d="M10 21.5V24H20V21.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="15" cy="8.5" rx="4" ry="2" fill="white" fill-opacity="0.5"/>
+      </svg>
+    </div>
+    <div>
+      <div class="app-name">SRI <span>REJEKI</span></div>
+      <div class="tagline">Sistem Manajemen Toko</div>
+    </div>
+  </div>
+</div>
+
+<!-- GRID MODUL -->
+<div class="grid-wrap">
+  <div class="module-grid">
+
+    <!-- KASIR -->
+    <a href="kasir.html" class="module-card card-kasir" id="link-kasir" data-device="pc">
+      <span class="device-badge">💻 PC</span>
+      <svg class="card-watermark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="38" stroke="#0f9b8e" stroke-width="6"/>
+        <path d="M30 50H70M50 30V70" stroke="#0f9b8e" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <div class="card-icon-wrap icon-kasir">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="7" width="22" height="15" rx="3" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8"/>
+          <path d="M3 12H25" stroke="white" stroke-width="1.8"/>
+          <rect x="7" y="16" width="4" height="2.5" rx="1" fill="white"/>
+          <rect x="12" y="16" width="4" height="2.5" rx="1" fill="white"/>
+          <rect x="17" y="16" width="4" height="2.5" rx="1" fill="white"/>
+        </svg>
+      </div>
+      <div class="card-title">Kasir</div>
+    </a>
+
+    <!-- OWNER -->
+    <a href="owner.html" class="module-card card-owner" data-device="hp">
+      <span class="device-badge">📱 HP</span>
+      <svg class="card-watermark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 75L35 50L50 62L75 28" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M60 28H75V43" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="card-icon-wrap icon-owner">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 20L8.5 13L12.5 17L17 10L24 20H4Z" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="21" cy="8" r="3" fill="white" fill-opacity="0.5" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="card-title">Owner</div>
+    </a>
+
+    <!-- MASTER DATA -->
+    <a href="master.html" class="module-card card-master" data-device="pc">
+      <span class="device-badge">💻 PC</span>
+      <svg class="card-watermark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="28" rx="28" ry="11" stroke="#6366f1" stroke-width="6"/>
+        <path d="M22 28V72C22 78.07 34.7 83 50 83C65.3 83 78 78.07 78 72V28" stroke="#6366f1" stroke-width="6"/>
+        <path d="M22 50C22 56.07 34.7 61 50 61C65.3 61 78 56.07 78 50" stroke="#6366f1" stroke-width="6"/>
+      </svg>
+      <div class="card-icon-wrap icon-master">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="5" width="20" height="5" rx="2" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8"/>
+          <rect x="4" y="12" width="20" height="5" rx="2" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8"/>
+          <rect x="4" y="19" width="20" height="4" rx="2" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8"/>
+          <circle cx="8" cy="7.5" r="1.2" fill="white"/>
+          <circle cx="8" cy="14.5" r="1.2" fill="white"/>
+          <circle cx="8" cy="21" r="1.2" fill="white"/>
+        </svg>
+      </div>
+      <div class="card-title">Master Data</div>
+    </a>
+
+    <!-- PAYROLL -->
+    <a href="payroll.html" class="module-card card-payroll" data-device="hp">
+      <span class="device-badge">📱 HP</span>
+      <svg class="card-watermark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="30" width="70" height="48" rx="8" stroke="#ec4899" stroke-width="6"/>
+        <path d="M15 46H85" stroke="#ec4899" stroke-width="6"/>
+        <circle cx="30" cy="62" r="5" fill="#ec4899"/>
+      </svg>
+      <div class="card-icon-wrap icon-payroll">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="10" r="5" fill="white" fill-opacity="0.25" stroke="white" stroke-width="1.8"/>
+          <path d="M5 23C5 19.134 9.03 16 14 16C18.97 16 23 19.134 23 23" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M17 10H19M19 10H21M19 10V8M19 10V12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-title">Payroll</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  em2studio &copy; <span id="year"></span> &nbsp;·&nbsp; v1.0
+</div>
+
+<!-- MODAL LOGIN KASIR -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <h3>🔑 Masuk ke Kasir</h3>
+    <div class="modal-sub">Pilih cabang dan masukkan password</div>
+
+    <div class="form-group">
+      <label>Pilih Cabang</label>
+      <div class="custom-select-wrap" id="cabang-wrap">
+        <button type="button" class="custom-select-btn" id="cabang-btn" onclick="toggleCabangDropdown()" aria-haspopup="listbox" aria-expanded="false">
+          <span id="cabang-label">Pilih Cabang</span>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="custom-select-dropdown" id="cabang-dropdown" role="listbox"></div>
+      </div>
+      <input type="hidden" id="login-cabang">
+    </div>
+
+    <div class="form-group">
+      <label>Password / Kode Akses</label>
+      <input type="password" id="login-password" placeholder="Masukkan password cabang" maxlength="20">
+    </div>
+
+    <!-- ERROR WRAPPER (stabil, tidak mengubah ukuran modal) -->
+    <div id="login-error-wrap">
+      <div id="login-error">⚠️ Password salah. Silakan coba lagi.</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel-modal" onclick="closeLoginModal()">Batal</button>
+      <button class="btn-confirm-modal" onclick="loginKasir()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Masuk
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+var SUPABASE_URL = 'https://aowjbkirwxkbwdqvqlpy.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvd2pia2lyd3hrYndkcXZxbHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Nzc2MTAsImV4cCI6MjA5NzI1MzYxMH0.A913aR55dauEdkxq91LLEgmTXNRwaXiircUrMyzjCyM';
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============ DEVICE DETECTION ============
+var CURRENT_UA = navigator.userAgent || '';
+var IS_MOBILE_DEVICE = /Mobi|Android|iPhone|iPad|iPod|Tablet|BlackBerry|IEMobile|Opera Mini|Windows Phone/i.test(CURRENT_UA) || window.innerWidth <= 480;
+
+function applyDeviceLocks() {
+  document.querySelectorAll('.module-card[data-device]').forEach(function (card) {
+    var need = card.getAttribute('data-device'); // 'pc' atau 'hp'
+    var ok = (need === 'pc' && !IS_MOBILE_DEVICE) || (need === 'hp' && IS_MOBILE_DEVICE);
+    card.classList.toggle('device-locked', !ok);
+    card.classList.toggle('device-ok', ok);
+  });
+}
+applyDeviceLocks();
+
+var _pendingForceHref = null;
+var _pendingForceTimer = null;
+
+// ============ PAGE TRANSITION ============
+var FADE_OUT_MS = 320;
+
+document.querySelectorAll('a.module-card').forEach(function (link) {
+  link.addEventListener('click', function (e) {
+    var href = link.getAttribute('href');
+    if (!href || link.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+      return;
+    }
+
+    e.preventDefault();
+
+    // ── CEK DEVICE LOCK ──
+    if (link.classList.contains('device-locked')) {
+      var need = link.getAttribute('data-device');
+      var labelDev = need === 'pc' ? 'PC / Laptop' : 'HP / Smartphone';
+      if (_pendingForceHref === href) {
+        // tap kedua dalam 3 detik -> buka paksa
+        clearTimeout(_pendingForceTimer);
+        _pendingForceHref = null;
+        document.body.classList.add('fade-out');
+        setTimeout(function () {
+          window.location.href = href + (href.indexOf('?') > -1 ? '&' : '?') + 'force=1';
+        }, FADE_OUT_MS);
+        return;
+      }
+      showToast('Modul ini khusus untuk ' + labelDev + '. Tap sekali lagi untuk tetap membuka.');
+      _pendingForceHref = href;
+      clearTimeout(_pendingForceTimer);
+      _pendingForceTimer = setTimeout(function () { _pendingForceHref = null; }, 3000);
+      return;
+    }
+
+    if (href === 'kasir.html') {
+      openLoginModal();
+      return;
+    }
+
+    document.body.classList.add('fade-out');
+    setTimeout(function () {
+      window.location.href = href;
+    }, FADE_OUT_MS);
+  });
+});
+
+// ============ TOAST ============
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'show';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function () {
+    t.className = '';
+  }, 3200);
+}
+
+// ============ LOGIN KASIR ============
+async function openLoginModal() {
+  var modal = document.getElementById('modal-login');
+  modal.classList.add('open');
+
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+
+  setTimeout(function () {
+    document.getElementById('login-password').focus();
+  }, 100);
+
+  var dropdown = document.getElementById('cabang-dropdown');
+  dropdown.innerHTML = '<div class="custom-option placeholder"><span class="opt-dot"></span>Memuat cabang...</div>';
+  selectCabang('', 'Pilih Cabang', true);
+
+  try {
+    var { data, error } = await sb.from('cabang').select('id, nama').order('nama');
+    if (error) throw error;
+
+    dropdown.innerHTML = '';
+
+    (data || []).forEach(function (c) {
+      var opt = document.createElement('div');
+      opt.className = 'custom-option';
+      opt.dataset.value = c.id;
+      opt.innerHTML = '<span class="opt-dot"></span>' + c.nama;
+      opt.addEventListener('click', function () {
+        selectCabang(c.id, c.nama);
+      });
+      dropdown.appendChild(opt);
+    });
+  } catch (e) {
+    dropdown.innerHTML = '<div class="custom-option placeholder" style="color:var(--danger)"><span class="opt-dot"></span>Gagal memuat cabang</div>';
+    console.error('Load cabang error:', e);
+  }
+}
+
+function toggleCabangDropdown() {
+  var btn = document.getElementById('cabang-btn');
+  var dd = document.getElementById('cabang-dropdown');
+  var isOpen = dd.classList.contains('open');
+
+  if (isOpen) {
+    dd.classList.remove('open');
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  } else {
+    dd.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function selectCabang(value, label, isPlaceholder) {
+  isPlaceholder = isPlaceholder || false;
+  document.getElementById('login-cabang').value = value;
+
+  var lbl = document.getElementById('cabang-label');
+  lbl.textContent = label;
+
+  var btn = document.getElementById('cabang-btn');
+  if (isPlaceholder) {
+    btn.classList.remove('has-value');
+  } else {
+    btn.classList.add('has-value');
+  }
+
+  var options = document.querySelectorAll('#cabang-dropdown .custom-option');
+  for (var i = 0; i < options.length; i++) {
+    var opt = options[i];
+    if (!isPlaceholder && opt.dataset.value === value) {
+      opt.classList.add('selected');
+    } else {
+      opt.classList.remove('selected');
+    }
+  }
+
+  document.getElementById('cabang-dropdown').classList.remove('open');
+  btn.classList.remove('open');
+  btn.setAttribute('aria-expanded', 'false');
+}
+
+document.addEventListener('click', function (e) {
+  var wrap = document.getElementById('cabang-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('cabang-dropdown').classList.remove('open');
+    document.getElementById('cabang-btn').classList.remove('open');
+  }
+});
+
+document.getElementById('modal-login').addEventListener('click', function (e) {
+  if (e.target === this) {
+    closeLoginModal();
+  }
+});
+
+function closeLoginModal() {
+  document.getElementById('modal-login').classList.remove('open');
+  document.body.classList.remove('fade-out');
+}
+
+async function loginKasir() {
+  var cabangId = document.getElementById('login-cabang').value;
+  var password = document.getElementById('login-password').value.trim();
+
+  if (!cabangId) {
+    showToast('Pilih cabang terlebih dahulu');
+    return;
+  }
+
+  if (!password) {
+    showToast('Masukkan password');
+    return;
+  }
+
+  var { data, error } = await sb
+    .from('cabang')
+    .select('id, nama')
+    .eq('id', cabangId)
+    .eq('password', password)
+    .single();
+
+  if (error || !data) {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-password').focus();
+    return;
+  }
+
+  closeLoginModal();
+  document.body.classList.add('fade-out');
+
+  setTimeout(function () {
+    window.location.href = 'kasir.html?cabang=' + data.id + '&nama=' + encodeURIComponent(data.nama);
+  }, FADE_OUT_MS);
+}
+
+document.getElementById('login-password').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') loginKasir();
+  if (e.key === 'Escape') closeLoginModal();
+});
+
+// ============ RESET FADE-OUT ============
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.classList.remove('fade-out');
+});
+
+window.addEventListener('pageshow', function () {
+  document.body.classList.remove('fade-out');
+});
+</script>
+
+<!-- ── SERVICE WORKER REGISTRATION (offline support) ── -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Deteksi base path otomatis — aman untuk GitHub Pages subfolder
+    const swUrl = new URL('sw.js', document.baseURI).href;
+    const scope = new URL('./', document.baseURI).href;
+    navigator.serviceWorker.register(swUrl, { scope })
+      .then(reg => console.log('[SW] Terdaftar:', reg.scope))
+      .catch(err => console.warn('[SW] Gagal daftar:', err));
+  });
+}
+</script>
+</body>
+</html>
