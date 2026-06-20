@@ -620,7 +620,6 @@ body { padding-bottom: 78px; }
   <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;">
     <div style="font-size:44px;margin-bottom:10px;line-height:1;">🔐</div>
     <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Owner Dashboard</div>
-    <div id="lg-sub" style="font-size:13px;color:#8a8071;margin-bottom:22px;line-height:1.5;">Masukkan password untuk membuka halaman ini.</div>
 
     <div id="lg-setup-fields" style="display:none;">
       <input type="text" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
@@ -781,6 +780,10 @@ body { padding-bottom: 78px; }
     </div>
   </div>
   <div class="spacer"></div>
+<a href="index.html" class="topbar-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Dashboard
+  </a>
 </div>
 
 <div class="main-content">
@@ -1083,13 +1086,7 @@ body { padding-bottom: 78px; }
     </div>
   </div>
 
-  <!-- TOMBOL KEMBALI KE DASHBOARD (BAWAH) -->
-  <a href="index.html" class="topbar-back" style="display:flex; align-items:center; justify-content:center; gap:8px; margin:28px auto 90px; max-width:280px; padding:13px 20px; background:linear-gradient(135deg, var(--accent), var(--accent-dark)); border-radius:14px; color:white; text-decoration:none; font-size:14px; font-weight:700; box-shadow:var(--shadow-sm);">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Kembali ke Dashboard
-  </a>
-
-</div><!-- /main-content -->
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
