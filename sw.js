@@ -4,7 +4,7 @@
  * v4 — gabungan index + kasir + master + owner + payroll
  */
 
-const CACHE_NAME = 'sri-rejeki-v4';
+const CACHE_NAME = 'sri-rejeki-v5';
 const SUPABASE_ORIGIN = 'supabase.co';
 const CDN_ORIGINS = ['cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
