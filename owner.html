@@ -51,6 +51,9 @@ if ('serviceWorker' in navigator) {
   --shadow-md: 0 8px 24px rgba(15,155,142,0.14);
   --shadow-pop: 0 10px 30px rgba(43,38,32,0.12);
 }
+html {
+  overscroll-behavior-y: none;
+}
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
@@ -59,6 +62,7 @@ body {
     radial-gradient(circle at 95% 85%, rgba(255,183,3,0.10) 0, transparent 40%);
   color: var(--text);
   min-height: 100vh;
+  overscroll-behavior-y: none;
 }
 h1,h2,h3,.display { font-family: 'Baloo 2','Inter',sans-serif; }
 svg.icon { display:block; flex-shrink:0; }
@@ -135,6 +139,7 @@ body { padding-bottom: 78px; }
 .preset-btn:hover { border-color:var(--accent); color:#92400e; }
 .preset-btn.active { background:var(--accent); color:white; border-color:var(--accent); box-shadow:var(--shadow-sm); }
 .btn-refresh {
+  position:relative; overflow:hidden;
   display:flex; align-items:center; justify-content:center; gap:7px;
   padding:11px 16px; border-radius:10px; width:100%;
   background:linear-gradient(135deg, var(--accent), var(--accent-dark)); color:white;
@@ -142,6 +147,16 @@ body { padding-bottom: 78px; }
   transition:opacity 0.15s; box-shadow:0 4px 12px rgba(255,183,3,0.3);
 }
 .btn-refresh:hover { opacity:0.88; }
+.btn-refresh:disabled { cursor:not-allowed; }
+.btn-refresh-fill {
+  position:absolute; top:0; left:0; height:100%; width:0%;
+  background:rgba(255,255,255,0.32);
+  transition:width 0.25s ease;
+  pointer-events:none; z-index:0;
+}
+.btn-refresh-icon, .btn-refresh-label { position:relative; z-index:1; }
+.btn-refresh.is-loading .btn-refresh-icon { animation:btnRefreshSpin 0.9s linear infinite; }
+@keyframes btnRefreshSpin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 
 /* CABANG FILTER DROPDOWN */
 .filter-cabang {
@@ -615,8 +630,8 @@ body { padding-bottom: 78px; }
 <!-- ============================================================ -->
 <!-- LOGIN GATE: PROTEKSI PASSWORD UNTUK HALAMAN INI -->
 <!-- ============================================================ -->
-<div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:flex-start;justify-content:center;padding:24px;font-family:'Inter',sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;margin:12vh auto 40px;">
+<div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Inter',sans-serif;">
+  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;">
     <div style="font-size:44px;margin-bottom:10px;line-height:1;">🔐</div>
     <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Owner Dashboard</div>
 
@@ -745,6 +760,7 @@ body { padding-bottom: 78px; }
 })();
 </script>
 
+
 <!-- LOADING SCREEN -->
 <div class="loading-screen" id="loading-screen">
   <div class="loading-card">
@@ -821,9 +837,10 @@ body { padding-bottom: 78px; }
       </div>
     </div>
     <!-- Baris 4: Tombol Muat Data -->
-    <button class="btn-refresh" onclick="loadAll()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0114.5-4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M20 12a8 8 0 01-14.5 4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M18.5 4v3.5H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 20v-3.5H2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Muat Data
+    <button class="btn-refresh" id="btn-muat-data" onclick="loadAll()">
+      <span class="btn-refresh-fill" id="btn-refresh-fill"></span>
+      <svg class="btn-refresh-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0114.5-4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M20 12a8 8 0 01-14.5 4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M18.5 4v3.5H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 20v-3.5H2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="btn-refresh-label" id="btn-refresh-label">Muat Data</span>
     </button>
   </div>
 
@@ -1084,7 +1101,7 @@ body { padding-bottom: 78px; }
     </div>
   </div>
 
-</div>
+</div><!-- /main-content -->
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -1153,6 +1170,7 @@ function togglePayrollItem(id) {
     if (toggle) toggle.classList.add('open');
   }
 }
+
 
 // ============================================================
 // DATE PRESETS
@@ -1326,12 +1344,30 @@ async function loadCabang() {
 // ============================================================
 // MAIN LOAD
 // ============================================================
-// loading mini spinner untuk refresh (bukan full-screen)
+// loading: progress bar maju dari kiri ke kanan di tombol Muat Data (bukan full-screen)
 function showMiniLoading(show) {
-  const btn = document.querySelector('.btn-refresh');
+  const btn = document.getElementById('btn-muat-data');
+  const fill = document.getElementById('btn-refresh-fill');
+  const label = document.getElementById('btn-refresh-label');
   if (!btn) return;
   btn.disabled = show;
-  btn.style.opacity = show ? '0.6' : '1';
+  if (show) {
+    btn.classList.add('is-loading');
+    if (label) label.textContent = 'Memuat Data...';
+    if (fill) fill.style.width = '4%';
+  } else {
+    if (fill) fill.style.width = '100%';
+    setTimeout(() => {
+      btn.classList.remove('is-loading');
+      if (label) label.textContent = 'Muat Data';
+      if (fill) fill.style.width = '0%';
+    }, 220);
+  }
+}
+
+function setBtnLoadProgress(pct) {
+  const fill = document.getElementById('btn-refresh-fill');
+  if (fill) fill.style.width = Math.min(96, Math.max(4, pct)) + '%';
 }
 
 async function loadAll() {
@@ -1343,14 +1379,20 @@ async function loadAll() {
 
   showMiniLoading(true);
   try {
-    await Promise.all([
+    const tasks = [
       loadCabang(),
       loadProduk(),
       loadPelanggan(),
       loadPayroll(from, to),
       loadTrx(from, to, cabangId),
       loadTrxRingkasan(from, to),
-    ]);
+    ];
+    let doneCount = 0;
+    await Promise.all(tasks.map(p => p.then(res => {
+      doneCount++;
+      setBtnLoadProgress((doneCount / tasks.length) * 100);
+      return res;
+    })));
 
     renderRingkasan();
     renderOmset(cabangId);
@@ -2125,5 +2167,22 @@ setupPayrollRealtimeSync();
   </button>
 </div>
 
+<script>
+// Fallback blokir pull-to-refresh untuk WebView/browser yang belum support overscroll-behavior CSS
+(function(){
+  var startY = 0;
+  document.addEventListener('touchstart', function(e){
+    if (e.touches.length === 1) startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e){
+    if (e.touches.length !== 1) return;
+    var y = e.touches[0].clientY;
+    var scroller = document.scrollingElement || document.documentElement;
+    if (scroller.scrollTop <= 0 && y > startY) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+})();
+</script>
 </body>
 </html>
