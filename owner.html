@@ -643,7 +643,6 @@ body { padding-bottom: 78px; }
 <script>
 (function(){
   var LG_KEY = 'owner_password';
-  var LG_STORAGE_FLAG = 'sri_rejeki_owner_authorized';
   var lgTitle = document.getElementById('lg-title');
   var lgSub = document.getElementById('lg-sub');
   var lgSetupFields = document.getElementById('lg-setup-fields');
@@ -652,6 +651,7 @@ body { padding-bottom: 78px; }
   var lgSubmitBtn = document.getElementById('lg-submit-btn');
   var lgOverlay = document.getElementById('login-gate-overlay');
   var isSetupMode = false;
+  var isAuthorized = false;
 
   function showError(msg) {
     lgError.textContent = '⚠️ ' + msg;
@@ -660,22 +660,30 @@ body { padding-bottom: 78px; }
   function hideError() { lgError.style.display = 'none'; }
 
   function unlockGate() {
-    try { localStorage.setItem(LG_STORAGE_FLAG, '1'); } catch(e) {}
-    if (lgOverlay) lgOverlay.remove();
+    isAuthorized = true;
+    if (lgOverlay) lgOverlay.style.display = 'none';
   }
 
-  async function checkExistingSession() {
-    try {
-      if (localStorage.getItem(LG_STORAGE_FLAG) === '1') {
-        lgOverlay.remove();
-        return true;
+  // Kunci lagi setiap kali aplikasi disembunyikan/ditinggal (pindah app, minimize, tutup tab)
+  function relockGate() {
+    if (!isAuthorized) return;
+    isAuthorized = false;
+    if (lgOverlay) {
+      lgOverlay.style.display = 'flex';
+      hideError();
+      if (!isSetupMode) {
+        var passInput = document.getElementById('lg-pass-input');
+        if (passInput) passInput.value = '';
       }
-    } catch(e) {}
-    return false;
+    }
   }
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) relockGate();
+  });
+  window.addEventListener('pagehide', relockGate);
+  window.addEventListener('blur', relockGate);
 
   async function initGate() {
-    if (await checkExistingSession()) return;
     try {
       var res = await sb.from('settings').select('value').eq('key', LG_KEY).single();
       if (res.error || !res.data) {
@@ -701,6 +709,9 @@ body { padding-bottom: 78px; }
       try {
         var { error } = await sb.from('settings').insert({ key: LG_KEY, value: p1 });
         if (error) throw error;
+        isSetupMode = false;
+        lgSetupFields.style.display = 'none';
+        lgLoginFields.style.display = 'block';
         unlockGate();
       } catch(e) {
         showError('Gagal menyimpan password: ' + (e.message || e));
@@ -725,7 +736,7 @@ body { padding-bottom: 78px; }
 
   lgSubmitBtn.addEventListener('click', handleSubmit);
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' && lgOverlay && document.body.contains(lgOverlay)) handleSubmit();
+    if (e.key === 'Enter' && lgOverlay && lgOverlay.style.display !== 'none') handleSubmit();
   });
 
   if (document.readyState === 'loading') {
@@ -770,10 +781,6 @@ body { padding-bottom: 78px; }
     </div>
   </div>
   <div class="spacer"></div>
-<a href="index.html" class="topbar-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Dashboard
-  </a>
 </div>
 
 <div class="main-content">
@@ -1075,6 +1082,12 @@ body { padding-bottom: 78px; }
       </div>
     </div>
   </div>
+
+  <!-- TOMBOL KEMBALI KE DASHBOARD (BAWAH) -->
+  <a href="index.html" class="topbar-back" style="display:flex; align-items:center; justify-content:center; gap:8px; margin:28px auto 90px; max-width:280px; padding:13px 20px; background:linear-gradient(135deg, var(--accent), var(--accent-dark)); border-radius:14px; color:white; text-decoration:none; font-size:14px; font-weight:700; box-shadow:var(--shadow-sm);">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Kembali ke Dashboard
+  </a>
 
 </div><!-- /main-content -->
 
