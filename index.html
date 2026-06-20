@@ -750,12 +750,8 @@ async function openLoginModal() {
   dropdown.innerHTML = '<div class="custom-option placeholder"><span class="opt-dot"></span>Memuat cabang...</div>';
   selectCabang('', 'Pilih Cabang', true);
 
-  try {
-    var { data, error } = await sb.from('cabang').select('id, nama').order('nama');
-    if (error) throw error;
-
+  function renderCabangOptions(data) {
     dropdown.innerHTML = '';
-
     (data || []).forEach(function (c) {
       var opt = document.createElement('div');
       opt.className = 'custom-option';
@@ -766,9 +762,31 @@ async function openLoginModal() {
       });
       dropdown.appendChild(opt);
     });
+  }
+
+  // Coba load dari Supabase, fallback ke cache localStorage saat offline
+  try {
+    var { data, error } = await sb.from('cabang').select('id, nama').order('nama');
+    if (error) throw error;
+    // Simpan ke localStorage sebagai cache offline
+    localStorage.setItem('cabang_cache', JSON.stringify(data));
+    renderCabangOptions(data);
   } catch (e) {
-    dropdown.innerHTML = '<div class="custom-option placeholder" style="color:var(--danger)"><span class="opt-dot"></span>Gagal memuat cabang</div>';
-    console.error('Load cabang error:', e);
+    // Offline atau error — coba ambil dari cache
+    var cached = localStorage.getItem('cabang_cache');
+    if (cached) {
+      var cachedData = JSON.parse(cached);
+      renderCabangOptions(cachedData);
+      // Tampilkan info kecil bahwa ini data cache
+      var info = document.createElement('div');
+      info.className = 'custom-option placeholder';
+      info.style.cssText = 'color:#f59e0b;font-size:11px;border-top:1px solid #eee;';
+      info.innerHTML = '<span class="opt-dot" style="background:#f59e0b"></span>Mode offline — data terakhir';
+      dropdown.appendChild(info);
+    } else {
+      dropdown.innerHTML = '<div class="custom-option placeholder" style="color:var(--danger)"><span class="opt-dot"></span>Tidak ada koneksi & belum ada cache</div>';
+    }
+    console.warn('Load cabang offline, pakai cache:', e);
   }
 }
 
@@ -850,18 +868,43 @@ async function loginKasir() {
     return;
   }
 
-  var { data, error } = await sb
-    .from('cabang')
-    .select('id, nama')
-    .eq('id', cabangId)
-    .eq('password', password)
-    .single();
+  var data = null;
 
-  if (error || !data) {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('login-password').value = '';
-    document.getElementById('login-password').focus();
-    return;
+  if (navigator.onLine) {
+    // Online: verifikasi ke Supabase
+    var { data: d, error } = await sb
+      .from('cabang')
+      .select('id, nama')
+      .eq('id', cabangId)
+      .eq('password', password)
+      .single();
+
+    if (error || !d) {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-password').focus();
+      return;
+    }
+    // Simpan password hash ke cache untuk login offline
+    var pwCache = JSON.parse(localStorage.getItem('cabang_pw_cache') || '{}');
+    pwCache[cabangId] = password;
+    localStorage.setItem('cabang_pw_cache', JSON.stringify(pwCache));
+    data = d;
+  } else {
+    // Offline: verifikasi dari cache
+    var pwCache = JSON.parse(localStorage.getItem('cabang_pw_cache') || '{}');
+    var cachedPw = pwCache[cabangId];
+    if (!cachedPw || cachedPw !== password) {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('login-error').textContent = 'Password salah atau belum pernah login online di cabang ini';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-password').focus();
+      return;
+    }
+    // Ambil nama cabang dari cache
+    var cabangCache = JSON.parse(localStorage.getItem('cabang_cache') || '[]');
+    var cabang = cabangCache.find(function(c) { return c.id == cabangId; });
+    data = { id: cabangId, nama: cabang ? cabang.nama : 'Cabang #' + cabangId };
   }
 
   closeLoginModal();
@@ -871,6 +914,7 @@ async function loginKasir() {
     window.location.href = 'kasir.html?cabang=' + data.id + '&nama=' + encodeURIComponent(data.nama);
   }, FADE_OUT_MS);
 }
+
 
 document.getElementById('login-password').addEventListener('keydown', function (e) {
   if (e.key === 'Enter') loginKasir();
