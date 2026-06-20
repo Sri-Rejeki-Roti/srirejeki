@@ -1060,11 +1060,10 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 <!-- ============================================================ -->
 <!-- LOGIN GATE: PROTEKSI PASSWORD UNTUK HALAMAN INI -->
 <!-- ============================================================ -->
-<div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Inter',sans-serif;">
-  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;">
+<div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:flex-start;justify-content:center;padding:24px;font-family:'Inter',sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;margin:12vh auto 40px;">
     <div style="font-size:44px;margin-bottom:10px;line-height:1;">🔐</div>
     <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Payroll</div>
-    <div id="lg-sub" style="font-size:13px;color:#8a8071;margin-bottom:22px;line-height:1.5;">Masukkan password untuk membuka halaman ini.</div>
 
     <div id="lg-setup-fields" style="display:none;">
       <input type="text" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
@@ -1179,6 +1178,16 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   }
 
   lgSubmitBtn.addEventListener('click', handleSubmit);
+
+  // Pastikan input password tidak ketutup keyboard HP saat fokus
+  ['lg-pass-new','lg-pass-confirm','lg-pass-input'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('focus', function(){
+      setTimeout(function(){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+      }, 300);
+    });
+  });
   document.addEventListener('keydown', function(e){
     if (e.key === 'Enter' && lgOverlay && lgOverlay.style.display !== 'none') handleSubmit();
   });
