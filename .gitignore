@@ -1,1 +1,1 @@
-.DS_Store .DS_Store? ._* .Spotlight-V100 .Trashes Thumbs.db
+echo -e ".DS_Store\n.AppleDouble\n.LSOverride\n._*" >> .gitignore
