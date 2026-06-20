@@ -51,6 +51,9 @@ if ('serviceWorker' in navigator) {
   --nav-height: 56px;
   --topbar-height: 52px;
 }
+html {
+  overscroll-behavior-y: none;
+}
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
@@ -62,6 +65,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
 }
 button, .clickable { min-height: 44px; min-width: 44px; }
 
@@ -2653,5 +2657,22 @@ window.addEventListener('beforeunload', (e) => {
     </div>
   </div>
 </div>
+<script>
+// Fallback blokir pull-to-refresh untuk WebView/browser yang belum support overscroll-behavior CSS
+(function(){
+  var startY = 0;
+  document.addEventListener('touchstart', function(e){
+    if (e.touches.length === 1) startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e){
+    if (e.touches.length !== 1) return;
+    var y = e.touches[0].clientY;
+    var scroller = document.scrollingElement || document.documentElement;
+    if (scroller.scrollTop <= 0 && y > startY) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+})();
+</script>
 </body>
 </html>
