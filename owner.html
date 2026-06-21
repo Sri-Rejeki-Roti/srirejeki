@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f59e0b">
+<meta name="theme-color" content="#0f9b8e">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,8 +32,8 @@ if ('serviceWorker' in navigator) {
   --primary: #0f9b8e;
   --primary-light: #e3f9f5;
   --primary-dark: #0b756c;
-  --accent: #ffb703;
-  --accent-dark: #e09a00;
+  --accent: #2dd4bf;
+  --accent-dark: #0c8478;
   --pink: #ff6b9d;
   --indigo: #6366f1;
   --bg: #fef9ef;
@@ -59,7 +59,7 @@ body {
   background: var(--bg);
   background-image:
     radial-gradient(circle at 8% 12%, rgba(15,155,142,0.07) 0, transparent 45%),
-    radial-gradient(circle at 95% 85%, rgba(255,183,3,0.10) 0, transparent 40%);
+    radial-gradient(circle at 95% 85%, rgba(45,212,191,0.10) 0, transparent 40%);
   color: var(--text);
   min-height: 100vh;
   overscroll-behavior-y: none;
@@ -72,9 +72,9 @@ svg.icon { display:block; flex-shrink:0; }
 
 /* TOPBAR */
 .topbar {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, #0c8478 100%);
   color: white; padding: env(safe-area-inset-top, 0px) 22px 0; height: calc(62px + env(safe-area-inset-top, 0px)); display:flex; align-items:center; gap:14px;
-  position:sticky; top:0; z-index:50; box-shadow: 0 4px 18px rgba(245,158,11,0.30);
+  position:sticky; top:0; z-index:50; box-shadow: 0 4px 18px rgba(15,155,142,0.25);
 }
 .topbar .brand { display:flex; align-items:center; gap:10px; }
 .topbar .brand-icon {
@@ -105,8 +105,8 @@ svg.icon { display:block; flex-shrink:0; }
   color:var(--text-muted); border-radius:12px; transition:all 0.15s;
   font-family:inherit; white-space:nowrap;
 }
-.tab-btn:hover { color:#d97706; background:#fff8e6; }
-.tab-btn.active { color:#d97706; background:#fff8e6; }
+.tab-btn:hover { color:var(--primary); background:var(--primary-light); }
+.tab-btn.active { color:var(--primary); background:var(--primary-light); }
 body { padding-bottom: 78px; }
 
 /* MAIN CONTENT */
@@ -136,7 +136,7 @@ body { padding-bottom: 78px; }
   border:1.5px solid var(--border); cursor:pointer; background:var(--card);
   color:var(--text-muted); transition:all 0.15s; font-family:inherit; text-align:center;
 }
-.preset-btn:hover { border-color:var(--accent); color:#92400e; }
+.preset-btn:hover { border-color:var(--accent); color:var(--accent-dark); }
 .preset-btn.active { background:var(--accent); color:white; border-color:var(--accent); box-shadow:var(--shadow-sm); }
 .btn-refresh {
   position:relative; overflow:hidden;
@@ -144,7 +144,7 @@ body { padding-bottom: 78px; }
   padding:11px 16px; border-radius:10px; width:100%;
   background:linear-gradient(135deg, var(--accent), var(--accent-dark)); color:white;
   border:none; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;
-  transition:opacity 0.15s; box-shadow:0 4px 12px rgba(255,183,3,0.3);
+  transition:opacity 0.15s; box-shadow:0 4px 12px rgba(45,212,191,0.3);
 }
 .btn-refresh:hover { opacity:0.88; }
 .btn-refresh:disabled { cursor:not-allowed; }
@@ -183,14 +183,14 @@ body { padding-bottom: 78px; }
 }
 .custom-select-btn.has-placeholder { color:var(--text-muted); font-weight:500; }
 .custom-select-btn:focus, .custom-select-btn.open {
-  outline:none; border-color:var(--accent); box-shadow:0 0 0 4px rgba(255,183,3,0.15);
+  outline:none; border-color:var(--accent); box-shadow:0 0 0 4px rgba(45,212,191,0.15);
 }
 .custom-select-btn .caret { flex-shrink:0; transition:transform 0.2s ease; color:var(--text-muted); }
 .custom-select-btn.open .caret { transform:rotate(180deg); color:var(--accent-dark); }
 .custom-select-dropdown {
   display:none; position:absolute; top:calc(100% + 6px); left:0; right:0;
   background:var(--card); border:2px solid var(--accent); border-radius:14px;
-  box-shadow:0 12px 36px rgba(255,183,3,0.18); z-index:60;
+  box-shadow:0 12px 36px rgba(45,212,191,0.18); z-index:60;
   overflow:hidden; animation:dropdownPop 0.15s ease;
   max-height:220px; overflow-y:auto;
 }
@@ -229,7 +229,7 @@ body { padding-bottom: 78px; }
   content:''; position:absolute; top:0; left:0; right:0; height:4px;
 }
 .stat-card.teal::before { background:linear-gradient(90deg, var(--primary), var(--primary-dark)); }
-.stat-card.amber::before { background:linear-gradient(90deg, var(--accent), var(--accent-dark)); }
+.stat-card.amber::before { background:linear-gradient(90deg, #f59e0b, #d97706); }
 .stat-card.green::before { background:linear-gradient(90deg, var(--success), #087a46); }
 .stat-card.pink::before { background:linear-gradient(90deg, var(--pink), #e0316f); }
 .stat-card.indigo::before { background:linear-gradient(90deg, var(--indigo), #4f46e5); }
@@ -427,7 +427,7 @@ body { padding-bottom: 78px; }
 .stok-right { margin-left:auto; text-align:right; }
 .stok-qty { font-size:14px; font-weight:800; }
 .stok-qty.ok { color:var(--success); }
-.stok-qty.warn { color:var(--accent-dark); }
+.stok-qty.warn { color:#9a6800; }
 .stok-qty.empty { color:var(--danger); }
 .stok-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; }
 
@@ -460,7 +460,7 @@ body { padding-bottom: 78px; }
 /* LOADING SCREEN */
 .loading-screen {
   position:fixed; inset:0; z-index:999;
-  background:rgba(245,158,11,0.07);
+  background:rgba(15,155,142,0.07);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   display:flex; align-items:center; justify-content:center;
@@ -470,29 +470,29 @@ body { padding-bottom: 78px; }
 .loading-card {
   background:white; border-radius:24px;
   padding:36px 44px; min-width:340px;
-  box-shadow:0 24px 60px rgba(245,158,11,0.18), 0 8px 24px rgba(43,38,32,0.10);
+  box-shadow:0 24px 60px rgba(15,155,142,0.18), 0 8px 24px rgba(43,38,32,0.10);
   display:flex; flex-direction:column; align-items:center;
   text-align:center;
 }
 .loading-brand-icon {
   width:56px; height:56px; border-radius:18px;
-  background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background:linear-gradient(135deg, var(--primary) 0%, #0c8478 100%);
   display:flex; align-items:center; justify-content:center;
-  margin-bottom:18px; box-shadow:0 6px 20px rgba(245,158,11,0.35);
+  margin-bottom:18px; box-shadow:0 6px 20px rgba(15,155,142,0.35);
 }
 .loading-title {
   font-family:'Baloo 2','Inter',sans-serif;
   font-size:22px; font-weight:800; color:var(--text); margin-bottom:4px;
 }
 .loading-sub { font-size:13px; color:var(--text-muted); font-weight:500; margin-bottom:28px; }
-.loading-step { font-size:13px; font-weight:600; color:#92400e; margin-bottom:12px; min-height:20px; }
+.loading-step { font-size:13px; font-weight:600; color:var(--primary-dark); margin-bottom:12px; min-height:20px; }
 .loading-track {
   width:100%; height:8px; background:var(--border);
   border-radius:99px; overflow:hidden; margin-bottom:10px;
 }
 .loading-fill {
   height:100%; border-radius:99px; width:0%;
-  background:linear-gradient(90deg, #f59e0b, #0f9b8e);
+  background:linear-gradient(90deg, var(--accent), var(--primary));
   transition:width 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 .loading-pct { font-size:12px; color:var(--text-muted); font-weight:600; }
@@ -540,7 +540,7 @@ body { padding-bottom: 78px; }
   content:''; position:absolute; top:0; left:0; right:0; height:5px;
 }
 .ringkasan-card.total::before { background:linear-gradient(90deg, var(--indigo), #4f46e5); }
-.ringkasan-card.pusat::before { background:linear-gradient(90deg, var(--accent), var(--accent-dark)); }
+.ringkasan-card.pusat::before { background:linear-gradient(90deg, #f59e0b, #d97706); }
 .ringkasan-card.cabang::before { background:linear-gradient(90deg, var(--primary), var(--primary-dark)); }
 .rk-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
 .rk-icon {
@@ -591,7 +591,7 @@ body { padding-bottom: 78px; }
     <div style="font-size:14px;color:#8a8071;line-height:1.55;margin-bottom:26px;">
       Halaman <b id="device-guard-appname" style="color:#2b2620;">ini</b> didesain khusus untuk diakses dari HP agar tampilan dan fungsinya optimal. Silakan buka dari smartphone Anda.
     </div>
-    <a href="index.html" style="display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(245,158,11,.30);">⬅ Kembali ke Menu</a>
+    <a href="index.html" style="display:inline-block;background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(15,155,142,.30);">⬅ Kembali ke Menu</a>
     <div style="margin-top:20px;">
       <a href="#" id="device-guard-force" style="font-size:12px;color:#8a8071;text-decoration:underline;">Tetap buka di perangkat ini</a>
     </div>
@@ -897,7 +897,7 @@ body { padding-bottom: 78px; }
     <div class="grid-2" style="margin-bottom:24px">
       <div class="chart-wrap">
         <div class="chart-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="4" height="11" rx="1" fill="#f59e0b"/><rect x="10" y="5" width="4" height="16" rx="1" fill="#0f9b8e"/><rect x="17" y="8" width="4" height="13" rx="1" fill="#6366f1"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="4" height="11" rx="1" fill="var(--accent)"/><rect x="10" y="5" width="4" height="16" rx="1" fill="#0f9b8e"/><rect x="17" y="8" width="4" height="13" rx="1" fill="#6366f1"/></svg>
           Omset Harian
         </div>
         <div class="chart-canvas-wrap">
@@ -906,7 +906,7 @@ body { padding-bottom: 78px; }
       </div>
       <div class="chart-wrap">
         <div class="chart-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#f59e0b" stroke-width="1.8"/><path d="M12 12L12 5M12 12l5 3" stroke="#0f9b8e" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--accent)" stroke-width="1.8"/><path d="M12 12L12 5M12 12l5 3" stroke="#0f9b8e" stroke-width="1.8" stroke-linecap="round"/></svg>
           Metode Pembayaran
         </div>
         <div class="chart-canvas-wrap">
@@ -1675,8 +1675,8 @@ function renderChartOmset() {
       datasets: [{
         label: 'Omset',
         data: vals,
-        backgroundColor: 'rgba(245,158,11,0.7)',
-        borderColor: '#f59e0b',
+        backgroundColor: 'rgba(15,155,142,0.7)',
+        borderColor: '#0f9b8e',
         borderWidth: 2,
         borderRadius: 7,
         borderSkipped: false,
@@ -1982,7 +1982,7 @@ function stokItem(p) {
     </div>
     <div class="stok-right">
       <div class="stok-qty ${cls}">${p.stok}</div>
-      <div class="stok-label" style="color:${cls==='ok'?'var(--success)':cls==='warn'?'var(--accent-dark)':'var(--danger)'}">${label}</div>
+      <div class="stok-label" style="color:${cls==='ok'?'var(--success)':cls==='warn'?'#9a6800':'var(--danger)'}">${label}</div>
     </div>
   </div>`;
 }
