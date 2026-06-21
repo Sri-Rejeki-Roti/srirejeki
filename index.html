@@ -18,7 +18,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { background: #fef9ef; overscroll-behavior: none; }
+html { background: #fef9ef; overscroll-behavior: none; height: 100%; overflow: hidden; }
 
 body {
   font-family: 'Inter', sans-serif;
@@ -28,7 +28,9 @@ body {
     radial-gradient(circle at 90% 85%, rgba(45,212,191,0.10) 0, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(255,107,157,0.04) 0, transparent 60%);
   color: var(--text);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   opacity: 1;
@@ -65,8 +67,9 @@ body.fade-out {
 }
 
 .header {
-  padding: 32px 32px 0;
+  padding: clamp(12px, 4vh, 32px) 32px 0;
   text-align: center;
+  flex-shrink: 0;
 }
 .logo-wrap {
   display: inline-flex;
@@ -75,15 +78,16 @@ body.fade-out {
   margin-bottom: 8px;
 }
 .logo-icon {
-  width: 56px; height: 56px;
+  width: clamp(40px, 7vh, 56px); height: clamp(40px, 7vh, 56px);
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-radius: 18px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 20px rgba(15,155,142,0.30);
+  flex-shrink: 0;
 }
 .app-name {
   font-family: 'Baloo 2', sans-serif;
-  font-size: 32px;
+  font-size: clamp(22px, 4vh, 32px);
   font-weight: 800;
   color: var(--primary-dark);
   letter-spacing: -0.5px;
@@ -102,14 +106,17 @@ body.fade-out {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 36px 32px 40px;
+  padding: clamp(10px, 3vh, 36px) 32px clamp(10px, 3vh, 40px);
+  min-height: 0;
+  overflow: hidden;
 }
 .module-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: clamp(10px, 2.5vh, 20px);
   max-width: 780px;
   width: 100%;
+  max-height: 100%;
 }
 .module-card {
   background: var(--card);
@@ -254,9 +261,10 @@ body.fade-out {
 
 .footer {
   text-align: center;
-  padding: 0 32px 28px;
+  padding: 0 32px clamp(10px, 2.5vh, 28px);
   font-size: 12px;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 /* ── WATERMARK BACKGROUND HALAMAN ── */
@@ -563,35 +571,36 @@ body.fade-out {
 
 /* ── RESPONSIVE (HP) ── */
 @media (max-width: 600px) {
-  .header { padding: 40px 20px 0; }
-  .app-name { font-size: 28px; }
-  .tagline { font-size: 14px; }
-  .logo-icon { width: 50px; height: 50px; border-radius: 15px; }
-  .grid-wrap { padding: 18px 14px 22px; align-items: stretch; }
+  .header { padding: clamp(14px, 5vh, 40px) 20px 0; }
+  .app-name { font-size: clamp(20px, 4.5vh, 28px); }
+  .tagline { font-size: clamp(11px, 2vh, 14px); }
+  .logo-icon { width: clamp(36px, 6vh, 50px); height: clamp(36px, 6vh, 50px); border-radius: 15px; }
+  .grid-wrap { padding: clamp(10px, 2vh, 18px) 14px clamp(10px, 2vh, 22px); align-items: stretch; }
   .module-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 14px;
+    gap: clamp(8px, 2vh, 14px);
     width: 100%;
     max-width: none;
+    max-height: 100%;
   }
-  .module-card { padding: 18px 14px 16px; gap: 8px; }
-  .card-icon-wrap { width: clamp(54px, 16vw, 72px); height: clamp(54px, 16vw, 72px); border-radius: 20px 20px 20px 7px; }
+  .module-card { padding: clamp(10px, 2.5vh, 18px) 14px clamp(8px, 2vh, 16px); gap: clamp(4px, 1vh, 8px); }
+  .card-icon-wrap { width: clamp(40px, 13vw, 72px); height: clamp(40px, 13vw, 72px); border-radius: 20px 20px 20px 7px; }
   .module-card:hover .card-icon-wrap { border-radius: 16px; }
-  .card-icon-wrap svg { width: clamp(26px, 7.5vw, 34px); height: clamp(26px, 7.5vw, 34px); }
-  .card-title { font-size: clamp(18px, 5.2vw, 22px); }
-  .card-sub { font-size: 10.5px; }
+  .card-icon-wrap svg { width: clamp(20px, 6.5vw, 34px); height: clamp(20px, 6.5vw, 34px); }
+  .card-title { font-size: clamp(15px, 4.5vw, 22px); }
+  .card-sub { font-size: clamp(9px, 1.6vh, 10.5px); }
   .card-watermark { width: 130px; height: 130px; }
   .card-go { width: 24px; height: 24px; bottom: 10px; right: 10px; }
   .card-go svg { width: 12px; height: 12px; }
 }
 
-@media (max-width: 380px) {
-  .module-grid { gap: 10px; }
-  .module-card { padding: 14px 12px 12px; gap: 6px; }
-  .card-icon-wrap { width: 54px; height: 54px; border-radius: 16px 16px 16px 6px; }
-  .card-icon-wrap svg { width: 26px; height: 26px; }
-  .card-title { font-size: 17px; }
+@media (max-width: 380px), (max-height: 600px) {
+  .module-grid { gap: 8px; }
+  .module-card { padding: clamp(8px, 2vh, 14px) 10px clamp(6px, 1.5vh, 12px); gap: 4px; }
+  .card-icon-wrap { width: clamp(36px, 12vw, 54px); height: clamp(36px, 12vw, 54px); border-radius: 16px 16px 16px 6px; }
+  .card-icon-wrap svg { width: clamp(18px, 6vw, 26px); height: clamp(18px, 6vw, 26px); }
+  .card-title { font-size: clamp(13px, 4vw, 17px); }
   .card-sub { display: none; }
   .card-watermark { width: 100px; height: 100px; }
   .card-go { display: none; }
