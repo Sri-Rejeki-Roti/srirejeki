@@ -17,17 +17,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  overflow-y: scroll;
-  scrollbar-gutter: stable;
-}
+html { overflow-y: scroll; scrollbar-gutter: stable; }
 :root {
   --primary: #0f9b8e;
   --primary-light: #e3f9f5;
   --primary-dark: #0b756c;
   --accent: #2dd4bf;
   --accent-dark: #0c8478;
-  --pink: #ff6b9d;
   --bg: #fef9ef;
   --card: #ffffff;
   --border: #ece4d3;
@@ -46,8 +42,7 @@ html {
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
-  background-image:
-    radial-gradient(circle at 8% 12%, rgba(15,155,142,0.07) 0, transparent 45%),
+  background-image: radial-gradient(circle at 8% 12%, rgba(15,155,142,0.07) 0, transparent 45%),
     radial-gradient(circle at 95% 85%, rgba(45,212,191,0.10) 0, transparent 40%);
   color: var(--text);
   min-height: 100vh;
@@ -71,10 +66,6 @@ svg.icon { display:block; flex-shrink:0; }
 .topbar h1 { font-size:19px; font-weight:700; letter-spacing:-0.2px; }
 .topbar .tagline { font-size:11px; opacity:0.75; font-weight:500; margin-top:-2px; }
 .topbar .spacer { flex:1; }
-.topbar-badge {
-  background:rgba(255,255,255,0.15); border-radius:20px; padding:5px 14px;
-  font-size:12px; font-weight:700; letter-spacing:0.3px;
-}
 .topbar-back {
   display:flex; align-items:center; gap:5px; padding:7px 12px;
   border-radius:9px; background:rgba(255,255,255,0.18);
@@ -86,14 +77,12 @@ svg.icon { display:block; flex-shrink:0; }
   background: rgba(45,212,191,0.25);
   border: 1px solid rgba(45,212,191,0.35);
 }
-.topbar-back.master-only:hover {
-  background: rgba(45,212,191,0.4);
-}
+.topbar-back.master-only:hover { background: rgba(45,212,191,0.4); }
 
 .tabs-nav {
   background: var(--card); border-bottom:2px solid var(--border);
   display:flex; gap:4px; padding:12px 22px 0; position:sticky; top:62px; z-index:40;
-  box-shadow: var(--shadow-sm);
+  box-shadow:var(--shadow-sm);
   overflow-x:auto;
 }
 .tab-btn {
@@ -111,6 +100,26 @@ svg.icon { display:block; flex-shrink:0; }
 .tab-btn:not(.active) .tab-count { background:var(--border); color:var(--text-muted); }
 
 .main-content { padding:24px 22px; max-width:1400px; margin:0 auto; }
+
+.subtabs-nav {
+  display:flex; gap:4px; background:var(--bg, #f3f1ea); border:1.5px solid var(--border);
+  border-radius:12px; padding:4px; margin-bottom:20px; width:100%;
+  overflow-x:auto;
+}
+.subtab-btn {
+  display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 16px;
+  font-size:13.5px; font-weight:700; border:none; background:none; cursor:pointer;
+  color:var(--text-muted); border-radius:9px; transition:all 0.15s; font-family:inherit;
+  white-space:nowrap; flex:1;
+}
+.subtab-btn:hover { color:var(--primary); }
+.subtab-btn.active { color:white; background:var(--primary); box-shadow:var(--shadow-sm); }
+.subtab-btn .subtab-count {
+  background:rgba(0,0,0,0.12); color:inherit; border-radius:20px;
+  padding:1px 7px; font-size:11px; font-weight:700;
+}
+.subtab-btn.active .subtab-count { background:rgba(255,255,255,0.28); }
+.subtab-btn:not(.active) .subtab-count { background:var(--border); color:var(--text-muted); }
 
 .sec-header {
   display:flex; align-items:center; justify-content:space-between;
@@ -162,8 +171,6 @@ svg.icon { display:block; flex-shrink:0; }
 .badge-stok-ok { background:var(--success-bg); color:var(--success); }
 .badge-stok-low { background:#fff7e0; color:#9a6800; }
 .badge-stok-habis { background:var(--danger-bg); color:var(--danger); }
-.badge-kredit { background:#fff3f0; color:#c0392b; }
-.badge-lunas { background:var(--success-bg); color:var(--success); }
 .badge-retur { background:#f0e6ff; color:#6b21a8; }
 
 .act-btn {
@@ -184,7 +191,6 @@ svg.icon { display:block; flex-shrink:0; }
 }
 .produk-info { display:flex; align-items:center; gap:10px; }
 .produk-name { font-weight:600; font-size:14px; }
-.produk-cat { font-size:11px; color:var(--text-muted); margin-top:2px; }
 
 .cards-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px; }
 .cat-card {
@@ -314,47 +320,6 @@ svg.icon { display:block; flex-shrink:0; }
   outline:none; border-color:var(--primary); box-shadow:0 0 0 4px rgba(15,155,142,0.1);
 }
 
-.mini-cal-wrap { position:relative; display:inline-block; }
-.mini-cal-trigger {
-  width:148px; min-width:148px; max-width:148px; text-align:left;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238a8071' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 12px center; padding-right:34px;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.mini-cal-pop {
-  position:absolute; top:calc(100% + 6px); left:0; z-index:50;
-  background:white; border:1px solid var(--border); border-radius:var(--radius-sm);
-  box-shadow:var(--shadow-pop); padding:12px; width:264px; display:none;
-}
-.mini-cal-pop.open { display:block; }
-.mini-cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.mini-cal-head .mc-label { font-size:14px; font-weight:700; color:var(--text); }
-.mini-cal-head button {
-  width:28px; height:28px; border:none; background:transparent; border-radius:8px;
-  cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-muted);
-  transition:background 0.15s;
-}
-.mini-cal-head button:hover { background:var(--bg-soft, #f3f1ec); color:var(--primary); }
-.mini-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; transition:opacity 0.1s ease; }
-.mini-cal-grid.mc-fading { opacity:0; }
-.mini-cal-grid .mc-dow {
-  font-size:11px; font-weight:700; color:var(--text-muted); text-align:center; padding:4px 0;
-}
-.mini-cal-grid .mc-day {
-  font-size:13px; font-weight:600; color:var(--text); text-align:center; padding:6px 0;
-  border-radius:8px; cursor:pointer; transition:background 0.12s; border:none; background:transparent;
-}
-.mini-cal-grid .mc-day:hover { background:rgba(15,155,142,0.12); }
-.mini-cal-grid .mc-day.mc-muted { color:var(--text-muted); opacity:0.45; }
-.mini-cal-grid .mc-day.mc-selected { background:var(--primary); color:white; }
-.mini-cal-grid .mc-day.mc-today:not(.mc-selected) { box-shadow:inset 0 0 0 1.5px var(--primary); }
-
-@media (max-width:900px) {
-  #sec-restok .form-grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-
 .modal-overlay {
   position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100;
   display:none; align-items:center; justify-content:center; padding:16px;
@@ -367,10 +332,7 @@ svg.icon { display:block; flex-shrink:0; }
   animation:modalPop 0.2s ease;
   overflow:visible;
 }
-#modal-produk .modal {
-  max-width:720px;
-  padding:22px 24px;
-}
+#modal-produk .modal { max-width:720px; padding:22px 24px; }
 #modal-produk-layout {
   display:grid;
   grid-template-columns:180px minmax(0,1fr);
@@ -503,7 +465,7 @@ svg.icon { display:block; flex-shrink:0; }
 .toast.success { background:var(--success); }
 .toast.error { background:var(--danger); }
 .toast.warn { background:var(--accent-dark); }
-/* PROMPT MODAL (ganti native prompt()) */
+
 .prompt-overlay {
   position:fixed; inset:0; z-index:900; background:rgba(0,0,0,0.45);
   display:flex; align-items:center; justify-content:center;
@@ -582,10 +544,8 @@ svg.icon { display:block; flex-shrink:0; }
 }
 
 .price { font-weight:700; color:var(--primary-dark); }
-
 .tab-section { display:none; }
 .tab-section.active { display:block; }
-
 .confirm-text { font-size:15px; line-height:1.6; margin-bottom:6px; }
 .confirm-sub { font-size:13px; color:var(--text-muted); }
 
@@ -616,9 +576,7 @@ svg.icon { display:block; flex-shrink:0; }
 .btn-stok-inline:disabled { opacity:0.6; cursor:not-allowed; }
 .stok-summary-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
 
-/* ── CUSTOM DROPDOWN CABANG ── */
 .custom-select-wrap { position:relative; width:100%; min-width:200px; }
-/* Di toolbar/filter bar, jangan maksa full-width — biar konsisten dgn .flat-select */
 .controls-row .custom-select-wrap,
 .cabang-selector-bar .custom-select-wrap { width:auto; flex:0 1 220px; }
 .custom-select-btn {
@@ -671,28 +629,14 @@ svg.icon { display:block; flex-shrink:0; }
   background:var(--primary-light); color:var(--primary-dark); flex-shrink:0;
 }
 
-/* ── MODAL MASTER LOGIN ── */
 .btn-confirm-modal {
-  flex: 2;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  flex:2; padding:14px; border:none; border-radius:12px;
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color:white; font-size:14px; font-weight:800; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
 }
-.btn-confirm-modal:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(15,155,142,0.35);
-}
+.btn-confirm-modal:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,155,142,0.35); }
 
-/* ── PREVIEW PANEL RESTOK ── */
 #restok-preview-panel {
   background: var(--card);
   border: 2px solid var(--border);
@@ -721,10 +665,7 @@ svg.icon { display:block; flex-shrink:0; }
   width: 100%;
   height: 100%;
 }
-#restok-preview-empty svg {
-  opacity: 0.3;
-  margin-bottom: 12px;
-}
+#restok-preview-empty svg { opacity:0.3; margin-bottom:12px; }
 #restok-preview-content {
   display: none;
   width: 100%;
@@ -734,12 +675,9 @@ svg.icon { display:block; flex-shrink:0; }
   justify-content: center;
   padding: 10px;
 }
-#restok-preview-content.show {
-  display: flex !important;
-}
+#restok-preview-content.show { display: flex !important; }
 #restok-preview-image {
-  width: 140px;
-  height: 140px;
+  width: 140px; height: 140px;
   border-radius: 16px;
   overflow: hidden;
   background: white;
@@ -751,55 +689,40 @@ svg.icon { display:block; flex-shrink:0; }
   margin-bottom: 16px;
   flex-shrink: 0;
 }
-#restok-preview-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-#restok-preview-name {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text);
-}
-#restok-preview-price {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--primary-dark);
-}
-#restok-preview-stok {
-  font-size: 13px;
+#restok-preview-image img { width:100%; height:100%; object-fit:cover; }
+#restok-preview-name { font-size:20px; font-weight:800; color:var(--text); }
+#restok-preview-price { font-size:16px; font-weight:700; color:var(--primary-dark); }
+#restok-preview-stok { font-size:13px; color:var(--text-muted); margin-top:4px; }
+
+.print-only { display: none; }
+
+/* ============ BAHAN BAKU STYLES ============ */
+#main-bahan { display: none; }
+.bahan-stok-info {
+  font-size: 12px;
   color: var(--text-muted);
   margin-top: 4px;
 }
-
-/* ============ PRINT: REKAP TRANSAKSI (A4, rapi & profesional) ============ */
-.print-only { display: none; }
+#ambil-stok-info {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  padding: 4px 10px;
+  background: var(--primary-light);
+  border-radius: 6px;
+}
 
 @media print {
-  /* Hilangkan background gradient dekoratif body saat print */
-  body {
-    background: white !important;
-    background-image: none !important;
-  }
-
-  /* Sembunyikan seluruh halaman aplikasi, hanya tampilkan #page-rekap saat print */
+  body { background:white !important; background-image:none !important; }
   body * { visibility: hidden; }
   #page-rekap, #page-rekap * { visibility: visible; }
   #page-rekap {
-    position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
-    background: white !important;
+    position: absolute; left:0; top:0; width:100%; margin:0; padding:0;
+    background:white !important;
   }
-
   @page { size: A4; margin: 14mm 14mm 16mm; }
-
-  /* Sembunyikan elemen kontrol yang tidak relevan untuk dicetak */
-  #page-rekap .topbar,
-  #page-rekap .controls-row,
-  #page-rekap .retur-form-card { display: none !important; }
-
+  #page-rekap .topbar, #page-rekap .controls-row, #page-rekap .retur-form-card { display: none !important; }
   .print-only { display: block !important; }
-
-  /* Paksa palet warna print: hitam teks, abu netral, satu warna aksen tipis */
   #page-rekap, #page-rekap * {
     color: #1a1a1a !important;
     background: white !important;
@@ -807,16 +730,13 @@ svg.icon { display:block; flex-shrink:0; }
     text-shadow: none !important;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-
-  .rekap-body { padding: 0 !important; }
-
-  /* ---- HEADER DOKUMEN ---- */
+  .rekap-body { padding:0 !important; }
   #rekap-print-header {
     display: flex; align-items: flex-end; justify-content: space-between;
     margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2.5px solid #111 !important;
   }
   #rekap-print-header .rph-left h2 {
-    font-size: 17px; font-weight: 800; color: #111 !important; margin: 0 0 4px 0;
+    font-size: 17px; font-weight: 800; color: #111 !important; margin:0 0 4px 0;
     letter-spacing: 0.2px; font-family: 'Inter', sans-serif !important;
   }
   #rekap-print-header .rph-left .rph-sub {
@@ -833,77 +753,47 @@ svg.icon { display:block; flex-shrink:0; }
   #rekap-print-header .rph-right .rph-date {
     font-size: 9px; color: #777 !important; margin-top: 3px; font-weight: 500;
   }
-
-  /* ---- STAT CARDS ---- */
-  .stats-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .stats-row { display:flex; gap:8px; margin-bottom:14px; }
   .stat-card {
-    border: 1px solid #ccc !important; border-radius: 5px !important;
-    flex: 1; padding: 7px 11px !important; background: #fafafa !important;
+    border: 1px solid #ccc !important; border-radius:5px !important;
+    flex:1; padding:7px 11px !important; background:#fafafa !important;
   }
-  .stat-card .sv { font-size: 14px !important; font-weight: 800; color: #111 !important; line-height: 1.3; }
+  .stat-card .sv { font-size:14px !important; font-weight:800; color:#111 !important; line-height:1.3; }
   .stat-card .sl {
-    font-size: 8px !important; text-transform: uppercase; letter-spacing: 0.5px;
-    color: #777 !important; font-weight: 700; margin-top: 1px;
+    font-size:8px !important; text-transform:uppercase; letter-spacing:0.5px;
+    color:#777 !important; font-weight:700; margin-top:1px;
   }
-
-  /* ---- TABEL ---- */
-  .tbl-wrap { box-shadow: none !important; border: none !important; border-radius: 0 !important; overflow: visible !important; }
-  table { width: 100%; border-collapse: collapse; }
-  thead tr { background: #1a1a1a !important; }
+  .tbl-wrap { box-shadow:none !important; border:none !important; border-radius:0 !important; overflow:visible !important; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:#1a1a1a !important; }
   th {
-    color: #fff !important; font-size: 8.5px !important; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 8px !important;
-    border: none !important;
+    color:#fff !important; font-size:8.5px !important; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.4px; padding:5px 8px !important;
+    border:none !important;
   }
   td {
-    border: none !important; border-bottom: 1px solid #e3e3e3 !important;
-    padding: 4px 8px !important; font-size: 10px;
+    border:none !important; border-bottom:1px solid #e3e3e3 !important;
+    padding:4px 8px !important; font-size:10px;
   }
-  tbody tr:nth-child(even) td { background: #f7f7f7 !important; }
-  tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a !important; }
-
-  /* hapus avatar inisial bulat/kotak supaya baris lebih ramping */
-  #tbl-rekap-pel td div[style*="border-radius:50%"] { display: none !important; }
-
+  tbody tr:nth-child(even) td { background:#f7f7f7 !important; }
+  tbody tr:last-child td { border-bottom:1.5px solid #1a1a1a !important; }
+  #tbl-rekap-pel td div[style*="border-radius:50%"] { display:none !important; }
   .badge {
-    border: 1px solid #999 !important; background: #fff !important; color: #333 !important;
-    padding: 1px 7px !important; border-radius: 20px !important; font-weight: 700 !important;
-    font-size: 9px !important;
+    border:1px solid #999 !important; background:#fff !important; color:#333 !important;
+    padding:1px 7px !important; border-radius:20px !important; font-weight:700 !important;
+    font-size:9px !important;
   }
-  .act-btns, .act-btn { display: none !important; }
-
-  /* ---- FOOTER ---- */
+  .act-btns, .act-btn { display:none !important; }
   #rekap-print-footer {
-    margin-top: 14px; padding-top: 6px; border-top: 1px solid #ccc !important;
-    font-size: 8px; color: #888 !important; text-align: center;
+    margin-top:14px; padding-top:6px; border-top:1px solid #ccc !important;
+    font-size:8px; color:#888 !important; text-align:center;
   }
 }
 </style>
-<script>
-function printRekap() {
-  const periodLabel = document.getElementById('rekap-period-label');
-  const printPeriodEl = document.getElementById('rekap-print-period');
-  if (printPeriodEl) {
-    printPeriodEl.textContent = (periodLabel && periodLabel.textContent !== 'Pilih periode')
-      ? `Periode: ${periodLabel.textContent}`
-      : 'Periode: Semua';
-  }
-  const printDateEl = document.getElementById('rekap-print-date');
-  if (printDateEl) {
-    const now = new Date();
-    const tgl = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
-    const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    printDateEl.textContent = `Dicetak: ${tgl}, ${jam}`;
-  }
-  window.print();
-}
-</script>
 </head>
 <body>
 
-<!-- ============================================================ -->
-<!-- DEVICE GUARD: HALAMAN INI KHUSUS UNTUK PC / LAPTOP -->
-<!-- ============================================================ -->
+<!-- DEVICE GUARD -->
 <div id="device-guard-overlay" style="position:fixed;inset:0;z-index:999999;background:#fef9ef;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Inter',sans-serif;text-align:center;">
   <div style="max-width:380px;">
     <div style="font-size:56px;margin-bottom:14px;line-height:1;">💻</div>
@@ -947,8 +837,7 @@ function printRekap() {
 })();
 </script>
 
-
-<!-- LOADING SCREEN -->
+<!-- LOADING -->
 <div id="loading">
   <div class="loading-card">
     <div class="loading-brand-icon" id="ls-icon"></div>
@@ -982,42 +871,33 @@ function printRekap() {
 <!-- TABS NAV -->
 <div class="tabs-nav">
   <button class="tab-btn active" onclick="switchTab('produk',this)" id="tab-produk-btn">
-    <span id="ti-produk"></span> Produk
-    <span class="tab-count" id="count-produk">0</span>
+    <span id="ti-produk"></span> Produk <span class="tab-count" id="count-produk">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('kategori',this)" id="tab-kategori-btn">
-    <span id="ti-kategori"></span> Kategori
-    <span class="tab-count" id="count-kategori">0</span>
+    <span id="ti-kategori"></span> Kategori <span class="tab-count" id="count-kategori">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('pelanggan',this)" id="tab-pelanggan-btn">
-    <span id="ti-pelanggan"></span> Pelanggan
-    <span class="tab-count" id="count-pelanggan">0</span>
+    <span id="ti-pelanggan"></span> Pelanggan <span class="tab-count" id="count-pelanggan">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('retur',this)" id="tab-retur-btn">
-    <span id="ti-retur"></span> Retur
-    <span class="tab-count" id="count-retur">0</span>
+    <span id="ti-retur"></span> Retur <span class="tab-count" id="count-retur">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('restok',this)" id="tab-restok-btn">
-    <span id="ti-restok"></span> Restok
-    <span class="tab-count" id="count-restok">0</span>
+    <span id="ti-restok"></span> Restok <span class="tab-count" id="count-restok">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('stok',this)" id="tab-stok-btn">
-    <span id="ti-stok"></span> Stok Cabang
-    <span class="tab-count" id="count-stok">0</span>
-  </button>
-  <button class="tab-btn" onclick="switchTab('cabang',this)" id="tab-cabang-btn">
-    <span id="ti-cabang"></span> Cabang
-    <span class="tab-count" id="count-cabang">0</span>
+    <span id="ti-stok"></span> Stok &amp; Cabang <span class="tab-count" id="count-stok">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('stoklog',this)" id="tab-stoklog-btn">
-    <span id="ti-stoklog"></span> Log Stok
-    <span class="tab-count" id="count-stoklog">0</span>
+    <span id="ti-stoklog"></span> Log Stok <span class="tab-count" id="count-stoklog">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('bahan',this)" id="tab-bahan-btn">
+    <span id="ti-bahan"></span> Bahan Baku <span class="tab-count" id="count-bahan">0</span>
   </button>
 </div>
 
-<!-- ===== MAIN CONTENT WRAPPER ===== -->
+<!-- MAIN DEFAULT -->
 <div class="main-content" id="main-default">
-
   <!-- TAB PRODUK -->
   <div class="tab-section active" id="sec-produk">
     <div class="stats-row" id="produk-stats"></div>
@@ -1028,17 +908,17 @@ function printRekap() {
     <div class="controls-row">
       <div class="search-wrap"><span class="si" id="si-produk"></span><input type="text" placeholder="Cari produk..." id="search-produk" oninput="filterProduk()"></div>
       <div class="custom-select-wrap" id="filter-kategori-produk-wrap">
-        <button type="button" class="custom-select-btn has-placeholder" id="filter-kategori-produk-btn" onclick="toggleGenericDropdown('filter-kategori-produk')" aria-haspopup="listbox" aria-expanded="false">
+        <button type="button" class="custom-select-btn has-placeholder" id="filter-kategori-produk-btn" onclick="toggleGenericDropdown('filter-kategori-produk')">
           <span id="filter-kategori-produk-label">Semua Kategori</span>
-          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="custom-select-dropdown" id="filter-kategori-produk-dropdown" role="listbox"></div>
       </div>
       <input type="hidden" id="filter-kategori-produk" value="">
       <div class="custom-select-wrap" id="filter-status-produk-wrap">
-        <button type="button" class="custom-select-btn has-placeholder" id="filter-status-produk-btn" onclick="toggleGenericDropdown('filter-status-produk')" aria-haspopup="listbox" aria-expanded="false">
+        <button type="button" class="custom-select-btn has-placeholder" id="filter-status-produk-btn" onclick="toggleGenericDropdown('filter-status-produk')">
           <span id="filter-status-produk-label">Semua Status</span>
-          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="custom-select-dropdown" id="filter-status-produk-dropdown" role="listbox"></div>
       </div>
@@ -1062,40 +942,36 @@ function printRekap() {
   </div>
 
   <!-- TAB PELANGGAN -->
-  <!-- TAB PELANGGAN -->
-<div class="tab-section" id="sec-pelanggan">
-  <div class="stats-row" id="pel-stats"></div>
-  <div class="sec-header">
-    <div class="sec-title"><span id="sh-icon-pelanggan"></span>Data Pelanggan <small id="pelanggan-total-label"></small></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <button class="btn-add master-only" onclick="openModalPelanggan()" style="display:none"><span id="btn-add-pel-icon"></span> Tambah Pelanggan</button>
+  <div class="tab-section" id="sec-pelanggan">
+    <div class="stats-row" id="pel-stats"></div>
+    <div class="sec-header">
+      <div class="sec-title"><span id="sh-icon-pelanggan"></span>Data Pelanggan <small id="pelanggan-total-label"></small></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn-add master-only" onclick="openModalPelanggan()" style="display:none"><span id="btn-add-pel-icon"></span> Tambah Pelanggan</button>
+      </div>
     </div>
+    <div class="controls-row">
+      <div class="search-wrap"><span class="si" id="si-pelanggan"></span><input type="text" placeholder="Cari pelanggan..." id="search-pelanggan" oninput="filterPelanggan()"></div>
+      <div class="custom-select-wrap" id="pel-cabang-wrap" style="width:220px;min-width:220px;flex:0 0 auto">
+        <button type="button" class="custom-select-btn has-placeholder" id="pel-cabang-btn" onclick="toggleCabangDropdown('pel')">
+          <span id="pel-cabang-label">SEMUA CABANG</span>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="custom-select-dropdown" id="pel-cabang-dropdown" role="listbox"></div>
+      </div>
+      <input type="hidden" id="pel-cabang-value">
+      <div class="custom-select-wrap" id="filter-kredit-pel-wrap" style="width:160px;min-width:160px;flex:0 0 auto">
+        <button type="button" class="custom-select-btn has-placeholder" id="filter-kredit-pel-btn" onclick="toggleGenericDropdown('filter-kredit-pel')">
+          <span id="filter-kredit-pel-label">Semua</span>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="custom-select-dropdown" id="filter-kredit-pel-dropdown" role="listbox"></div>
+      </div>
+      <input type="hidden" id="filter-kredit-pel" value="">
+      <button class="btn-secondary" onclick="openRekap()" id="btn-toggle-rekap" style="flex:0 0 auto;white-space:nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Rekap Transaksi</button>
+    </div>
+    <div class="tbl-wrap" id="wrap-pelanggan"><div id="list-pelanggan"></div></div>
   </div>
-  
-  <div class="controls-row">
-    <div class="search-wrap"><span class="si" id="si-pelanggan"></span><input type="text" placeholder="Cari pelanggan..." id="search-pelanggan" oninput="filterPelanggan()"></div>
-    <!-- FILTER CABANG -->
-    <div class="custom-select-wrap" id="pel-cabang-wrap" style="width:220px;min-width:220px;flex:0 0 auto">
-      <button type="button" class="custom-select-btn has-placeholder" id="pel-cabang-btn" onclick="toggleCabangDropdown('pel')" aria-haspopup="listbox" aria-expanded="false">
-        <span id="pel-cabang-label">SEMUA CABANG</span>
-        <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="custom-select-dropdown" id="pel-cabang-dropdown" role="listbox"></div>
-    </div>
-    <input type="hidden" id="pel-cabang-value">
-    <div class="custom-select-wrap" id="filter-kredit-pel-wrap" style="width:160px;min-width:160px;flex:0 0 auto">
-      <button type="button" class="custom-select-btn has-placeholder" id="filter-kredit-pel-btn" onclick="toggleGenericDropdown('filter-kredit-pel')" aria-haspopup="listbox" aria-expanded="false">
-        <span id="filter-kredit-pel-label">Semua</span>
-        <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="custom-select-dropdown" id="filter-kredit-pel-dropdown" role="listbox"></div>
-    </div>
-    <input type="hidden" id="filter-kredit-pel" value="">
-    <button class="btn-secondary" onclick="openRekap()" id="btn-toggle-rekap" style="flex:0 0 auto;white-space:nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Rekap Transaksi</button>
-  </div>
-  
-  <div class="tbl-wrap" id="wrap-pelanggan"><div id="list-pelanggan"></div></div>
-</div>
 
   <!-- TAB RETUR -->
   <div class="tab-section" id="sec-retur">
@@ -1104,9 +980,9 @@ function printRekap() {
       <div class="form-grid">
         <div class="form-group"><label>Cabang *</label>
           <div class="custom-select-wrap" id="retur-cabang-wrap">
-            <button type="button" class="custom-select-btn has-placeholder" id="retur-cabang-btn" onclick="toggleCabangDropdown('retur')" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="custom-select-btn has-placeholder" id="retur-cabang-btn" onclick="toggleCabangDropdown('retur')">
               <span id="retur-cabang-label">— Pilih Cabang —</span>
-              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="custom-select-dropdown" id="retur-cabang-dropdown" role="listbox"></div>
           </div>
@@ -1114,9 +990,9 @@ function printRekap() {
         </div>
         <div class="form-group"><label>Produk</label>
           <div class="custom-select-wrap" id="retur-produk-select-wrap">
-            <button type="button" class="custom-select-btn has-placeholder" id="retur-produk-select-btn" onclick="toggleGenericDropdown('retur-produk-select')" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="custom-select-btn has-placeholder" id="retur-produk-select-btn" onclick="toggleGenericDropdown('retur-produk-select')">
               <span id="retur-produk-select-label">— Pilih Produk —</span>
-              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="custom-select-dropdown" id="retur-produk-select-dropdown" role="listbox"></div>
           </div>
@@ -1125,9 +1001,9 @@ function printRekap() {
         <div class="form-group"><label>Jumlah Retur</label><input type="number" id="retur-qty" min="1" value="1"></div>
         <div class="form-group"><label>Alasan Retur</label>
           <div class="custom-select-wrap" id="retur-alasan-wrap">
-            <button type="button" class="custom-select-btn" id="retur-alasan-btn" onclick="toggleGenericDropdown('retur-alasan')" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="custom-select-btn" id="retur-alasan-btn" onclick="toggleGenericDropdown('retur-alasan')">
               <span id="retur-alasan-label">Rusak / Cacat</span>
-              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="custom-select-dropdown" id="retur-alasan-dropdown" role="listbox"></div>
           </div>
@@ -1156,25 +1032,18 @@ function printRekap() {
   <div class="tab-section" id="sec-restok">
     <div class="retur-form-card">
       <h3><span id="sh-icon-restok-form"></span>Tambah Stok / Restok</h3>
-      
       <div style="display:flex; gap:24px; align-items:stretch; flex-wrap:wrap">
-        
-        <!-- KOLOM KIRI: FORM (60%) -->
         <div style="flex:3; min-width:280px">
-          <!-- CABANG -->
-          <div class="form-group">
-            <label>Cabang *</label>
+          <div class="form-group"><label>Cabang *</label>
             <div class="custom-select-wrap" id="restokin-cabang-wrap">
-              <button type="button" class="custom-select-btn has-placeholder" id="restokin-cabang-btn" onclick="toggleCabangDropdown('restokin')" aria-haspopup="listbox" aria-expanded="false">
+              <button type="button" class="custom-select-btn has-placeholder" id="restokin-cabang-btn" onclick="toggleCabangDropdown('restokin')">
                 <span id="restokin-cabang-label">— Pilih Cabang —</span>
-                <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
               <div class="custom-select-dropdown" id="restokin-cabang-dropdown" role="listbox"></div>
             </div>
             <input type="hidden" id="restokin-cabang-value">
           </div>
-
-          <!-- CARI PRODUK -->
           <div class="form-group" style="margin-top:12px">
             <label>Cari Produk *</label>
             <div style="position:relative">
@@ -1184,23 +1053,16 @@ function printRekap() {
               <div id="restok-search-results" style="display:none;position:absolute;top:calc(100%+4px);left:0;right:0;background:white;border:2px solid var(--primary);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;z-index:50;box-shadow:var(--shadow-pop)"></div>
             </div>
           </div>
-
           <input type="hidden" id="restok-produk-id">
-
-          <!-- JUMLAH TAMBAH -->
           <div class="form-group" style="margin-top:12px;max-width:200px">
             <label>Jumlah Tambah *</label>
             <input type="number" id="restok-qty" min="1" value="1" style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:18px;font-weight:700;font-family:inherit;height:46px;box-sizing:border-box" onfocus="this.value=''" onblur="if(this.value==='' || isNaN(parseInt(this.value)) || parseInt(this.value)<1) this.value='1';">
           </div>
-
-          <!-- TOMBOL SIMPAN -->
           <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
             <button class="btn-submit master-only" id="btn-restok-submit" onclick="submitRestok()" style="display:none"><span id="btn-restok-icon"></span> Simpan Restok</button>
             <div style="background:#e6f9ef;border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:6px"><span id="restok-info-icon"></span>Stok akan <b>bertambah</b></div>
           </div>
         </div>
-        
-        <!-- KOLOM KANAN: PREVIEW PRODUK (40%) -->
         <div id="restok-preview-panel" style="flex:2; min-width:200px">
           <div id="restok-preview-empty">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1219,14 +1081,22 @@ function printRekap() {
             <button type="button" onclick="resetRestokProduk()" style="margin-top:10px;background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;font-weight:600;padding:4px 8px">✕ Batal pilih produk</button>
           </div>
         </div>
-        
       </div>
     </div>
-    
-    <!-- Riwayat Restok -->
     <div class="sec-header">
       <div class="sec-title"><span id="sh-icon-restok"></span>Riwayat Restok <small id="restok-total-label"></small></div>
-      <div style="display:flex;gap:8px"><select id="restok-filter-cabang" class="flat-date" onchange="loadRestok()" style="cursor:pointer"><option value="">Semua Cabang</option></select><input type="date" id="restok-filter-tgl" class="flat-date" onchange="loadRestok()"><button class="btn-secondary" onclick="document.getElementById('restok-filter-tgl').value='';document.getElementById('restok-filter-cabang').value='';loadRestok()">Semua</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div class="custom-select-wrap" id="restok-filter-cabang-wrap" style="width:170px;min-width:170px;flex:0 0 auto">
+          <button type="button" class="custom-select-btn has-placeholder" id="restok-filter-cabang-btn" onclick="toggleGenericDropdown('restok-filter-cabang')">
+            <span id="restok-filter-cabang-label">Semua Cabang</span>
+            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="custom-select-dropdown" id="restok-filter-cabang-dropdown" role="listbox"></div>
+        </div>
+        <input type="hidden" id="restok-filter-cabang" value="">
+        <input type="date" id="restok-filter-tgl" class="flat-date" onchange="loadRestok()">
+        <button class="btn-secondary" onclick="document.getElementById('restok-filter-tgl').value='';renderGenericDropdown('restok-filter-cabang','');loadRestok()">Semua</button>
+      </div>
     </div>
     <div class="tbl-wrap">
       <table>
@@ -1235,18 +1105,21 @@ function printRekap() {
       </table>
     </div>
   </div>
-
 </div><!-- /main-default -->
 
-<!-- ===== TAB STOK CABANG ===== -->
+<!-- MAIN STOK -->
 <div class="main-content" id="main-stok" style="display:none">
+  <div class="subtabs-nav">
+    <button class="subtab-btn active" onclick="switchSubTab('stok',this)" id="subtab-stok-btn">📦 Stok per Cabang</button>
+    <button class="subtab-btn" onclick="switchSubTab('cabang',this)" id="subtab-cabang-btn">🏪 Manajemen Cabang <span class="subtab-count" id="count-cabang">0</span></button>
+  </div>
   <div class="tab-section active" id="sec-stok">
     <div class="cabang-selector-bar">
       <label>📍 Pilih Cabang</label>
       <div class="custom-select-wrap" id="stok-cabang-wrap" style="min-width:220px">
-        <button type="button" class="custom-select-btn has-placeholder" id="stok-cabang-btn" onclick="toggleCabangDropdown('stok')" aria-haspopup="listbox" aria-expanded="false">
+        <button type="button" class="custom-select-btn has-placeholder" id="stok-cabang-btn" onclick="toggleCabangDropdown('stok')">
           <span id="stok-cabang-label">— Pilih Cabang —</span>
-          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="custom-select-dropdown" id="stok-cabang-dropdown" role="listbox"></div>
       </div>
@@ -1259,9 +1132,9 @@ function printRekap() {
       <div class="sec-title"><span id="sh-icon-stok"></span>Stok per Cabang <small id="stok-total-label"></small></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <div class="custom-select-wrap" id="stok-filter-status-wrap">
-          <button type="button" class="custom-select-btn has-placeholder" id="stok-filter-status-btn" onclick="toggleGenericDropdown('stok-filter-status')" aria-haspopup="listbox" aria-expanded="false">
+          <button type="button" class="custom-select-btn has-placeholder" id="stok-filter-status-btn" onclick="toggleGenericDropdown('stok-filter-status')">
             <span id="stok-filter-status-label">Semua Status Stok</span>
-            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="custom-select-dropdown" id="stok-filter-status-dropdown" role="listbox"></div>
         </div>
@@ -1275,11 +1148,7 @@ function printRekap() {
       </table>
     </div>
   </div>
-</div>
-
-<!-- ===== TAB CABANG ===== -->
-<div class="main-content" id="main-cabang" style="display:none">
-  <div class="tab-section active" id="sec-cabang">
+  <div class="tab-section" id="sec-cabang">
     <div class="sec-header">
       <div class="sec-title"><span id="sh-icon-cabang"></span>Manajemen Cabang <small id="cabang-total-label"></small></div>
       <button class="btn-add master-only" onclick="openModalCabang()" style="display:none"><span id="btn-add-cabang-icon"></span> Tambah Cabang</button>
@@ -1288,15 +1157,12 @@ function printRekap() {
   </div>
 </div>
 
-<!-- ===== TAB LOG STOK ===== -->
+<!-- MAIN STOKLOG -->
 <div class="main-content" id="main-stoklog" style="display:none">
   <div class="tab-section active" id="sec-stoklog">
     <div class="sec-header">
       <div class="sec-title"><span id="sh-icon-stoklog"></span>Riwayat Perubahan Stok <small id="stoklog-total-label"></small></div>
-      <div style="display:flex;gap:8px">
-        <input type="date" id="stoklog-filter-tgl" class="flat-date" onchange="loadStokLog()">
-        <button class="btn-secondary" onclick="document.getElementById('stoklog-filter-tgl').value='';loadStokLog()">Semua</button>
-      </div>
+      <div style="display:flex;gap:8px"><input type="date" id="stoklog-filter-tgl" class="flat-date" onchange="loadStokLog()"><button class="btn-secondary" onclick="document.getElementById('stoklog-filter-tgl').value='';loadStokLog()">Semua</button></div>
     </div>
     <div class="tbl-wrap">
       <table>
@@ -1307,7 +1173,114 @@ function printRekap() {
   </div>
 </div>
 
-<!-- MODAL PRODUK -->
+<!-- MAIN BAHAN BAKU -->
+<div class="main-content" id="main-bahan" style="display:none">
+  <div class="subtabs-nav">
+    <button class="subtab-btn active" onclick="switchSubTabBahan('bahan',this)" id="subtab-bahan-btn">📦 Stok Bahan Baku <span class="subtab-count" id="count-bahan">0</span></button>
+    <button class="subtab-btn" onclick="switchSubTabBahan('pengambilan',this)" id="subtab-pengambilan-btn">📤 Pengambilan <span class="subtab-count" id="count-pengambilan">0</span></button>
+    <button class="subtab-btn" onclick="switchSubTabBahan('rekapbahan',this)" id="subtab-rekapbahan-btn">📊 Rekap</button>
+  </div>
+
+  <div class="tab-section active" id="sec-bahan">
+    <div class="sec-header">
+      <div class="sec-title"><span id="sh-icon-bahan"></span>Daftar Bahan Baku <small id="bahan-total-label"></small></div>
+      <button class="btn-add master-only" onclick="openModalBahan()" style="display:none"><span id="btn-add-bahan-icon"></span> Tambah Bahan</button>
+    </div>
+    <div class="controls-row">
+      <div class="search-wrap"><span class="si" id="si-bahan"></span><input type="text" placeholder="Cari bahan..." id="search-bahan" oninput="filterBahan()"></div>
+      <div class="custom-select-wrap" id="filter-unit-bahan-wrap">
+        <button type="button" class="custom-select-btn has-placeholder" id="filter-unit-bahan-btn" onclick="toggleGenericDropdown('filter-unit-bahan')">
+          <span id="filter-unit-bahan-label">Semua Unit</span>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="custom-select-dropdown" id="filter-unit-bahan-dropdown" role="listbox"></div>
+      </div>
+      <input type="hidden" id="filter-unit-bahan" value="">
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Bahan</th><th>Unit</th><th>Stok</th><th style="width:130px">Status</th><th style="text-align:center;width:140px">Aksi</th></tr></thead>
+        <tbody id="tbl-bahan"><tr class="empty-row"><td colspan="5">Memuat...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-section" id="sec-pengambilan">
+    <div class="retur-form-card">
+      <h3><span id="sh-icon-pengambilan"></span>Pengambilan Bahan Baku</h3>
+      <div class="form-grid">
+        <div class="form-group"><label>Bahan Baku *</label>
+          <div class="custom-select-wrap" id="ambil-bahan-wrap">
+            <button type="button" class="custom-select-btn has-placeholder" id="ambil-bahan-btn" onclick="toggleGenericDropdown('ambil-bahan')">
+              <span id="ambil-bahan-label">— Pilih Bahan —</span>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="custom-select-dropdown" id="ambil-bahan-dropdown" role="listbox"></div>
+          </div>
+          <input type="hidden" id="ambil-bahan-value">
+          <div id="ambil-stok-info" class="bahan-stok-info"></div>
+        </div>
+        <div class="form-group"><label>Jumlah *</label><input type="number" id="ambil-jumlah" min="0.1" step="0.1" value="1"></div>
+        <div class="form-group"><label>Nama Pegawai *</label>
+          <div class="custom-select-wrap" id="ambil-pegawai-wrap">
+            <button type="button" class="custom-select-btn has-placeholder" id="ambil-pegawai-btn" onclick="toggleGenericDropdown('ambil-pegawai')">
+              <span id="ambil-pegawai-label">— Pilih Pegawai —</span>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="custom-select-dropdown" id="ambil-pegawai-dropdown" role="listbox"></div>
+          </div>
+          <input type="hidden" id="ambil-pegawai-value">
+        </div>
+        <div class="form-group"><label>Catatan</label><input type="text" id="ambil-catatan" placeholder="Opsional..."></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn-submit master-only" id="btn-ambil-submit" onclick="submitPengambilan()" style="display:none"><span id="btn-ambil-icon"></span> Simpan Pengambilan</button>
+        <div style="background:var(--danger-bg);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;font-weight:600;color:var(--danger);display:flex;align-items:center;gap:6px"><span id="ambil-info-icon"></span>Stok akan <b>berkurang</b></div>
+      </div>
+    </div>
+    <div class="sec-header">
+      <div class="sec-title"><span id="sh-icon-riwayat-ambil"></span>Riwayat Pengambilan <small id="pengambilan-total-label"></small></div>
+      <div style="display:flex;gap:8px;flex-shrink:0"><input type="date" id="pengambilan-filter-tgl" class="flat-date" onchange="loadPengambilan()"><button class="btn-secondary" onclick="document.getElementById('pengambilan-filter-tgl').value='';loadPengambilan()">Semua</button></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Tanggal</th><th>Bahan</th><th>Jumlah</th><th>Pegawai</th><th>Catatan</th><th style="text-align:center">Aksi</th></tr></thead>
+        <tbody id="tbl-pengambilan"><tr class="empty-row"><td colspan="6">Memuat...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-section" id="sec-rekapbahan">
+    <div class="sec-header">
+      <div class="sec-title"><span id="sh-icon-rekapbahan"></span>Rekap Pengambilan Bahan</div>
+    </div>
+    <div class="retur-form-card" style="margin-bottom:16px">
+      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
+        <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">Periode</span>
+        <input type="date" id="rekapbahan-dari" class="flat-date" style="width:auto">
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
+        <input type="date" id="rekapbahan-sampai" class="flat-date" style="width:auto">
+        <button class="btn-submit" style="height:46px;padding:0 20px" onclick="loadRekapBahan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
+        <button class="btn-secondary" onclick="setRekapBahanBulanIni()">Bulan Ini</button>
+        <button class="btn-secondary" onclick="document.getElementById('rekapbahan-dari').value='';document.getElementById('rekapbahan-sampai').value='';loadRekapBahan()">Reset</button>
+        <button class="btn-secondary" onclick="printRekapBahan()">🖨️ Print</button>
+      </div>
+    </div>
+    <div class="stats-row" id="rekapbahan-summary">
+      <div class="stat-card"><div class="sv" id="rekapbahan-total-ambil">0</div><div class="sl">Total Pengambilan</div></div>
+      <div class="stat-card"><div class="sv" id="rekapbahan-total-jumlah">0</div><div class="sl">Total Jumlah</div></div>
+      <div class="stat-card"><div class="sv" id="rekapbahan-total-pegawai">0</div><div class="sl">Pegawai</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:48px">#</th><th>Nama Pegawai</th><th style="text-align:center">Jumlah Pengambilan</th><th style="text-align:right">Total Unit</th></tr></thead>
+        <tbody id="tbl-rekapbahan"><tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
 <div class="modal-overlay" id="modal-produk">
   <div class="modal">
     <h3 id="modal-produk-title"><span id="modal-icon-produk"></span>Tambah Produk</h3>
@@ -1329,13 +1302,13 @@ function printRekap() {
         <div class="form-group"><label>Nama Produk *</label><input type="text" id="fp-nama" placeholder="Contoh: Roti Tawar, Croissant..."></div>
         <div class="form-grid" style="grid-template-columns:1fr 1fr">
           <div class="form-group"><label>Harga Jual *</label><input type="text" id="fp-harga" placeholder="Rp 0" inputmode="numeric" autocomplete="off"></div>
-          <div class="form-group"><label style="color:var(--text-muted)">Stok</label><div style="padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);background:#fafafa;height:46px;display:flex;align-items:center;">ℹ️ Stok diatur per cabang </div></div>
+          <div class="form-group"><label style="color:var(--text-muted)">Stok</label><div style="padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);background:#fafafa;height:46px;display:flex;align-items:center;">ℹ️ Stok diatur per cabang</div></div>
         </div>
         <div class="form-group"><label>Kategori</label>
           <div class="custom-select-wrap" id="fp-kategori-wrap">
-            <button type="button" class="custom-select-btn has-placeholder" id="fp-kategori-btn" onclick="toggleGenericDropdown('fp-kategori')" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="custom-select-btn has-placeholder" id="fp-kategori-btn" onclick="toggleGenericDropdown('fp-kategori')">
               <span id="fp-kategori-label">— Tanpa Kategori —</span>
-              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="custom-select-dropdown" id="fp-kategori-dropdown" role="listbox"></div>
           </div>
@@ -1348,7 +1321,6 @@ function printRekap() {
   </div>
 </div>
 
-<!-- MODAL KATEGORI -->
 <div class="modal-overlay" id="modal-kategori">
   <div class="modal" style="max-width:360px">
     <h3 id="modal-kat-title"><span id="modal-icon-kat"></span>Tambah Kategori</h3>
@@ -1358,25 +1330,21 @@ function printRekap() {
   </div>
 </div>
 
-<!-- MODAL PELANGGAN -->
-<!-- MODAL PELANGGAN -->
 <div class="modal-overlay" id="modal-pelanggan">
   <div class="modal" style="max-width:420px">
     <h3 id="modal-pel-title"><span id="modal-icon-pel"></span>Tambah Pelanggan</h3>
     <input type="hidden" id="edit-pel-id">
-    
     <div class="form-group">
       <label>Cabang *</label>
       <div class="custom-select-wrap" id="pel-modal-cabang-wrap">
-        <button type="button" class="custom-select-btn has-placeholder" id="pel-modal-cabang-btn" onclick="toggleCabangDropdown('pel-modal')" aria-haspopup="listbox" aria-expanded="false">
+        <button type="button" class="custom-select-btn has-placeholder" id="pel-modal-cabang-btn" onclick="toggleCabangDropdown('pel-modal')">
           <span id="pel-modal-cabang-label">— Pilih Cabang —</span>
-          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="custom-select-dropdown" id="pel-modal-cabang-dropdown" role="listbox"></div>
       </div>
       <input type="hidden" id="pel-modal-cabang-value">
     </div>
-    
     <div class="form-group"><label>Nama Pelanggan *</label><input type="text" id="fp2-nama" placeholder="Nama lengkap pelanggan..."></div>
     <div class="form-group"><label>No. HP / WhatsApp</label><input type="tel" id="fp2-hp" placeholder="08xxxxxxxxxx"></div>
     <div class="form-group"><label>Alamat</label><input type="text" id="fp2-alamat" placeholder="Opsional..."></div>
@@ -1395,7 +1363,6 @@ function printRekap() {
   </div>
 </div>
 
-<!-- MODAL CABANG -->
 <div class="modal-overlay" id="modal-cabang">
   <div class="modal" style="max-width:400px">
     <h3 id="modal-cabang-title">🏪 Tambah Cabang</h3>
@@ -1406,7 +1373,27 @@ function printRekap() {
   </div>
 </div>
 
-<!-- MODAL CONFIRM DELETE -->
+<div class="modal-overlay" id="modal-bahan">
+  <div class="modal" style="max-width:400px">
+    <h3 id="modal-bahan-title">🧂 Tambah Bahan Baku</h3>
+    <input type="hidden" id="edit-bahan-id">
+    <div class="form-group"><label>Nama Bahan *</label><input type="text" id="fb-nama" placeholder="Contoh: Tepung Terigu, Gula..."></div>
+    <div class="form-group"><label>Unit *</label>
+      <div class="custom-select-wrap" id="fb-unit-wrap">
+        <button type="button" class="custom-select-btn has-placeholder" id="fb-unit-btn" onclick="toggleGenericDropdown('fb-unit')">
+          <span id="fb-unit-label">— Pilih Unit —</span>
+          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="custom-select-dropdown" id="fb-unit-dropdown" role="listbox"></div>
+      </div>
+      <input type="hidden" id="fb-unit" value="">
+    </div>
+    <div class="form-group"><label>Stok Awal</label><input type="number" id="fb-stok" min="0" step="0.1" value="0"></div>
+    <div class="form-group"><label>Status</label><div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="fb-aktif" checked><span class="toggle-slider"></span></label><span id="fb-aktif-label" style="font-size:14px;font-weight:600;color:var(--success)">Aktif</span></div></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModalBahan()">Batal</button><button class="btn-save" id="btn-save-bahan" onclick="saveBahan()">💾 Simpan</button></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-confirm">
   <div class="modal" style="max-width:360px">
     <h3 style="color:var(--danger)"><span id="modal-icon-del"></span>Hapus Data?</h3>
@@ -1416,38 +1403,30 @@ function printRekap() {
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- REKAP PELANGGAN -->
 <div id="page-rekap">
   <div class="topbar">
-    <button class="topbar-back" onclick="closeRekap()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M4 12l6-6M4 12l6 6"/></svg>Kembali</button>
+    <button class="topbar-back" onclick="closeRekap()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12H4M4 12l6-6M4 12l6 6"/></svg>Kembali</button>
     <div class="brand"><div class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div><div><h1>Rekap Transaksi</h1><div class="tagline" id="rekap-period-label">Pilih periode</div></div></div>
     <div class="spacer"></div>
-    <button class="topbar-back" onclick="printRekap()" id="btn-rekap-print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
-    <button class="topbar-back" onclick="loadRekapPelanggan()" id="btn-rekap-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
+    <button class="topbar-back" onclick="printRekap()" id="btn-rekap-print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
+    <button class="topbar-back" onclick="loadRekapPelanggan()" id="btn-rekap-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
   </div>
   <div class="rekap-body">
-    <!-- Header khusus untuk hasil print, tersembunyi di tampilan layar normal -->
     <div id="rekap-print-header" class="print-only">
-      <div class="rph-left">
-        <h2>Rekap Transaksi Pelanggan</h2>
-        <div id="rekap-print-period"></div>
-      </div>
-      <div class="rph-right">
-        <div class="rph-brand">Sri Rejeki</div>
-        <div class="rph-date" id="rekap-print-date"></div>
-      </div>
+      <div class="rph-left"><h2>Rekap Transaksi Pelanggan</h2><div id="rekap-print-period"></div></div>
+      <div class="rph-right"><div class="rph-brand">Sri Rejeki</div><div class="rph-date" id="rekap-print-date"></div></div>
     </div>
     <div class="retur-form-card" style="margin-bottom:20px">
       <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">Periode</span>
         <div class="mini-cal-wrap" id="mc-wrap-dari"><button type="button" class="flat-date mini-cal-trigger" id="rekap-dari-btn" onclick="miniCalToggle('dari')"></button><input type="hidden" id="rekap-dari"></div>
         <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
         <div class="mini-cal-wrap" id="mc-wrap-sampai"><button type="button" class="flat-date mini-cal-trigger" id="rekap-sampai-btn" onclick="miniCalToggle('sampai')"></button><input type="hidden" id="rekap-sampai"></div>
-        <button class="btn-submit" style="height:46px" onclick="loadRekapPelanggan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
+        <button class="btn-submit" style="height:46px" onclick="loadRekapPelanggan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
         <button class="btn-secondary" onclick="resetPeriodRekap()">Reset</button>
         <button class="btn-secondary" onclick="setPeriodBulanIni()">Bulan Ini</button>
         <button class="btn-secondary" onclick="setPeriodTahunIni()">Tahun Ini</button>
@@ -1462,13 +1441,10 @@ function printRekap() {
     <div class="tbl-wrap">
       <table><thead><tr><th style="width:48px">#</th><th>Nama Pelanggan</th><th style="text-align:center">Jumlah Transaksi</th><th style="text-align:right">Total Nominal</th></tr></thead><tbody id="tbl-rekap-pel"><tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr></tbody></table>
     </div>
-    <div id="rekap-print-footer" class="print-only">
-      <span>Dokumen ini dibuat otomatis oleh sistem Master Data — Sri Rejeki</span>
-    </div>
+    <div id="rekap-print-footer" class="print-only"><span>Dokumen ini dibuat otomatis oleh sistem Master Data — Sri Rejeki</span></div>
   </div>
 </div>
 
-<!-- MODAL MASTER LOGIN -->
 <div class="modal-overlay" id="modal-master-login">
   <div class="modal" style="max-width:380px">
     <h3>🔐 Akses Master Data</h3>
@@ -1480,37 +1456,35 @@ function printRekap() {
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeMasterLogin()">Batal</button>
       <button class="btn-confirm-modal" onclick="verifyMasterPassword()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7"/></svg>
         Masuk
       </button>
     </div>
   </div>
 </div>
 
-<!-- MODAL GANTI PASSWORD -->
 <div class="modal-overlay" id="modal-ganti-password">
   <div class="modal" style="max-width:400px">
     <h3>🔑 Ganti Password Master</h3>
     <div class="modal-sub">Ubah password untuk akses Master Data</div>
-    <div class="form-group">
-      <label>Password Lama</label>
-      <input type="text" id="gp-password-lama" placeholder="Masukkan password lama..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc">
-    </div>
-    <div class="form-group">
-      <label>Password Baru</label>
-      <input type="text" id="gp-password-baru" placeholder="Masukkan password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') document.getElementById('gp-password-konfirmasi').focus()">
-    </div>
-    <div class="form-group">
-      <label>Konfirmasi Password Baru</label>
-      <input type="text" id="gp-password-konfirmasi" placeholder="Konfirmasi password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') saveGantiPassword()">
-    </div>
+    <div class="form-group"><label>Password Lama</label><input type="text" id="gp-password-lama" placeholder="Masukkan password lama..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc"></div>
+    <div class="form-group"><label>Password Baru</label><input type="text" id="gp-password-baru" placeholder="Masukkan password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') document.getElementById('gp-password-konfirmasi').focus()"></div>
+    <div class="form-group"><label>Konfirmasi Password Baru</label><input type="text" id="gp-password-konfirmasi" placeholder="Konfirmasi password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') saveGantiPassword()"></div>
     <div id="gp-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Pesan error akan muncul di sini</div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeGantiPassword()">Batal</button>
-      <button class="btn-confirm-modal" onclick="saveGantiPassword()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Simpan Password
-      </button>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeGantiPassword()">Batal</button><button class="btn-confirm-modal" onclick="saveGantiPassword()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7"/></svg>Simpan Password</button></div>
+  </div>
+</div>
+
+<div class="prompt-overlay" id="prompt-overlay">
+  <div class="prompt-card">
+    <div class="prompt-icon" id="prompt-icon">✏️</div>
+    <div class="prompt-title" id="prompt-title"></div>
+    <div class="prompt-info" id="prompt-info"></div>
+    <div class="prompt-label" id="prompt-label">Alasan perubahan (wajib):</div>
+    <input class="prompt-input" id="prompt-input" type="text" placeholder="Tulis alasan...">
+    <div class="prompt-actions">
+      <button class="prompt-btn-cancel" onclick="resolvePromptModal(null)">Batal</button>
+      <button class="prompt-btn-ok" id="prompt-ok-btn" onclick="resolvePromptModal()">Simpan</button>
     </div>
   </div>
 </div>
@@ -1522,15 +1496,12 @@ let sb = null;
 try {
   if (typeof supabase === 'undefined') throw new Error('Library Supabase gagal dimuat');
   sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-} catch (e) {
-  console.error('Supabase init error:', e);
-}
+} catch (e) { console.error('Supabase init error:', e); }
 
 const ICONS = {
   bread:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 11c0-3.5 2.8-7 8-7s8 3.5 8 7v6.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5V11z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 11h16" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 14.5v3M12 14.5v3M15.5 14.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
   tag:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3.5 3.5h7.5l10 10-7.5 7.5-10-10V3.5z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/></svg>`,
   users:`<svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.7"/><path d="M2.5 20.5c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 8a3.5 3.5 0 011 6.5M18.5 15c2 .5 3.5 2 3.5 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`,
-  arrowLeft:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M20 12H4M4 12l6-6M4 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   plus:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
   edit:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M11 4H5a2 2 0 00-2 2v13a2 2 0 002 2h13a2 2 0 002-2v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 2.5a2.1 2.1 0 013 3L12 14l-4 1 1-4 8.5-8.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   trash:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12.5a1.5 1.5 0 001.5 1.5h5a1.5 1.5 0 001.5-1.5L17 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -1541,7 +1512,6 @@ const ICONS = {
   boxIn:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M20 7H4a1 1 0 00-1 1v11a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z" fill="currentColor" fill-opacity="0.13" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 12v5M9.5 14.5L12 12l2.5 2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   toggle:`<svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="1" y="7" width="22" height="10" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="12" r="3.5" fill="currentColor"/></svg>`,
   save:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-4-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 3v4h7V3M9 17h6v4H9v-4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
-  warning:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 10v4M12 17v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   store:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="currentColor" fill-opacity="0.13" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
   warehouse:`<svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="1.5" fill="currentColor" fill-opacity="0.13" stroke="currentColor" stroke-width="1.7"/><path d="M2 7l10-4 10 4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>`,
   list:`<svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 7h8M8 12h6M8 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
@@ -1581,8 +1551,11 @@ let selectedFotoBase64 = null;
 let activeTab = 'produk';
 let masterAuthorized = false;
 let restokSearchResults = [];
+let bahanList = [];
+let pengambilanList = [];
+let pegawaiPayrollList = [];
 
-// ============ LOADING PROGRESS ============
+// ============ LOADING ============
 function setProgress(pct, step) {
   document.getElementById('ls-bar').style.width = pct + '%';
   document.getElementById('ls-pct').textContent = pct + '%';
@@ -1613,6 +1586,7 @@ async function verifyMasterPassword() {
       document.querySelectorAll('.stok-input-cell input').forEach(inp => { inp.disabled = false; });
       document.getElementById('btn-retur-submit').style.display = '';
       document.getElementById('btn-restok-submit').style.display = '';
+      document.getElementById('btn-ambil-submit').style.display = '';
     } else {
       errorEl.style.display = 'block';
       errorEl.textContent = '⚠️ Password salah. Silakan coba lagi.';
@@ -1624,7 +1598,6 @@ async function verifyMasterPassword() {
 function openMasterLogin() { document.getElementById('modal-master-login').classList.add('open'); document.getElementById('master-password-input').value = ''; document.getElementById('master-login-error').style.display = 'none'; setTimeout(() => document.getElementById('master-password-input').focus(), 100); }
 function closeMasterLogin() { document.getElementById('modal-master-login').classList.remove('open'); }
 
-// ============ GANTI PASSWORD ============
 function openGantiPassword() {
   if (!masterAuthorized) { showToast('🔐 Login terlebih dahulu', 'warn'); openMasterLogin(); return; }
   document.getElementById('modal-ganti-password').classList.add('open');
@@ -1658,66 +1631,48 @@ async function saveGantiPassword() {
     document.querySelectorAll('.stok-input-cell input').forEach(inp => { inp.disabled = true; });
     document.getElementById('btn-retur-submit').style.display = 'none';
     document.getElementById('btn-restok-submit').style.display = 'none';
+    document.getElementById('btn-ambil-submit').style.display = 'none';
     setTimeout(() => { openMasterLogin(); }, 500);
   } catch(e) { console.error(e); errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Gagal menyimpan: ' + (e.message || 'Unknown error'); }
 }
 
-// ============ CUSTOM DROPDOWN CABANG ============
+// ============ CUSTOM DROPDOWN ============
 function getCabangOptions() {
-  const sorted = [...cabangList].sort((a, b) => {
+  return [...cabangList].sort((a, b) => {
     const aIsPusat = a.nama.toLowerCase().includes('pusat');
     const bIsPusat = b.nama.toLowerCase().includes('pusat');
     if (aIsPusat && !bIsPusat) return -1;
     if (!aIsPusat && bIsPusat) return 1;
     return a.nama.localeCompare(b.nama, 'id');
   });
-  return sorted;
 }
 function renderCabangDropdown(prefix, selectedId = null) {
   const dropdown = document.getElementById(prefix + '-cabang-dropdown');
   const label = document.getElementById(prefix + '-cabang-label');
   const valueInput = document.getElementById(prefix + '-cabang-value');
   const btn = document.getElementById(prefix + '-cabang-btn');
-  
-  // Jika elemen tidak ada, skip
   if (!dropdown || !label || !valueInput || !btn) return;
-  
   const options = getCabangOptions();
-  
   dropdown.innerHTML = '';
-  
-  // Placeholder "Semua Cabang" untuk filter (tidak relevan untuk dropdown input
-  // Stok Cabang / Tambah Stok-Restok, karena wajib pilih satu cabang spesifik)
   if (prefix !== 'stok' && prefix !== 'restokin') {
     const ph = document.createElement('div');
     ph.className = 'custom-option placeholder';
     ph.innerHTML = '<span class="opt-dot"></span>SEMUA CABANG';
-    ph.addEventListener('click', () => {
-      selectCabangDropdown(prefix, null, 'SEMUA CABANG', true);
-    });
+    ph.addEventListener('click', () => { selectCabangDropdown(prefix, null, 'SEMUA CABANG', true); });
     dropdown.appendChild(ph);
   }
-  
   options.forEach(c => {
     const opt = document.createElement('div');
     opt.className = 'custom-option' + (String(c.id) === String(selectedId) ? ' selected' : '');
     opt.dataset.value = c.id;
     const isPusat = c.nama.toLowerCase().includes('pusat');
     opt.innerHTML = `<span class="opt-dot"></span>${c.nama}${isPusat ? ' <span class="opt-badge">⭐ Pusat</span>' : ''}`;
-    opt.addEventListener('click', () => {
-      selectCabangDropdown(prefix, c.id, c.nama, false);
-    });
+    opt.addEventListener('click', () => { selectCabangDropdown(prefix, c.id, c.nama, false); });
     dropdown.appendChild(opt);
   });
-  
   if (selectedId) {
     const selected = cabangList.find(c => String(c.id) === String(selectedId));
-    if (selected) {
-      label.textContent = selected.nama;
-      valueInput.value = selected.id;
-      btn.classList.remove('has-placeholder');
-      btn.classList.add('has-value');
-    }
+    if (selected) { label.textContent = selected.nama; valueInput.value = selected.id; btn.classList.remove('has-placeholder'); btn.classList.add('has-value'); }
   } else {
     label.textContent = (prefix === 'stok' || prefix === 'restokin') ? '— Pilih Cabang —' : 'SEMUA CABANG';
     valueInput.value = '';
@@ -1730,9 +1685,7 @@ function selectCabangDropdown(prefix, value, labelText, isPlaceholder) {
   const valueInput = document.getElementById(prefix + '-cabang-value');
   const btn = document.getElementById(prefix + '-cabang-btn');
   const dropdown = document.getElementById(prefix + '-cabang-dropdown');
-  
   if (!label || !valueInput || !btn || !dropdown) return;
-  
   if (isPlaceholder || !value) {
     label.textContent = labelText || ((prefix === 'stok' || prefix === 'restokin') ? '— Pilih Cabang —' : 'SEMUA CABANG');
     valueInput.value = '';
@@ -1744,36 +1697,22 @@ function selectCabangDropdown(prefix, value, labelText, isPlaceholder) {
     btn.classList.remove('has-placeholder');
     btn.classList.add('has-value');
   }
-  
   dropdown.querySelectorAll('.custom-option').forEach(opt => {
     opt.classList.toggle('selected', String(opt.dataset.value) === String(value) && !isPlaceholder);
   });
-  
   dropdown.classList.remove('open');
   btn.classList.remove('open');
   btn.setAttribute('aria-expanded', 'false');
-  
-  // 🔥 TAMBAHKAN INI: Trigger filter pelanggan jika prefix === 'pel'
-  if (prefix === 'pel') {
-    filterPelanggan(); // ← Panggil filter
-  }
+  if (prefix === 'pel') filterPelanggan();
   if (prefix === 'stok') {
     const val = valueInput.value;
     if (val) { loadStokCabang(); }
     else { document.getElementById('tbl-stok-cabang').innerHTML = '<tr class="empty-row"><td colspan="6">Pilih cabang untuk melihat stok</td></tr>'; document.getElementById('stok-cabang-badge').innerHTML = ''; document.getElementById('stok-summary-cards').innerHTML = ''; }
   }
-  if (prefix === 'restokin') {
-    // 🔥 Saat ganti cabang, reset kolom-kolom di bawahnya (produk & qty)
-    resetRestokProduk();
-  }
-
-  // 🔒 RETUR: Disable semua field jika SEMUA CABANG (tidak ada cabang dipilih)
+  if (prefix === 'restokin') resetRestokProduk();
   if (prefix === 'retur') {
-    // Simpan posisi scroll agar tidak geser saat tabel riwayat berubah tinggi
     const scrollY = window.scrollY;
-    // Reload riwayat retur sesuai pilihan cabang
     loadRetur();
-    // Refresh daftar produk agar hanya menampilkan produk dengan stok tersedia di cabang ini
     populateReturProdukSelect();
     const isLocked = !value;
     const produkBtn = document.getElementById('retur-produk-select-btn');
@@ -1782,18 +1721,15 @@ function selectCabangDropdown(prefix, value, labelText, isPlaceholder) {
     const catatanInput = document.getElementById('retur-catatan');
     const submitBtn = document.getElementById('btn-retur-submit');
     const infoBar = document.getElementById('retur-info-icon') ? document.getElementById('retur-info-icon').closest('div') : null;
-
     if (produkBtn) { produkBtn.disabled = isLocked; produkBtn.style.opacity = isLocked ? '0.45' : ''; produkBtn.style.pointerEvents = isLocked ? 'none' : ''; produkBtn.style.cursor = isLocked ? 'not-allowed' : ''; }
     if (qtyInput) { qtyInput.disabled = isLocked; qtyInput.style.opacity = isLocked ? '0.45' : ''; qtyInput.style.cursor = isLocked ? 'not-allowed' : ''; }
     if (alasanBtn) { alasanBtn.disabled = isLocked; alasanBtn.style.opacity = isLocked ? '0.45' : ''; alasanBtn.style.pointerEvents = isLocked ? 'none' : ''; alasanBtn.style.cursor = isLocked ? 'not-allowed' : ''; }
     if (catatanInput) { catatanInput.disabled = isLocked; catatanInput.style.opacity = isLocked ? '0.45' : ''; catatanInput.style.cursor = isLocked ? 'not-allowed' : ''; }
     if (submitBtn) { submitBtn.disabled = isLocked; submitBtn.style.opacity = isLocked ? '0.45' : ''; submitBtn.style.pointerEvents = isLocked ? 'none' : ''; submitBtn.style.cursor = isLocked ? 'not-allowed' : ''; }
     if (infoBar) { infoBar.style.opacity = isLocked ? '0.45' : ''; }
-    // Kembalikan posisi scroll setelah render ulang (cegah layar "lompat")
     requestAnimationFrame(() => window.scrollTo(0, scrollY));
   }
 }
-
 function toggleCabangDropdown(prefix) {
   const btn = document.getElementById(prefix + '-cabang-btn');
   const dd = document.getElementById(prefix + '-cabang-dropdown');
@@ -1814,7 +1750,6 @@ document.addEventListener('click', function(e) {
   });
 });
 
-// ============ GENERIC CUSTOM DROPDOWN (untuk select sederhana: filter, kategori, alasan, dll) ============
 const genericDropdownConfig = {};
 function setGenericDropdownOptions(id, options, placeholder, onChangeFn) {
   genericDropdownConfig[id] = { options, placeholder, onChange: onChangeFn || null };
@@ -1872,69 +1807,46 @@ function toggleGenericDropdown(id) {
 }
 function initStaticGenericDropdowns() {
   setGenericDropdownOptions('filter-status-produk', [
-    { value:'', label:'Semua Status' },
-    { value:'aktif', label:'Aktif' },
-    { value:'nonaktif', label:'Non-aktif' },
-    { value:'habis', label:'Stok Habis' }
+    { value:'', label:'Semua Status' }, { value:'aktif', label:'Aktif' }, { value:'nonaktif', label:'Non-aktif' }, { value:'habis', label:'Stok Habis' }
   ], 'Semua Status', filterProduk);
   setGenericDropdownOptions('filter-kredit-pel', [
-    { value:'', label:'Semua' },
-    { value:'kredit', label:'Ada Kredit' },
-    { value:'lunas', label:'Lunas' }
+    { value:'', label:'Semua' }, { value:'kredit', label:'Ada Kredit' }, { value:'lunas', label:'Lunas' }
   ], 'Semua', filterPelanggan);
   setGenericDropdownOptions('stok-filter-status', [
-    { value:'', label:'Semua Status Stok' },
-    { value:'habis', label:'Stok Habis' },
-    { value:'low', label:'Stok Menipis' },
-    { value:'ok', label:'Stok Aman' }
+    { value:'', label:'Semua Status Stok' }, { value:'habis', label:'Stok Habis' }, { value:'low', label:'Stok Menipis' }, { value:'ok', label:'Stok Aman' }
   ], 'Semua Status Stok', filterStokCabang);
   setGenericDropdownOptions('retur-alasan', [
-    { value:'Rusak', label:'Rusak / Cacat' },
-    { value:'Kadaluarsa', label:'Kadaluarsa' },
-    { value:'Salah produk', label:'Salah Produk' },
-    { value:'Kelebihan', label:'Kelebihan Stok' },
-    { value:'Lainnya', label:'Lainnya' }
+    { value:'Rusak', label:'Rusak / Cacat' }, { value:'Kadaluarsa', label:'Kadaluarsa' }, { value:'Salah produk', label:'Salah Produk' }, { value:'Kelebihan', label:'Kelebihan Stok' }, { value:'Lainnya', label:'Lainnya' }
   ], 'Rusak / Cacat', null);
   renderGenericDropdown('retur-alasan', 'Rusak');
+  setGenericDropdownOptions('filter-unit-bahan', [
+    { value:'', label:'Semua Unit' }, { value:'kg', label:'kg' }, { value:'gram', label:'gram' }, { value:'liter', label:'liter' }, { value:'ml', label:'ml' }, { value:'pcs', label:'pcs' }, { value:'sachet', label:'sachet' }, { value:'bungkus', label:'bungkus' }
+  ], 'Semua Unit', filterBahan);
+  setGenericDropdownOptions('fb-unit', [
+    { value:'', label:'— Pilih Unit —' }, { value:'kg', label:'kg' }, { value:'gram', label:'gram' }, { value:'liter', label:'liter' }, { value:'ml', label:'ml' }, { value:'pcs', label:'pcs' }, { value:'sachet', label:'sachet' }, { value:'bungkus', label:'bungkus' }
+  ], '— Pilih Unit —', null);
 }
 
 // ============ MOUNT ICONS ============
 function mountIcons() {
   const set = (id, name, size) => { const el = document.getElementById(id); if(el) el.innerHTML = svgIcon(name, size); };
   set('icon-brand','bread',22);
-  set('ti-produk','bread',15);
-  set('ti-kategori','tag',15);
-  set('ti-pelanggan','users',15);
-  set('ti-retur','retur',15);
-  set('ti-restok','boxIn',15);
-  set('ti-stok','warehouse',15);
-  set('ti-cabang','store',15);
-  set('ti-stoklog','list',15);
-  set('sh-icon-produk','bread',18);
-  set('sh-icon-kategori','tag',18);
-  set('sh-icon-pelanggan','users',18);
-  set('sh-icon-retur','retur',18);
-  set('sh-icon-retur-form','retur',16);
-  set('sh-icon-restok','boxIn',18);
-  set('sh-icon-restok-form','boxIn',16);
-  set('sh-icon-stok','warehouse',18);
-  set('sh-icon-cabang','store',18);
-  set('sh-icon-stoklog','list',18);
-  set('btn-add-produk-icon','plus',15);
-  set('btn-add-kat-icon','plus',15);
-  set('btn-add-pel-icon','plus',15);
-  set('btn-add-cabang-icon','plus',15);
-  set('btn-retur-icon','check',15);
-  set('btn-restok-icon','check',15);
+  set('ti-produk','bread',15); set('ti-kategori','tag',15); set('ti-pelanggan','users',15);
+  set('ti-retur','retur',15); set('ti-restok','boxIn',15); set('ti-stok','warehouse',15);
+  set('ti-cabang','store',15); set('ti-stoklog','list',15); set('ti-bahan','warehouse',15);
+  set('sh-icon-produk','bread',18); set('sh-icon-kategori','tag',18); set('sh-icon-pelanggan','users',18);
+  set('sh-icon-retur','retur',18); set('sh-icon-retur-form','retur',16); set('sh-icon-restok','boxIn',18);
+  set('sh-icon-restok-form','boxIn',16); set('sh-icon-stok','warehouse',18); set('sh-icon-cabang','store',18);
+  set('sh-icon-stoklog','list',18); set('sh-icon-bahan','warehouse',18); set('sh-icon-pengambilan','boxIn',18);
+  set('sh-icon-riwayat-ambil','list',18); set('sh-icon-rekapbahan','list',18);
+  set('btn-add-produk-icon','plus',15); set('btn-add-kat-icon','plus',15); set('btn-add-pel-icon','plus',15);
+  set('btn-add-cabang-icon','plus',15); set('btn-add-bahan-icon','plus',15);
+  set('btn-retur-icon','check',15); set('btn-restok-icon','check',15); set('btn-ambil-icon','check',15);
   set('btn-save-produk-icon','save',15);
-  set('si-produk','search',17);
-  set('si-pelanggan','search',17);
-  set('modal-icon-produk','bread',18);
-  set('modal-icon-kat','tag',18);
-  set('modal-icon-pel','users',18);
+  set('si-produk','search',17); set('si-pelanggan','search',17); set('si-bahan','search',17);
+  set('modal-icon-produk','bread',18); set('modal-icon-kat','tag',18); set('modal-icon-pel','users',18);
   set('modal-icon-del','trash',18);
-  set('retur-info-icon','info',15);
-  set('restok-info-icon','info',15);
+  set('retur-info-icon','info',15); set('restok-info-icon','info',15); set('ambil-info-icon','info',15);
   buildEmojiGrid();
   setupRupiahInput('fp-harga');
   setupRupiahInput('fp2-kredit');
@@ -1945,7 +1857,7 @@ function mountIcons() {
   setupTitleCaseInput('fp2-alamat');
 }
 
-function toRupiah(val) { const num = parseInt(String(val).replace(/\D/g,'')) || 0; return num === 0 ? 'Rp 0' : 'Rp ' + num.toLocaleString('id-ID'); }
+function toRupiah(val) { const num = parseInt(String(val).replace(/\D/g,'')) || 0; return num === 0 ? 'Rp 0' : 'Rp ' + num.toLocaleString('id'); }
 function fromRupiah(val) { return parseInt(String(val).replace(/\D/g,'')) || 0; }
 function reSetupRupiah(id) { const el = document.getElementById(id); if (el) el._rupiahSetup = false; setupRupiahInput(id); }
 function setupRupiahInput(id) {
@@ -1967,7 +1879,6 @@ function setupRupiahInput(id) {
   el.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === 'Tab') { const num = fromRupiah(this.value); this.value = toRupiah(num); } });
 }
 function setRupiahValue(id, val) { const el = document.getElementById(id); if (el) el.value = toRupiah(val); }
-
 function toTitleCase(str) { return str.replace(/\S+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()); }
 function setupTitleCaseInput(id) {
   const el = document.getElementById(id);
@@ -1975,35 +1886,25 @@ function setupTitleCaseInput(id) {
   el._tcSetup = true;
   el.addEventListener('input', function() { const pos = this.selectionStart; this.value = toTitleCase(this.value); this.setSelectionRange(pos, pos); });
 }
-
 function buildEmojiGrid() {
   const g = document.getElementById('emoji-grid');
   g.innerHTML = EMOJI_MAP.map(e => `<div class="emoji-opt ${e.key===selectedEmoji?'selected':''}" title="${e.label}" onclick="selectEmoji('${e.key}',this)">${e.emoji}</div>`).join('');
 }
 function selectEmoji(key, el) { selectedEmoji = key; document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected')); el.classList.add('selected'); }
-function updateTopbarBadge() {}
 
 // ============ SWITCH TAB ============
-// 🔥 RESET SEMUA KOLOM FILTER/INPUT DI SETIAP TAB SAAT PINDAH TAB
-// Dipanggil setiap kali switchTab() dijalankan, supaya saat user balik lagi
-// ke tab manapun, semua kolom pencarian/filter/form sudah bersih (clear).
 function resetAllTabFields() {
   const todayStr = new Date().toISOString().split('T')[0];
-  // ── TAB PRODUK ──
   const searchProduk = document.getElementById('search-produk');
   if (searchProduk) searchProduk.value = '';
   if (typeof renderGenericDropdown === 'function') {
     renderGenericDropdown('filter-kategori-produk', '');
     renderGenericDropdown('filter-status-produk', '');
   }
-
-  // ── TAB PELANGGAN ──
   const searchPelanggan = document.getElementById('search-pelanggan');
   if (searchPelanggan) searchPelanggan.value = '';
   if (document.getElementById('pel-cabang-value')) selectCabangDropdown('pel', null, 'SEMUA CABANG', true);
   if (typeof renderGenericDropdown === 'function') renderGenericDropdown('filter-kredit-pel', '');
-
-  // ── TAB RETUR ──
   if (document.getElementById('retur-cabang-value')) selectCabangDropdown('retur', null, 'SEMUA CABANG', true);
   const returProduk = document.getElementById('retur-produk-select');
   if (returProduk) { returProduk.value = ''; renderGenericDropdown('retur-produk-select', ''); }
@@ -2014,8 +1915,6 @@ function resetAllTabFields() {
   if (returCatatan) returCatatan.value = '';
   const returFilterTgl = document.getElementById('retur-filter-tgl');
   if (returFilterTgl) returFilterTgl.value = todayStr;
-
-  // ── TAB RESTOK ──
   if (document.getElementById('restokin-cabang-value')) {
     document.getElementById('restokin-cabang-value').value = '';
     document.getElementById('restokin-cabang-label').textContent = '— Pilih Cabang —';
@@ -2023,18 +1922,31 @@ function resetAllTabFields() {
     if (restokinBtn) { restokinBtn.classList.add('has-placeholder'); restokinBtn.classList.remove('has-value'); }
   }
   if (typeof resetRestokProduk === 'function') resetRestokProduk();
-  const restokFilterCabang = document.getElementById('restok-filter-cabang');
-  if (restokFilterCabang) restokFilterCabang.value = '';
+  if (document.getElementById('restok-filter-cabang') && typeof renderGenericDropdown === 'function') renderGenericDropdown('restok-filter-cabang', '');
   const restokFilterTgl = document.getElementById('restok-filter-tgl');
   if (restokFilterTgl) restokFilterTgl.value = todayStr;
-
-  // ── TAB STOK CABANG ──
   if (document.getElementById('stok-cabang-value')) selectCabangDropdown('stok', null, '— Pilih Cabang —', true);
   if (typeof renderGenericDropdown === 'function') renderGenericDropdown('stok-filter-status', '');
-
-  // ── TAB LOG STOK ──
   const stoklogFilterTgl = document.getElementById('stoklog-filter-tgl');
   if (stoklogFilterTgl) stoklogFilterTgl.value = todayStr;
+  if (document.getElementById('search-bahan')) document.getElementById('search-bahan').value = '';
+  if (typeof renderGenericDropdown === 'function') renderGenericDropdown('filter-unit-bahan', '');
+  document.getElementById('ambil-bahan-value').value = '';
+  document.getElementById('ambil-bahan-label').textContent = '— Pilih Bahan —';
+  document.getElementById('ambil-pegawai-value').value = '';
+  document.getElementById('ambil-pegawai-label').textContent = '— Pilih Pegawai —';
+  document.getElementById('ambil-jumlah').value = '1';
+  document.getElementById('ambil-catatan').value = '';
+  const rekapDari = document.getElementById('rekapbahan-dari');
+  const rekapSampai = document.getElementById('rekapbahan-sampai');
+  if (rekapDari && rekapSampai) {
+    const now = new Date();
+    rekapDari.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    rekapSampai.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${lastDay}`;
+  }
+  const ambilFilterTgl = document.getElementById('pengambilan-filter-tgl');
+  if (ambilFilterTgl) ambilFilterTgl.value = todayStr;
 }
 
 function switchTab(name, btn) {
@@ -2043,43 +1955,59 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
   const mainDefault = document.getElementById('main-default');
   const mainStok = document.getElementById('main-stok');
-  const mainCabang = document.getElementById('main-cabang');
   const mainStoklog = document.getElementById('main-stoklog');
-  
+  const mainBahan = document.getElementById('main-bahan');
   if (name === 'stok') {
-    mainDefault.style.display = 'none'; mainStok.style.display = 'block'; mainCabang.style.display = 'none'; mainStoklog.style.display = 'none';
+    mainDefault.style.display = 'none'; mainStok.style.display = 'block'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
+    document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('subtab-stok-btn').classList.add('active');
+    document.getElementById('sec-stok').classList.add('active');
     const val = document.getElementById('stok-cabang-value').value;
     if (val) { loadStokCabang(); }
     else { document.getElementById('tbl-stok-cabang').innerHTML = '<tr class="empty-row"><td colspan="6">Pilih cabang untuk melihat stok</td></tr>'; }
-    document.getElementById('sec-stok').classList.add('active');
-  } else if (name === 'cabang') {
-    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainCabang.style.display = 'block'; mainStoklog.style.display = 'none';
-    document.getElementById('sec-cabang').classList.add('active');
   } else if (name === 'stoklog') {
-  mainDefault.style.display = 'none';
-  mainStok.style.display = 'none';
-  mainCabang.style.display = 'none';
-  mainStoklog.style.display = 'block';
-  document.getElementById('sec-stoklog').classList.add('active');
-  loadStokLog(); // ← Ini sudah ada, pastikan tidak hilang
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'block'; mainBahan.style.display = 'none';
+    document.getElementById('sec-stoklog').classList.add('active');
+    loadStokLog();
+  } else if (name === 'bahan') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'block';
+    document.querySelectorAll('#main-bahan .subtab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('subtab-bahan-btn').classList.add('active');
+    document.getElementById('sec-bahan').classList.add('active');
+    loadBahan();
+    loadPegawaiPayroll();
   } else {
-    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainCabang.style.display = 'none'; mainStoklog.style.display = 'none';
+    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
     document.getElementById('sec-' + name).classList.add('active');
   }
-  
-  // Catatan: filter tanggal TIDAK di-reset otomatis ke hari ini saat pindah tab,
-  // agar pilihan filter (termasuk "Semua") tetap dipertahankan sesuai keinginan user.
-  if (name === 'retur') {
-    loadRetur();
-  } else if (name === 'restok') {
-    loadRestok();
+  if (name === 'retur') loadRetur();
+  if (name === 'restok') loadRestok();
+}
+
+function switchSubTab(name, btn) {
+  document.querySelectorAll('#main-stok .tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-' + name).classList.add('active');
+}
+
+function switchSubTabBahan(name, btn) {
+  document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#main-bahan .subtab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-' + name).classList.add('active');
+  if (name === 'bahan') loadBahan();
+  else if (name === 'pengambilan') { loadPegawaiPayroll(); populateBahanSelect(); loadPengambilan(); }
+  else if (name === 'rekapbahan') {
+    if (!document.getElementById('rekapbahan-dari').value) setRekapBahanBulanIni();
+    else loadRekapBahan();
   }
 }
 
-// ============ LOAD DATA ============
+// ============ PRODUK ============
 async function loadProduk() {
   const { data, error } = await sb.from('produk').select('*, kategori(nama)').order('nama');
   if (error) { console.error(error); return; }
@@ -2290,8 +2218,6 @@ async function loadPelanggan() {
   renderPelanggan();
   document.getElementById('count-pelanggan').textContent = pelangganList.length;
   document.getElementById('pelanggan-total-label').textContent = `(${pelangganList.length} pelanggan)`;
-  
-  // Render dropdown cabang untuk filter pelanggan
   renderCabangDropdown('pel');
 }
 function renderPelStats() {
@@ -2307,50 +2233,21 @@ function filterPelanggan() {
   const q = document.getElementById('search-pelanggan').value.toLowerCase();
   const k = document.getElementById('filter-kredit-pel').value;
   const cabangId = document.getElementById('pel-cabang-value').value;
-  
-  console.log('🔍 Filter Pelanggan - Cabang ID:', cabangId); // Debug
-  
   let list = pelangganList;
-  
-  // 🔥 FILTER CABANG
-  if (cabangId) {
-    list = list.filter(p => {
-      console.log('  -', p.nama, 'cabang_id:', p.cabang_id);
-      return String(p.cabang_id) === String(cabangId);
-    });
-  }
-  
-  // Filter pencarian
-  if (q) {
-    list = list.filter(p => p.nama.toLowerCase().includes(q) || (p.no_hp||'').includes(q));
-  }
-  
-  // Filter kredit
-  if (k === 'kredit') {
-    list = list.filter(p => (p.total_kredit||0) > 0);
-  } else if (k === 'lunas') {
-    list = list.filter(p => (p.total_kredit||0) <= 0);
-  }
-  
-  console.log('📊 Hasil filter:', list.length, 'pelanggan');
+  if (cabangId) list = list.filter(p => String(p.cabang_id) === String(cabangId));
+  if (q) list = list.filter(p => p.nama.toLowerCase().includes(q) || (p.no_hp||'').includes(q));
+  if (k === 'kredit') list = list.filter(p => (p.total_kredit||0) > 0);
+  else if (k === 'lunas') list = list.filter(p => (p.total_kredit||0) <= 0);
   renderPelanggan(list);
 }
 function renderPelanggan(list) {
   list = list || pelangganList;
   const container = document.getElementById('list-pelanggan');
-  
   if (!list.length) {
     const cabangId = document.getElementById('pel-cabang-value').value;
     const cabang = cabangList.find(c => String(c.id) === String(cabangId));
     const namaCabang = cabang ? cabang.nama : 'cabang ini';
-    
-    container.innerHTML = `
-      <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">
-        <div style="font-size:40px;margin-bottom:12px">👤</div>
-        <div style="font-weight:600">Belum ada pelanggan di ${namaCabang}</div>
-        <div style="font-size:12px;margin-top:4px">Tambahkan pelanggan baru untuk cabang ini</div>
-      </div>
-    `;
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px"><div style="font-size:40px;margin-bottom:12px">👤</div><div style="font-weight:600">Belum ada pelanggan di ${namaCabang}</div><div style="font-size:12px;margin-top:4px">Tambahkan pelanggan baru untuk cabang ini</div></div>`;
     return;
   }
   container.innerHTML = list.map(p => {
@@ -2359,22 +2256,18 @@ function renderPelanggan(list) {
     const cabang = cabangList.find(c => c.id === p.cabang_id);
     const cabangNama = cabang ? cabang.nama : '—';
     const mDisp = masterAuthorized ? '' : 'style="display:none"';
-    
     const diskonLabel = p.diskon_tipe === 'persen' && p.diskon_nilai > 0
       ? `<span class="badge badge-diskon-pct">🏷 ${p.diskon_nilai}%</span>`
       : p.diskon_tipe === 'nominal' && p.diskon_nilai > 0
       ? `<span class="badge badge-diskon-rp">🏷 Rp ${(p.diskon_nilai||0).toLocaleString('id')}</span>`
       : '';
-      
     return `<div class="pelanggan-row-item">
       <div class="pel-avatar">${inisial}</div>
       <div class="pel-info">
         <div class="pel-name">${p.nama}</div>
         <div class="pel-phone">${p.no_hp || 'Tidak ada nomor'}</div>
         <div class="pel-status-row">
-          ${kredit > 0
-            ? `<span class="pel-kredit">💸 Kredit: Rp ${kredit.toLocaleString('id')}</span>`
-            : `<span class="pel-lunas">✓ Lunas</span>`}
+          ${kredit > 0 ? `<span class="pel-kredit">💸 Kredit: Rp ${kredit.toLocaleString('id')}</span>` : `<span class="pel-lunas">✓ Lunas</span>`}
           ${diskonLabel}
           <span class="badge" style="background:var(--primary-light);color:var(--primary-dark)">🏪 ${cabangNama}</span>
         </div>
@@ -2389,11 +2282,8 @@ function renderPelanggan(list) {
 }
 function openModalPelanggan() {
   if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
-  
   document.getElementById('edit-pel-id').value = '';
   document.getElementById('modal-pel-title').innerHTML = svgIcon('users',18) + ' Tambah Pelanggan';
-  
-  // 🔥 AUTO FILL CABANG DARI FILTER
   const filterCabangId = document.getElementById('pel-cabang-value').value;
   if (filterCabangId) {
     const cabang = cabangList.find(c => String(c.id) === String(filterCabangId));
@@ -2409,7 +2299,6 @@ function openModalPelanggan() {
     document.getElementById('pel-modal-cabang-btn').classList.add('has-placeholder');
     document.getElementById('pel-modal-cabang-btn').classList.remove('has-value');
   }
-  
   document.getElementById('fp2-nama').value = '';
   document.getElementById('fp2-hp').value = '';
   document.getElementById('fp2-alamat').value = '';
@@ -2423,13 +2312,9 @@ function openModalPelanggan() {
 }
 function openEditPelanggan(id) {
   if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
-  const p = pelangganList.find(x => x.id === id);
-  if (!p) return;
-  
+  const p = pelangganList.find(x => x.id === id); if (!p) return;
   document.getElementById('edit-pel-id').value = id;
   document.getElementById('modal-pel-title').innerHTML = svgIcon('edit',18) + ' Edit Pelanggan';
-  
-  // Set cabang
   if (p.cabang_id) {
     const cabang = cabangList.find(c => c.id === p.cabang_id);
     if (cabang) {
@@ -2439,7 +2324,6 @@ function openEditPelanggan(id) {
       document.getElementById('pel-modal-cabang-btn').classList.add('has-value');
     }
   }
-  
   document.getElementById('fp2-nama').value = p.nama;
   document.getElementById('fp2-hp').value = p.no_hp || '';
   document.getElementById('fp2-alamat').value = p.alamat || '';
@@ -2448,12 +2332,8 @@ function openEditPelanggan(id) {
   document.getElementById('pel-kredit-edit-wrap').style.display = 'block';
   const tipe = p.diskon_tipe || 'persen';
   setDiskonTipe(tipe);
-  if (tipe === 'persen') {
-    document.getElementById('fp2-diskon-pct').value = p.diskon_nilai || 0;
-  } else {
-    reSetupRupiah('fp2-diskon-rp');
-    setRupiahValue('fp2-diskon-rp', p.diskon_nilai || 0);
-  }
+  if (tipe === 'persen') { document.getElementById('fp2-diskon-pct').value = p.diskon_nilai || 0; }
+  else { reSetupRupiah('fp2-diskon-rp'); setRupiahValue('fp2-diskon-rp', p.diskon_nilai || 0); }
   document.getElementById('modal-pelanggan').classList.add('open');
 }
 async function savePelanggan() {
@@ -2464,62 +2344,20 @@ async function savePelanggan() {
   const alamat = document.getElementById('fp2-alamat').value.trim();
   const total_kredit = fromRupiah(document.getElementById('fp2-kredit').value);
   const diskon_tipe = document.getElementById('btn-diskon-pct').classList.contains('active') ? 'persen' : 'nominal';
-  const diskon_nilai = diskon_tipe === 'persen'
-    ? parseFloat(document.getElementById('fp2-diskon-pct').value) || 0
-    : fromRupiah(document.getElementById('fp2-diskon-rp').value);
-
-  // 🔥 WAJIB PILIH CABANG
-  if (!cabangId) {
-    showToast('⚠️ Pilih cabang terlebih dahulu', 'warn');
-    document.getElementById('pel-modal-cabang-btn').focus();
-    return;
-  }
-  
-  if (!nama) {
-    showToast('Nama pelanggan wajib diisi', 'warn');
-    return;
-  }
-  
-  if (diskon_tipe === 'persen' && diskon_nilai > 100) {
-    showToast('Diskon persentase maksimal 100%', 'warn');
-    return;
-  }
-
-  const btn = document.getElementById('btn-save-pel');
-  btn.blur(); btn.disabled = true; btn.textContent = 'Menyimpan...';
-  
+  const diskon_nilai = diskon_tipe === 'persen' ? parseFloat(document.getElementById('fp2-diskon-pct').value) || 0 : fromRupiah(document.getElementById('fp2-diskon-rp').value);
+  if (!cabangId) { showToast('⚠️ Pilih cabang terlebih dahulu', 'warn'); document.getElementById('pel-modal-cabang-btn').focus(); return; }
+  if (!nama) { showToast('Nama pelanggan wajib diisi', 'warn'); return; }
+  if (diskon_tipe === 'persen' && diskon_nilai > 100) { showToast('Diskon persentase maksimal 100%', 'warn'); return; }
+  const btn = document.getElementById('btn-save-pel'); btn.blur(); btn.disabled = true; btn.textContent = 'Menyimpan...';
   try {
-    const payload = { 
-      nama, 
-      no_hp, 
-      alamat, 
-      diskon_tipe, 
-      diskon_nilai, 
-      cabang_id: parseInt(cabangId) // ← PASTIKAN TERSIMPAN
-    };
-    
+    const payload = { nama, no_hp, alamat, diskon_tipe, diskon_nilai, cabang_id: parseInt(cabangId) };
     if (id) payload.total_kredit = total_kredit;
     else payload.total_kredit = 0;
-
-    if (id) {
-      const { error } = await sb.from('pelanggan').update(payload).eq('id', id);
-      if (error) throw error;
-      showToast('Pelanggan diperbarui', 'success');
-    } else {
-      const { error } = await sb.from('pelanggan').insert(payload);
-      if (error) throw error;
-      showToast('Pelanggan ditambahkan', 'success');
-    }
-    closeModalPelanggan();
-    await loadPelanggan();
-    filterPelanggan(); 
-    updateTopbarBadge();
-  } catch(e) {
-    console.error(e);
-    showToast('Gagal menyimpan pelanggan: ' + (e.message || 'Unknown error'), 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Simpan';
-  }
+    if (id) { const { error } = await sb.from('pelanggan').update(payload).eq('id', id); if (error) throw error; showToast('Pelanggan diperbarui', 'success'); }
+    else { const { error } = await sb.from('pelanggan').insert(payload); if (error) throw error; showToast('Pelanggan ditambahkan', 'success'); }
+    closeModalPelanggan(); await loadPelanggan(); filterPelanggan();
+  } catch(e) { console.error(e); showToast('Gagal menyimpan pelanggan: ' + (e.message || 'Unknown error'), 'error'); }
+  finally { btn.disabled = false; btn.textContent = 'Simpan'; }
 }
 function setDiskonTipe(tipe) {
   const btnPct = document.getElementById('btn-diskon-pct');
@@ -2531,6 +2369,8 @@ function setDiskonTipe(tipe) {
   else { btnRp.classList.add('active'); btnPct.classList.remove('active'); pctInput.style.display = 'none'; rpInput.style.display = ''; unitLabel.style.display = 'none'; unitLabel.textContent = ''; reSetupRupiah('fp2-diskon-rp'); }
 }
 function closeModalPelanggan() { document.getElementById('modal-pelanggan').classList.remove('open'); }
+
+// ============ REKAP PELANGGAN ============
 function openRekap() { const page = document.getElementById('page-rekap'); page.classList.add('open'); mcSyncButtons(); updatePeriodLabel(); loadRekapPelanggan(); }
 function closeRekap() { const page = document.getElementById('page-rekap'); page.classList.remove('open'); }
 function updatePeriodLabel() {
@@ -2591,7 +2431,7 @@ function miniCalToggle(which) {
 function mcRender(which) {
   const pop = mcEnsurePop(which);
   if (!pop.querySelector('.mini-cal-head')) {
-    pop.innerHTML = `<div class="mini-cal-head"><button type="button" onclick="mcNav('${which}',-1)" aria-label="Bulan sebelumnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><span class="mc-label"></span><button type="button" onclick="mcNav('${which}',1)" aria-label="Bulan berikutnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div><div class="mini-cal-grid">${MC_DOW.map(d => `<div class="mc-dow">${d}</div>`).join('')}</div>`;
+    pop.innerHTML = `<div class="mini-cal-head"><button type="button" onclick="mcNav('${which}',-1)" aria-label="Bulan sebelumnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button><span class="mc-label"></span><button type="button" onclick="mcNav('${which}',1)" aria-label="Bulan berikutnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></button></div><div class="mini-cal-grid">${MC_DOW.map(d => `<div class="mc-dow">${d}</div>`).join('')}</div>`;
   }
   mcRenderGrid(which);
 }
@@ -2676,32 +2516,20 @@ async function loadCabang() {
   if (error) { console.error(error); return; }
   cabangList = data || [];
   renderCabang();
-  
-  // 🔥 RENDER DROPDOWN UNTUK SEMUA PREFIX
   renderCabangDropdown('retur');
-  // 🔒 Pastikan field retur terkunci saat inisialisasi (SEMUA CABANG)
   selectCabangDropdown('retur', null, 'SEMUA CABANG', true);
   renderCabangDropdown('restokin');
   renderCabangDropdown('stok');
-  renderCabangDropdown('pel');      // ← Untuk filter pelanggan
-  renderCabangDropdown('pel-modal'); // ← Untuk modal pelanggan
-  
+  renderCabangDropdown('pel');
+  renderCabangDropdown('pel-modal');
   const pusat = cabangList.find(c => c.nama.toLowerCase().includes('pusat'));
-  if (pusat) { 
-    selectCabangDropdown('stok', pusat.id, pusat.nama, false); 
-    selectedCabangId = pusat.id; 
-    setTimeout(() => loadStokCabang(), 300); 
-    selectCabangDropdown('restokin', pusat.id, pusat.nama, false);
-  }
+  if (pusat) { selectCabangDropdown('stok', pusat.id, pusat.nama, false); selectedCabangId = pusat.id; setTimeout(() => loadStokCabang(), 300); selectCabangDropdown('restokin', pusat.id, pusat.nama, false); }
   document.getElementById('count-cabang').textContent = cabangList.length;
   document.getElementById('cabang-total-label').textContent = `(${cabangList.length} cabang)`;
-
-  // 🔥 Isi dropdown filter cabang di Riwayat Restok
-  const selRestokFilter = document.getElementById('restok-filter-cabang');
-  if (selRestokFilter) {
-    const currentVal = selRestokFilter.value;
-    selRestokFilter.innerHTML = '<option value="">Semua Cabang</option>' + cabangList.map(c => `<option value="${c.id}">${c.nama}</option>`).join('');
-    selRestokFilter.value = currentVal;
+  if (document.getElementById('restok-filter-cabang')) {
+    setGenericDropdownOptions('restok-filter-cabang', [
+      { value: '', label: 'Semua Cabang' }, ...cabangList.map(c => ({ value: c.id, label: c.nama }))
+    ], 'Semua Cabang', loadRestok);
   }
 }
 function renderCabang() {
@@ -2834,80 +2662,33 @@ async function updateStokCabang(produkId) {
     if (existing) { const { error } = await sb.from('stok_cabang').update({ stok: newStok }).eq('id', existing.id); if (error) throw error; existing.stok = newStok; }
     else { const { error } = await sb.from('stok_cabang').insert({ produk_id: produkId, cabang_id: selectedCabangId, stok: newStok }); if (error) throw error; stokCabangAll.push({ produk_id: produkId, cabang_id: selectedCabangId, stok: newStok }); }
     produk.stok_cabang = newStok;
-    try {
-      await sb.from('stok_log').insert({
-        produk_id: produkId,
-        cabang_id: selectedCabangId,
-        stok_lama: currentStok,
-        stok_baru: newStok,
-        alasan: alasan,
-        created_by: 'Admin'
-      });
-      console.log('✅ Stok log berhasil disimpan');
-    } catch(logError) {
-      console.error('❌ Gagal simpan stok log:', logError);
-      // Tampilkan error ke user agar tahu
-      showToast('⚠️ Stok berhasil diupdate, tapi gagal menyimpan log', 'warn');
-    }
-    
+    try { await sb.from('stok_log').insert({ produk_id: produkId, cabang_id: selectedCabangId, stok_lama: currentStok, stok_baru: newStok, alasan: alasan, created_by: 'Admin' }); } catch(logError) { console.error('❌ Gagal simpan stok log:', logError); showToast('⚠️ Stok berhasil diupdate, tapi gagal menyimpan log', 'warn'); }
     showToast('✅ Stok berhasil diperbarui', 'success');
-    
-    // REFRESH SEMUA DATA
-    await loadStokCabangAll();
-    await loadStokCabang();
-    renderProdukStats();
-    renderProduk();
-    
-    // 🔥 TAMBAHKAN INI: Refresh log stok jika tab sedang aktif
-    if (document.getElementById('sec-stoklog').classList.contains('active')) {
-      loadStokLog();
-    }
-    
-  } catch(e) {
-    // ... error handling ...
-  }
+    await loadStokCabangAll(); await loadStokCabang(); renderProdukStats(); renderProduk();
+    if (document.getElementById('sec-stoklog').classList.contains('active')) loadStokLog();
+  } catch(e) { console.error(e); showToast('Gagal update stok', 'error'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; } }
 }
 
 async function loadStokLog() {
   const tgl = document.getElementById('stoklog-filter-tgl').value;
   const tbody = document.getElementById('tbl-stoklog');
-  
-  // Tampilkan loading
   tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Memuat data...</td></tr>';
-  
   try {
-    let query = sb.from('stok_log')
-      .select('*, produk(nama), cabang(nama)')
-      .order('created_at', { ascending: false });
-    
-    if (tgl) {
-      query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59');
-    }
-    
+    let query = sb.from('stok_log').select('*, produk(nama), cabang(nama)').order('created_at', { ascending: false });
+    if (tgl) query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59');
     const { data, error } = await query;
-    
     if (error) {
       console.error('Error load stok log:', error);
-      if (error.code === '42P01') {
-        tbody.innerHTML = '<tr class="empty-row"><td colspan="8">⚠️ Tabel stok_log belum dibuat. Jalankan SQL di Supabase.</td></tr>';
-      } else {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="8">❌ Gagal memuat data: ${error.message}</td></tr>`;
-      }
+      if (error.code === '42P01') { tbody.innerHTML = '<tr class="empty-row"><td colspan="8">⚠️ Tabel stok_log belum dibuat. Jalankan SQL di Supabase.</td></tr>'; }
+      else { tbody.innerHTML = `<tr class="empty-row"><td colspan="8">❌ Gagal memuat data: ${error.message}</td></tr>`; }
       document.getElementById('count-stoklog').textContent = '0';
       document.getElementById('stoklog-total-label').textContent = '(0 log)';
       return;
     }
-    
-    if (!data || !data.length) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Belum ada perubahan stok manual</td></tr>';
-      document.getElementById('count-stoklog').textContent = '0';
-      document.getElementById('stoklog-total-label').textContent = '(0 log)';
-      return;
-    }
-    
+    if (!data || !data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Belum ada perubahan stok manual</td></tr>'; document.getElementById('count-stoklog').textContent = '0'; document.getElementById('stoklog-total-label').textContent = '(0 log)'; return; }
     document.getElementById('count-stoklog').textContent = data.length;
     document.getElementById('stoklog-total-label').textContent = `(${data.length} log)`;
-    
     tbody.innerHTML = data.map(r => {
       const dt = new Date(r.created_at);
       const tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
@@ -2915,51 +2696,22 @@ async function loadStokLog() {
       const perubahan = r.stok_baru - r.stok_lama;
       const perubahanClass = perubahan > 0 ? 'badge-stok-ok' : 'badge-stok-habis';
       const perubahanLabel = perubahan > 0 ? `+${perubahan}` : `${perubahan}`;
-      return `<tr>
-        <td><div style="font-weight:600;font-size:13px">${tglStr}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td>
-        <td><span style="font-weight:600">${r.cabang?.nama || '—'}</span></td>
-        <td><span style="font-weight:600">${r.produk?.nama || '—'}</span></td>
-        <td><span style="color:var(--text-muted)">${r.stok_lama}</span></td>
-        <td><span style="font-weight:700;color:var(--primary)">${r.stok_baru}</span></td>
-        <td><span class="badge ${perubahanClass}">${perubahanLabel}</span></td>
-        <td><span style="font-size:13px;color:var(--text-muted)">${r.alasan || '—'}</span></td>
-        <td><span style="font-size:12px;color:var(--text-muted)">${r.created_by || 'Admin'}</span></td>
-      </tr>`;
+      return `<tr><td><div style="font-weight:600;font-size:13px">${tglStr}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${r.cabang?.nama || '—'}</span></td><td><span style="font-weight:600">${r.produk?.nama || '—'}</span></td><td><span style="color:var(--text-muted)">${r.stok_lama}</span></td><td><span style="font-weight:700;color:var(--primary)">${r.stok_baru}</span></td><td><span class="badge ${perubahanClass}">${perubahanLabel}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.alasan || '—'}</span></td><td><span style="font-size:12px;color:var(--text-muted)">${r.created_by || 'Admin'}</span></td></tr>`;
     }).join('');
-    
-  } catch(e) {
-    console.error('Error:', e);
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">❌ Error: ${e.message || 'Unknown error'}</td></tr>`;
-  }
+  } catch(e) { console.error('Error:', e); tbody.innerHTML = `<tr class="empty-row"><td colspan="8">❌ Error: ${e.message || 'Unknown error'}</td></tr>`; }
 }
-// ============ POPULATE RETUR PRODUK SELECT ============
+
+// ============ RETUR & RESTOK ============
 function populateReturProdukSelect() {
   const cabangId = parseInt(document.getElementById('retur-cabang-value').value);
   let produkTersedia = produkList.filter(p => p.aktif);
-
-  // Filter hanya produk yang stoknya > 0 di cabang yang dipilih
-  if (cabangId) {
-    produkTersedia = produkTersedia.filter(p => {
-      const stokEntry = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId);
-      return stokEntry && stokEntry.stok > 0;
-    });
-  }
-
-  const options = [{ value:'', label:'— Pilih Produk —' }, ...produkTersedia.map(p => {
-    const stokEntry = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId);
-    const stok = stokEntry ? stokEntry.stok : 0;
-    return { value:String(p.id), label:p.nama, badge: cabangId ? stok : null };
-  })];
+  if (cabangId) produkTersedia = produkTersedia.filter(p => { const stokEntry = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId); return stokEntry && stokEntry.stok > 0; });
+  const options = [{ value:'', label:'— Pilih Produk —' }, ...produkTersedia.map(p => { const stokEntry = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId); const stok = stokEntry ? stokEntry.stok : 0; return { value:String(p.id), label:p.nama, badge: cabangId ? stok : null }; })];
   setGenericDropdownOptions('retur-produk-select', options, '— Pilih Produk —', null);
-
-  // Reset pilihan produk yang sedang aktif jika sudah tidak ada di daftar (stok habis / cabang berubah)
   const currentVal = document.getElementById('retur-produk-select').value;
-  if (currentVal && !produkTersedia.some(p => String(p.id) === String(currentVal))) {
-    renderGenericDropdown('retur-produk-select', '');
-  }
+  if (currentVal && !produkTersedia.some(p => String(p.id) === String(currentVal))) renderGenericDropdown('retur-produk-select', '');
 }
 
-// ============ RESTOK PRODUK SEARCH ============
 function filterRestokProduk() {
   const q = document.getElementById('restok-search-produk').value.toLowerCase().trim();
   const resultsDiv = document.getElementById('restok-search-results');
@@ -2976,20 +2728,15 @@ function filterRestokProduk() {
   }).join('');
   resultsDiv.style.display = 'block';
 }
-function selectRestokProdukFirst() { if (restokSearchResults && restokSearchResults.length > 0) { selectRestokProduk(restokSearchResults[0].id); } }
+function selectRestokProdukFirst() { if (restokSearchResults && restokSearchResults.length > 0) selectRestokProduk(restokSearchResults[0].id); }
 function selectRestokProduk(id) {
-  const p = produkList.find(x => x.id === id);
-  if (!p) return;
+  const p = produkList.find(x => x.id === id); if (!p) return;
   document.getElementById('restok-produk-id').value = id;
   document.getElementById('restok-search-produk').value = p.nama;
   document.getElementById('restok-search-results').style.display = 'none';
-
-  // Stok di cabang yang dipilih
   const cabangId = parseInt(document.getElementById('restokin-cabang-value').value);
   const stokDiCabang = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId);
   const stokCabang = stokDiCabang ? stokDiCabang.stok : 0;
-  
-  // Preview panel
   const previewEmpty = document.getElementById('restok-preview-empty');
   const previewContent = document.getElementById('restok-preview-content');
   const previewPanel = document.getElementById('restok-preview-panel');
@@ -2997,11 +2744,8 @@ function selectRestokProduk(id) {
   previewEmpty.style.display = 'none';
   previewContent.classList.add('show');
   previewContent.style.display = 'flex';
-  if (p.foto && p.foto.length > 10) {
-    previewImage.innerHTML = `<img src="${p.foto}" alt="${p.nama}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'font-size:56px\\'>${p.emoji || '🍞'}</span>'">`;
-  } else {
-    previewImage.innerHTML = `<span style="font-size:56px">${p.emoji || '🍞'}</span>`;
-  }
+  if (p.foto && p.foto.length > 10) previewImage.innerHTML = `<img src="${p.foto}" alt="${p.nama}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'font-size:56px\\'>${p.emoji || '🍞'}</span>'">`;
+  else previewImage.innerHTML = `<span style="font-size:56px">${p.emoji || '🍞'}</span>`;
   document.getElementById('restok-preview-name').textContent = p.nama;
   document.getElementById('restok-preview-price').textContent = `Rp ${p.harga.toLocaleString('id')}`;
   document.getElementById('restok-preview-stok').textContent = `Stok di cabang ini: ${stokCabang} pcs`;
@@ -3012,10 +2756,6 @@ function resetRestokProduk() {
   document.getElementById('restok-search-produk').value = '';
   document.getElementById('restok-search-results').style.display = 'none';
   document.getElementById('restok-qty').value = '1';
-  
-  // JANGAN reset cabang! Biarkan filter cabang tetap
-  // document.getElementById('restokin-cabang-value').value = '';
-  
   const previewEmpty = document.getElementById('restok-preview-empty');
   const previewContent = document.getElementById('restok-preview-content');
   const previewPanel = document.getElementById('restok-preview-panel');
@@ -3024,23 +2764,19 @@ function resetRestokProduk() {
   previewContent.style.display = 'none';
   previewPanel.classList.remove('has-product');
   document.getElementById('restok-preview-stok').textContent = 'Stok di cabang ini: 0 pcs';
-  
-  // Reload riwayat restok
   loadRestok();
 }
 
-// ============ RETUR & RESTOK ============
 async function loadRetur() {
   const tgl = document.getElementById('retur-filter-tgl').value;
   const cabangFilterId = document.getElementById('retur-cabang-value').value;
   let query = sb.from('retur').select('*, produk(nama), cabang(nama)').order('created_at', { ascending: false });
-  if (tgl) { query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59'); }
-  if (cabangFilterId) { query = query.eq('cabang_id', cabangFilterId); }
+  if (tgl) query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59');
+  if (cabangFilterId) query = query.eq('cabang_id', cabangFilterId);
   const { data, error } = await query;
   if (error) { console.error(error); return; }
   returList = data || [];
   renderRetur();
-  // Hitung total qty retur
   const totalQty = returList.reduce((sum, r) => sum + (r.qty || 0), 0);
   const labelCabang = cabangFilterId ? '' : ' — Semua Cabang';
   document.getElementById('count-retur').textContent = returList.length;
@@ -3049,35 +2785,20 @@ async function loadRetur() {
 function renderRetur() {
   const tbody = document.getElementById('tbl-retur');
   const cabangFilterId = document.getElementById('retur-cabang-value').value;
-  if (!returList.length) {
-    const msg = cabangFilterId ? 'Belum ada data retur' : 'Belum ada data retur dari cabang manapun';
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${msg}</td></tr>`;
-    return;
-  }
+  if (!returList.length) { const msg = cabangFilterId ? 'Belum ada data retur' : 'Belum ada data retur dari cabang manapun'; tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${msg}</td></tr>`; return; }
   const mDisp = masterAuthorized ? '' : 'style="display:none"';
   tbody.innerHTML = returList.map(r => {
     const dt = new Date(r.created_at);
     const tgl = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
     const jam = `${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-    const cabangNama = r.cabang?.nama || '—';
-    return `<tr><td><div style="font-weight:600;font-size:13px">${tgl}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${cabangNama}</span></td><td><span style="font-weight:600">${r.produk?.nama || '—'}</span></td><td><span class="badge badge-retur">- ${r.qty}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.alasan}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.catatan || '—'}</span></td><td style="text-align:center"><button class="act-btn del master-only" title="Hapus retur" onclick="konfirmHapusRetur(${r.id},${r.produk_id},${r.qty})" ${mDisp}>${svgIcon('trash',14)}</button></td></tr>`;
+    return `<tr><td><div style="font-weight:600;font-size:13px">${tgl}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${r.cabang?.nama || '—'}</span></td><td><span style="font-weight:600">${r.produk?.nama || '—'}</span></td><td><span class="badge badge-retur">- ${r.qty}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.alasan}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.catatan || '—'}</span></td><td style="text-align:center"><button class="act-btn del master-only" title="Hapus retur" onclick="konfirmHapusRetur(${r.id},${r.produk_id},${r.qty})" ${mDisp}>${svgIcon('trash',14)}</button></td></tr>`;
   }).join('');
-
-  // Tambah baris TOTAL jika SEMUA CABANG
   if (!cabangFilterId && returList.length > 1) {
     const totalQty = returList.reduce((sum, r) => sum + (r.qty || 0), 0);
-    // Hitung per produk
     const perProduk = {};
-    returList.forEach(r => {
-      const nama = r.produk?.nama || '—';
-      perProduk[nama] = (perProduk[nama] || 0) + r.qty;
-    });
+    returList.forEach(r => { const nama = r.produk?.nama || '—'; perProduk[nama] = (perProduk[nama] || 0) + r.qty; });
     const ringkasan = Object.entries(perProduk).map(([n, q]) => `${n}: ${q}`).join(', ');
-    tbody.innerHTML += `<tr style="background:var(--primary-light);border-top:2px solid var(--primary)">
-      <td colspan="3" style="font-weight:700;color:var(--primary-dark);font-size:13px;padding:10px 14px">🧮 TOTAL SEMUA CABANG</td>
-      <td><span class="badge badge-retur" style="font-size:13px;padding:4px 10px">- ${totalQty} pcs</span></td>
-      <td colspan="3" style="font-size:12px;color:var(--text-muted);font-weight:500">${ringkasan}</td>
-    </tr>`;
+    tbody.innerHTML += `<tr style="background:var(--primary-light);border-top:2px solid var(--primary)"><td colspan="3" style="font-weight:700;color:var(--primary-dark);font-size:13px;padding:10px 14px">🧮 TOTAL SEMUA CABANG</td><td><span class="badge badge-retur" style="font-size:13px;padding:4px 10px">- ${totalQty} pcs</span></td><td colspan="3" style="font-size:12px;color:var(--text-muted);font-weight:500">${ringkasan}</td></tr>`;
   }
 }
 async function submitRetur() {
@@ -3113,27 +2834,16 @@ async function submitRetur() {
 }
 function konfirmHapusRetur(id, produkId, qty) {
   document.getElementById('confirm-text').innerHTML = `Hapus data retur ini? <br><span style="font-size:12px;color:var(--text-muted)">Stok produk <b>tidak</b> akan dikembalikan otomatis.</span>`;
-  document.getElementById('btn-confirm-del').onclick = async () => {
-    const { error } = await sb.from('retur').delete().eq('id', id);
-    if (error) { showToast('Gagal hapus retur', 'error'); return; }
-    showToast('Retur dihapus', 'success');
-    await loadRetur();
-    closeConfirm();
-  };
+  document.getElementById('btn-confirm-del').onclick = async () => { const { error } = await sb.from('retur').delete().eq('id', id); if (error) { showToast('Gagal hapus retur', 'error'); return; } showToast('Retur dihapus', 'success'); await loadRetur(); closeConfirm(); };
   document.getElementById('modal-confirm').classList.add('open');
 }
 
 async function loadRestok() {
   const tgl = document.getElementById('restok-filter-tgl').value;
   const cabangId = document.getElementById('restok-filter-cabang').value;
-
-  let query = sb.from('restok')
-    .select('*, produk(nama, emoji), cabang(nama)')
-    .order('created_at', { ascending: false });
-
-  if (tgl) { query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59'); }
-  if (cabangId) { query = query.eq('cabang_id', cabangId); }
-
+  let query = sb.from('restok').select('*, produk(nama, emoji), cabang(nama)').order('created_at', { ascending: false });
+  if (tgl) query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59');
+  if (cabangId) query = query.eq('cabang_id', cabangId);
   const { data, error } = await query;
   if (error) { console.error(error); return; }
   restokList = data || [];
@@ -3144,17 +2854,13 @@ async function loadRestok() {
 }
 function renderRestok() {
   const tbody = document.getElementById('tbl-restok');
-  if (!restokList.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Belum ada data restok</td></tr>';
-    return;
-  }
+  if (!restokList.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Belum ada data restok</td></tr>'; return; }
   const mDisp = masterAuthorized ? '' : 'style="display:none"';
   tbody.innerHTML = restokList.map(r => {
     const dt = new Date(r.created_at);
     const tgl = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
     const jam = `${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-    const cabangNama = r.cabang?.nama || '—';
-    return `<tr><td><div style="font-weight:600;font-size:13px">${tgl}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${cabangNama}</span></td><td><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">${r.produk?.emoji || '🍞'}</span><span style="font-weight:600">${r.produk?.nama || '—'}</span></div></td><td><span class="badge badge-stok-ok">+ ${r.qty}</span></td><td style="text-align:center"><button class="act-btn del master-only" title="Hapus restok" onclick="konfirmHapusRestok(${r.id},${r.produk_id},${r.qty})" ${mDisp}>${svgIcon('trash',14)}</button></td></tr>`;
+    return `<tr><td><div style="font-weight:600;font-size:13px">${tgl}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${r.cabang?.nama || '—'}</span></td><td><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">${r.produk?.emoji || '🍞'}</span><span style="font-weight:600">${r.produk?.nama || '—'}</span></div></td><td><span class="badge badge-stok-ok">+ ${r.qty}</span></td><td style="text-align:center"><button class="act-btn del master-only" title="Hapus restok" onclick="konfirmHapusRestok(${r.id},${r.produk_id},${r.qty})" ${mDisp}>${svgIcon('trash',14)}</button></td></tr>`;
   }).join('');
 }
 async function submitRestok() {
@@ -3181,21 +2887,15 @@ async function submitRestok() {
 }
 function konfirmHapusRestok(id, produkId, qty) {
   document.getElementById('confirm-text').innerHTML = `Hapus data restok ini? <br><span style="font-size:12px;color:var(--text-muted)">Stok produk <b>tidak</b> akan dikurangi otomatis.</span>`;
-  document.getElementById('btn-confirm-del').onclick = async () => {
-    const { error } = await sb.from('restok').delete().eq('id', id);
-    if (error) { showToast('Gagal hapus restok', 'error'); return; }
-    showToast('Restok dihapus', 'success');
-    await loadRestok();
-    closeConfirm();
-  };
+  document.getElementById('btn-confirm-del').onclick = async () => { const { error } = await sb.from('restok').delete().eq('id', id); if (error) { showToast('Gagal hapus restok', 'error'); return; } showToast('Restok dihapus', 'success'); await loadRestok(); closeConfirm(); };
   document.getElementById('modal-confirm').classList.add('open');
 }
 
 // ============ CONFIRM DELETE ============
 function konfirmHapus(tipe, id, nama, extra) {
   let msg = `Hapus <b>${nama}</b>?`;
-  if (tipe === 'kategori' && extra > 0) { msg += `<br><span style="color:var(--danger);font-size:12px">⚠ ${extra} produk dalam kategori ini akan kehilangan kategori.</span>`; }
-  if (tipe === 'cabang') { msg += `<br><span style="font-size:12px;color:var(--text-muted)">⚠ Data stok cabang akan terhapus. Riwayat retur/restok akan tetap ada dengan cabang kosong.</span>`; }
+  if (tipe === 'kategori' && extra > 0) msg += `<br><span style="color:var(--danger);font-size:12px">⚠ ${extra} produk dalam kategori ini akan kehilangan kategori.</span>`;
+  if (tipe === 'cabang') msg += `<br><span style="font-size:12px;color:var(--text-muted)">⚠ Data stok cabang akan terhapus. Riwayat retur/restok akan tetap ada dengan cabang kosong.</span>`;
   document.getElementById('confirm-text').innerHTML = msg;
   document.getElementById('btn-confirm-del').onclick = async () => { await eksekusiHapus(tipe, id); closeConfirm(); };
   document.getElementById('modal-confirm').classList.add('open');
@@ -3225,7 +2925,6 @@ async function eksekusiHapus(tipe, id) {
       showToast('Data berhasil dihapus', 'success');
       if (tipe === 'produk') await loadProduk(); else await loadPelanggan();
     }
-    updateTopbarBadge();
   } catch(e) { console.error('[HAPUS] catch:', e); showToast('Gagal menghapus data', 'error'); }
 }
 function closeConfirm() { document.getElementById('modal-confirm').classList.remove('open'); }
@@ -3245,10 +2944,7 @@ function showPromptModal({ icon='✏️', title='', info='', label='Alasan (waji
     overlay.classList.add('open');
     window._promptResolve = resolve;
     setTimeout(() => input.focus(), 150);
-    input.onkeydown = e => {
-      if (e.key === 'Enter') resolvePromptModal();
-      if (e.key === 'Escape') resolvePromptModal(null);
-    };
+    input.onkeydown = e => { if (e.key === 'Enter') resolvePromptModal(); if (e.key === 'Escape') resolvePromptModal(null); };
   });
 }
 function resolvePromptModal(val) {
@@ -3258,7 +2954,6 @@ function resolvePromptModal(val) {
   const result = val === null ? null : (val !== undefined ? val : (input.value.trim() || null));
   if (window._promptResolve) { window._promptResolve(result); window._promptResolve = null; }
 }
-
 function showToast(msg, type='success') {
   const t = document.getElementById('toast');
   t.className = 'toast';
@@ -3269,16 +2964,358 @@ function showToast(msg, type='success') {
   window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
+// ============ BAHAN BAKU ============
+async function loadBahan() {
+  const { data, error } = await sb.from('bahan_baku').select('*').order('nama');
+  if (error) { console.error(error); return; }
+  bahanList = data || [];
+  renderBahan();
+  populateBahanSelect();
+  document.getElementById('count-bahan').textContent = bahanList.length;
+  document.getElementById('bahan-total-label').textContent = `(${bahanList.length} bahan)`;
+}
+
+function renderBahan(list) {
+  list = list || bahanList;
+  const tbody = document.getElementById('tbl-bahan');
+  if (!list.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Belum ada bahan baku</td></tr>'; return; }
+  const mDisp = masterAuthorized ? '' : 'style="display:none"';
+  tbody.innerHTML = list.map(b => {
+    const stokBadge = b.stok <= 0 ? `<span class="badge badge-stok-habis">Habis</span>` : b.stok <= 5 ? `<span class="badge badge-stok-low">⚠ ${b.stok}</span>` : `<span class="badge badge-stok-ok">${b.stok}</span>`;
+    return `<tr><td><div class="produk-info"><div class="produk-icon-mini" style="font-size:20px">${b.emoji || '🧂'}</div><div><div class="produk-name">${b.nama}</div></div></div></td><td><span style="font-size:13px;color:var(--text-muted);font-weight:600">${b.unit || '—'}</span></td><td>${stokBadge}</td><td><span class="badge ${b.aktif !== false ? 'badge-aktif' : 'badge-nonaktif'}">${b.aktif !== false ? 'Aktif' : 'Non-aktif'}</span></td><td><div class="act-btns" style="justify-content:center"><button class="act-btn toggle" title="${b.aktif !== false ? 'Non-aktifkan' : 'Aktifkan'}" onclick="toggleAktifBahan(${b.id},${b.aktif !== false})">${svgIcon('toggle',16)}</button><button class="act-btn edit master-only" title="Edit" onclick="openEditBahan(${b.id})" ${mDisp}>${svgIcon('edit',15)}</button><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapusBahan(${b.id},'${b.nama.replace(/'/g,"\\'")}')" ${mDisp}>${svgIcon('trash',14)}</button></div></td></tr>`;
+  }).join('');
+}
+function filterBahan() {
+  const q = document.getElementById('search-bahan').value.toLowerCase();
+  const unit = document.getElementById('filter-unit-bahan').value;
+  let list = bahanList;
+  if (q) list = list.filter(b => b.nama.toLowerCase().includes(q));
+  if (unit) list = list.filter(b => b.unit === unit);
+  renderBahan(list);
+}
+function openModalBahan() {
+  if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
+  document.getElementById('edit-bahan-id').value = '';
+  document.getElementById('modal-bahan-title').innerHTML = '🧂 Tambah Bahan Baku';
+  document.getElementById('fb-nama').value = '';
+  renderGenericDropdown('fb-unit', '');
+  document.getElementById('fb-stok').value = '0';
+  document.getElementById('fb-aktif').checked = true;
+  document.getElementById('fb-aktif-label').textContent = 'Aktif';
+  document.getElementById('fb-aktif-label').style.color = 'var(--success)';
+  document.getElementById('modal-bahan').classList.add('open');
+  setTimeout(() => document.getElementById('fb-nama').focus(), 100);
+}
+function openEditBahan(id) {
+  if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
+  const b = bahanList.find(x => x.id === id); if (!b) return;
+  document.getElementById('edit-bahan-id').value = id;
+  document.getElementById('modal-bahan-title').innerHTML = '✏️ Edit Bahan Baku';
+  document.getElementById('fb-nama').value = b.nama;
+  renderGenericDropdown('fb-unit', b.unit || '');
+  document.getElementById('fb-stok').value = b.stok || 0;
+  document.getElementById('fb-aktif').checked = b.aktif !== false;
+  document.getElementById('fb-aktif-label').textContent = b.aktif !== false ? 'Aktif' : 'Non-aktif';
+  document.getElementById('fb-aktif-label').style.color = b.aktif !== false ? 'var(--success)' : 'var(--text-muted)';
+  document.getElementById('modal-bahan').classList.add('open');
+}
+async function saveBahan() {
+  const id = document.getElementById('edit-bahan-id').value;
+  const nama = document.getElementById('fb-nama').value.trim();
+  const unit = document.getElementById('fb-unit').value.trim();
+  const stok = parseFloat(document.getElementById('fb-stok').value) || 0;
+  const aktif = document.getElementById('fb-aktif').checked;
+  if (!nama) { showToast('Nama bahan wajib diisi', 'warn'); return; }
+  if (!unit) { showToast('Unit wajib diisi', 'warn'); return; }
+  const btn = document.getElementById('btn-save-bahan');
+  btn.blur(); btn.disabled = true; btn.textContent = 'Menyimpan...';
+  try {
+    const payload = { nama, unit, stok, aktif, emoji: '🧂' };
+    if (id) { const { error } = await sb.from('bahan_baku').update(payload).eq('id', id); if (error) throw error; showToast('Bahan diperbarui', 'success'); }
+    else { const { error } = await sb.from('bahan_baku').insert(payload); if (error) throw error; showToast('Bahan ditambahkan', 'success'); }
+    closeModalBahan(); await loadBahan(); populateBahanSelect();
+  } catch(e) { console.error(e); showToast('Gagal menyimpan bahan: ' + (e.message || 'Unknown error'), 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '💾 Simpan'; }
+}
+function closeModalBahan() { document.getElementById('modal-bahan').classList.remove('open'); }
+async function toggleAktifBahan(id, isAktif) {
+  if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
+  const { error } = await sb.from('bahan_baku').update({ aktif: !isAktif }).eq('id', id);
+  if (error) { showToast('Gagal update status', 'error'); return; }
+  const b = bahanList.find(x => x.id === id); if (b) b.aktif = !isAktif;
+  showToast(!isAktif ? 'Bahan diaktifkan' : 'Bahan dinonaktifkan', 'success');
+  renderBahan();
+}
+function konfirmHapusBahan(id, nama) {
+  document.getElementById('confirm-text').innerHTML = `Hapus bahan <b>${nama}</b>?<br><span style="font-size:12px;color:var(--text-muted)">Data pengambilan bahan ini akan tetap ada dengan bahan kosong.</span>`;
+  document.getElementById('btn-confirm-del').onclick = async () => {
+    const { error } = await sb.from('bahan_baku').delete().eq('id', id);
+    if (error) { showToast('Gagal hapus bahan', 'error'); return; }
+    showToast('Bahan dihapus', 'success');
+    await loadBahan(); populateBahanSelect(); closeConfirm();
+  };
+  document.getElementById('modal-confirm').classList.add('open');
+}
+
+// ============ PEGAWAI PAYROLL ============
+async function loadPegawaiPayroll() {
+  try {
+    const { data, error } = await sb.from('pegawai').select('id, nama, jabatan, aktif').order('nama');
+    if (error) throw error;
+    pegawaiPayrollList = data || [];
+    populatePegawaiSelect();
+    try { localStorage.setItem('pegawai_payroll_cache', JSON.stringify(pegawaiPayrollList)); } catch(e) {}
+  } catch(e) {
+    console.error('Load pegawai payroll error:', e);
+    try { const cached = localStorage.getItem('pegawai_payroll_cache'); if (cached) { pegawaiPayrollList = JSON.parse(cached); populatePegawaiSelect(); } } catch(e2) {}
+  }
+}
+function populatePegawaiSelect() {
+  const dd = document.getElementById('ambil-pegawai-dropdown');
+  const label = document.getElementById('ambil-pegawai-label');
+  const hidden = document.getElementById('ambil-pegawai-value');
+  dd.innerHTML = '';
+  const aktif = pegawaiPayrollList.filter(p => p.aktif !== false);
+  if (!aktif.length) {
+    const opt = document.createElement('div'); opt.className = 'custom-option'; opt.textContent = '— Tidak ada pegawai —'; opt.style.color = 'var(--text-muted)'; dd.appendChild(opt); return;
+  }
+  aktif.forEach(p => {
+    const opt = document.createElement('div');
+    opt.className = 'custom-option' + (String(hidden.value) === String(p.id) ? ' selected' : '');
+    opt.dataset.value = p.id;
+    opt.textContent = `${p.nama}${p.jabatan ? ' ('+p.jabatan+')' : ''}`;
+    opt.addEventListener('click', () => {
+      hidden.value = p.id;
+      label.textContent = p.nama;
+      dd.querySelectorAll('.custom-option').forEach(o => o.classList.toggle('selected', o.dataset.value == p.id));
+      dd.classList.remove('open');
+      document.getElementById('ambil-pegawai-btn').classList.remove('open');
+    });
+    dd.appendChild(opt);
+  });
+}
+function populateBahanSelect() {
+  const dd = document.getElementById('ambil-bahan-dropdown');
+  const label = document.getElementById('ambil-bahan-label');
+  const hidden = document.getElementById('ambil-bahan-value');
+  const stokInfo = document.getElementById('ambil-stok-info');
+  dd.innerHTML = '';
+  const aktif = bahanList.filter(b => b.aktif !== false);
+  if (!aktif.length) {
+    const opt = document.createElement('div'); opt.className = 'custom-option'; opt.textContent = '— Tidak ada bahan aktif —'; opt.style.color = 'var(--text-muted)'; dd.appendChild(opt);
+    if (stokInfo) stokInfo.textContent = '';
+    return;
+  }
+  aktif.forEach(b => {
+    const opt = document.createElement('div');
+    opt.className = 'custom-option' + (String(hidden.value) === String(b.id) ? ' selected' : '');
+    opt.dataset.value = b.id;
+    opt.textContent = `${b.nama} (Stok: ${b.stok} ${b.unit})`;
+    opt.addEventListener('click', () => {
+      hidden.value = b.id;
+      label.textContent = b.nama;
+      dd.querySelectorAll('.custom-option').forEach(o => o.classList.toggle('selected', o.dataset.value == b.id));
+      dd.classList.remove('open');
+      document.getElementById('ambil-bahan-btn').classList.remove('open');
+      if (stokInfo) stokInfo.textContent = `Stok tersedia: ${b.stok} ${b.unit}`;
+    });
+    dd.appendChild(opt);
+  });
+  if (hidden.value) {
+    const selected = bahanList.find(b => String(b.id) === String(hidden.value));
+    if (selected && stokInfo) stokInfo.textContent = `Stok tersedia: ${selected.stok} ${selected.unit}`;
+  }
+}
+
+// ============ PENGAMBILAN ============
+async function submitPengambilan() {
+  if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
+  const bahanId = parseInt(document.getElementById('ambil-bahan-value').value);
+  const pegawaiId = parseInt(document.getElementById('ambil-pegawai-value').value);
+  const jumlah = parseFloat(document.getElementById('ambil-jumlah').value) || 0;
+  const catatan = document.getElementById('ambil-catatan').value.trim();
+
+  if (!bahanId) { showToast('Pilih bahan baku', 'warn'); return; }
+  if (!pegawaiId) { showToast('Pilih pegawai', 'warn'); return; }
+  if (jumlah <= 0) { showToast('Jumlah harus lebih dari 0', 'warn'); return; }
+
+  const bahan = bahanList.find(b => b.id === bahanId);
+  if (!bahan) { showToast('Bahan tidak ditemukan', 'error'); return; }
+  if (jumlah > bahan.stok) { showToast(`Stok tidak mencukupi. Tersisa: ${bahan.stok} ${bahan.unit}`, 'warn'); return; }
+
+  const pegawai = pegawaiPayrollList.find(p => p.id === pegawaiId);
+  if (!pegawai) { showToast('Pegawai tidak ditemukan', 'error'); return; }
+
+  const btn = document.getElementById('btn-ambil-submit');
+  btn.blur(); btn.disabled = true; btn.innerHTML = 'Menyimpan...';
+  try {
+    const { error: e1 } = await sb.from('pengambilan_bahan').insert({
+      bahan_id: bahanId,
+      pegawai_id: pegawaiId,
+      jumlah: jumlah,
+      catatan: catatan || null
+    });
+    if (e1) throw e1;
+
+    const newStok = bahan.stok - jumlah;
+    const { error: e2 } = await sb.from('bahan_baku').update({ stok: newStok }).eq('id', bahanId);
+    if (e2) throw e2;
+    bahan.stok = newStok;
+
+    showToast(`Pengambilan ${jumlah} ${bahan.unit} oleh ${pegawai.nama} berhasil`, 'success');
+
+    document.getElementById('ambil-bahan-value').value = '';
+    document.getElementById('ambil-bahan-label').textContent = '— Pilih Bahan —';
+    document.getElementById('ambil-pegawai-value').value = '';
+    document.getElementById('ambil-pegawai-label').textContent = '— Pilih Pegawai —';
+    document.getElementById('ambil-jumlah').value = '1';
+    document.getElementById('ambil-catatan').value = '';
+    document.getElementById('ambil-stok-info').textContent = '';
+
+    await Promise.all([loadBahan(), loadPengambilan()]);
+    renderBahan();
+    populateBahanSelect();
+  } catch(e) { console.error(e); showToast('Gagal menyimpan pengambilan: ' + (e.message || 'Unknown error'), 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '💾 Simpan Pengambilan'; }
+}
+
+async function loadPengambilan() {
+  const tgl = document.getElementById('pengambilan-filter-tgl').value;
+  const tbody = document.getElementById('tbl-pengambilan');
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Memuat data...</td></tr>';
+  try {
+    let query = sb.from('pengambilan_bahan').select('*').order('created_at', { ascending: false });
+    if (tgl) query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59');
+    const { data, error } = await query;
+    if (error) { console.error('Error load pengambilan:', error); tbody.innerHTML = `<tr class="empty-row"><td colspan="6">❌ Error: ${error.message}</td></tr>`; return; }
+    const { data: bahanData } = await sb.from('bahan_baku').select('id, nama, unit');
+    const bahanMap = {}; (bahanData || []).forEach(b => bahanMap[b.id] = b);
+    const { data: pegawaiData } = await sb.from('pegawai').select('id, nama');
+    const pegawaiMap = {}; (pegawaiData || []).forEach(p => pegawaiMap[p.id] = p);
+    pengambilanList = (data || []).map(r => ({ ...r, bahan_baku: bahanMap[r.bahan_id] || null, pegawai: pegawaiMap[r.pegawai_id] || null }));
+    renderPengambilan();
+    document.getElementById('count-pengambilan').textContent = pengambilanList.length;
+    document.getElementById('pengambilan-total-label').textContent = `(${pengambilanList.length} pengambilan)`;
+  } catch(e) { console.error('Error:', e); tbody.innerHTML = `<tr class="empty-row"><td colspan="6">❌ Error: ${e.message || 'Unknown error'}</td></tr>`; }
+}
+function renderPengambilan() {
+  const tbody = document.getElementById('tbl-pengambilan');
+  if (!pengambilanList || !pengambilanList.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Belum ada pengambilan</td></tr>'; return; }
+  const mDisp = masterAuthorized ? '' : 'style="display:none"';
+  tbody.innerHTML = pengambilanList.map(r => {
+    const dt = new Date(r.created_at);
+    const tgl = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
+    const jam = `${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+    const namaBahan = r.bahan_baku?.nama || 'Bahan dihapus';
+    const unitBahan = r.bahan_baku?.unit || '';
+    const namaPegawai = r.pegawai?.nama || '—';
+    return `<tr><td><div style="font-weight:600;font-size:13px">${tgl}</div><div style="font-size:11px;color:var(--text-muted)">${jam}</div></td><td><span style="font-weight:600">${namaBahan}</span></td><td><span class="badge badge-stok-habis">- ${r.jumlah} ${unitBahan}</span></td><td><span style="font-weight:600">${namaPegawai}</span></td><td><span style="font-size:13px;color:var(--text-muted)">${r.catatan || '—'}</span></td><td style="text-align:center"><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapusPengambilan(${r.id},${r.bahan_id},${r.jumlah})" ${mDisp}>${svgIcon('trash',14)}</button></td></tr>`;
+  }).join('');
+}
+function konfirmHapusPengambilan(id, bahanId, jumlah) {
+  document.getElementById('confirm-text').innerHTML = `Hapus data pengambilan ini?<br><span style="font-size:12px;color:var(--text-muted)">Stok bahan akan dikembalikan otomatis.</span>`;
+  document.getElementById('btn-confirm-del').onclick = async () => {
+    try {
+      const bahan = bahanList.find(b => b.id === bahanId);
+      if (bahan) { const newStok = bahan.stok + jumlah; await sb.from('bahan_baku').update({ stok: newStok }).eq('id', bahanId); bahan.stok = newStok; }
+      const { error } = await sb.from('pengambilan_bahan').delete().eq('id', id);
+      if (error) throw error;
+      showToast('Pengambilan dihapus, stok dikembalikan', 'success');
+      await Promise.all([loadBahan(), loadPengambilan()]);
+      renderBahan(); populateBahanSelect(); closeConfirm();
+    } catch(e) { showToast('Gagal hapus pengambilan', 'error'); }
+  };
+  document.getElementById('modal-confirm').classList.add('open');
+}
+
+// ============ REKAP BAHAN ============
+function setRekapBahanBulanIni() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('rekapbahan-dari').value = `${y}-${m}-01`;
+  const lastDay = new Date(y, now.getMonth()+1, 0).getDate();
+  document.getElementById('rekapbahan-sampai').value = `${y}-${m}-${lastDay}`;
+  loadRekapBahan();
+}
+async function loadRekapBahan() {
+  const dari = document.getElementById('rekapbahan-dari').value;
+  const sampai = document.getElementById('rekapbahan-sampai').value;
+  const tbody = document.getElementById('tbl-rekapbahan');
+  if (!dari || !sampai) { tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr>'; return; }
+  const { data, error } = await sb.from('pengambilan_bahan')
+    .select('*, pegawai(nama)')
+    .gte('created_at', dari + 'T00:00:00')
+    .lte('created_at', sampai + 'T23:59:59');
+  if (error) { console.error(error); tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Gagal memuat data</td></tr>'; return; }
+  const map = {};
+  let totalJumlah = 0;
+  (data || []).forEach(r => {
+    const pid = r.pegawai_id;
+    if (!map[pid]) map[pid] = { nama: r.pegawai?.nama || 'Unknown', count: 0, total: 0 };
+    map[pid].count++;
+    map[pid].total += (r.jumlah || 0);
+    totalJumlah += (r.jumlah || 0);
+  });
+  const rows = Object.values(map).sort((a, b) => b.total - a.total);
+  document.getElementById('rekapbahan-total-ambil').textContent = rows.reduce((s, r) => s + r.count, 0);
+  document.getElementById('rekapbahan-total-jumlah').textContent = totalJumlah;
+  document.getElementById('rekapbahan-total-pegawai').textContent = rows.length;
+  if (!rows.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Tidak ada pengambilan pada periode ini</td></tr>'; return; }
+  tbody.innerHTML = rows.map((r, i) => {
+    const rankColor = i === 0 ? '#f59e0b' : i === 1 ? '#94a3b8' : i === 2 ? '#b45309' : 'var(--text-muted)';
+    const rankIcon = i < 3 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="${rankColor}" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>` : '';
+    return `<tr><td style="width:44px"><div style="display:flex;align-items:center;gap:4px;font-weight:700;color:${rankColor};font-size:13px">${rankIcon}${i+1}</div></td><td><span style="font-weight:700">${r.nama}</span></td><td style="text-align:center"><span class="badge badge-stok-ok" style="font-size:12px">${r.count}x</span></td><td style="text-align:right;font-weight:800;font-size:14px;color:var(--primary-dark)">${r.total}</td></tr>`;
+  }).join('');
+}
+function printRekapBahan() {
+  const tbody = document.getElementById('tbl-rekapbahan');
+  const dari = document.getElementById('rekapbahan-dari').value;
+  const sampai = document.getElementById('rekapbahan-sampai').value;
+  if (!dari || !sampai) { showToast('Pilih periode terlebih dahulu', 'warn'); return; }
+  const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+  if (!rows.length) { showToast('Tidak ada data untuk dicetak', 'warn'); return; }
+  const printWindow = window.open('', '_blank', 'width=600,height=500');
+  if (!printWindow) { showToast('Izinkan popup untuk mencetak', 'warn'); return; }
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return `${dd} ${bulan[parseInt(m)-1]} ${y}`; };
+  let tableRows = '';
+  rows.forEach((row, i) => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length >= 4) tableRows += `<tr><td>${cells[0].textContent.trim()}</td><td>${cells[1].textContent.trim()}</td><td style="text-align:center">${cells[2].textContent.trim()}</td><td style="text-align:right">${cells[3].textContent.trim()}</td></tr>`;
+  });
+  printWindow.document.write(`<html><head><title>Rekap Pengambilan Bahan</title>
+    <style>body{font-family:'Inter',sans-serif;font-size:12px;padding:30px;line-height:1.6}.header{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:16px}.header h2{margin:0;font-size:18px}.header .sub{font-size:11px;color:#666;margin-top:4px}table{width:100%;border-collapse:collapse;margin-top:12px}th{background:#1a1a1a;color:#fff;padding:8px 10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:0.5px}td{padding:6px 10px;border-bottom:1px solid #e5e5e5}.summary{display:flex;gap:16px;margin-top:8px;font-weight:600}.summary span{background:#f5f5f5;padding:6px 14px;border-radius:6px}.footer{margin-top:20px;padding-top:10px;border-top:1px solid #ccc;font-size:10px;color:#888;text-align:center}</style>
+    </head><body><div class="header"><h2>📊 Rekap Pengambilan Bahan Baku</h2><div class="sub">Periode: ${fmt(dari)} — ${fmt(sampai)}</div></div>
+    <div class="summary"><span>👥 Total Pegawai: ${document.getElementById('rekapbahan-total-pegawai').textContent}</span>
+    <span>📦 Total Pengambilan: ${document.getElementById('rekapbahan-total-ambil').textContent}</span>
+    <span>📈 Total Jumlah: ${document.getElementById('rekapbahan-total-jumlah').textContent}</span></div>
+    <table><thead><tr><th>#</th><th>Nama Pegawai</th><th style="text-align:center">Pengambilan</th><th style="text-align:right">Total Jumlah</th></tr></thead><tbody>${tableRows}</tbody></table>
+    <div class="footer">Dicetak dari Sri Rejeki · Master Data</div>
+    <script>window.onload=function(){window.print();window.close();};<\/script></body></html>`);
+  printWindow.document.close();
+}
+
 // ============ ESCAPE KEY ============
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    if (document.getElementById('modal-ganti-password').classList.contains('open')) { closeGantiPassword(); }
+    if (document.getElementById('modal-ganti-password').classList.contains('open')) closeGantiPassword();
     closeMasterLogin();
-    document.querySelectorAll('.modal-overlay.open').forEach(m => { m.classList.remove('open'); });
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     const rekapPage = document.getElementById('page-rekap');
     if (rekapPage && rekapPage.classList.contains('open')) closeRekap();
   }
 });
+
+// ============ SERVICE WORKER ============
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swUrl = new URL('sw.js', document.baseURI).href;
+    const scope = new URL('./', document.baseURI).href;
+    navigator.serviceWorker.register(swUrl, { scope })
+      .then(reg => console.log('[SW] Terdaftar:', reg.scope))
+      .catch(err => console.warn('[SW] Gagal daftar:', err));
+  });
+}
 
 // ============ INIT ============
 async function init() {
@@ -3293,6 +3330,8 @@ async function init() {
   document.getElementById('stoklog-filter-tgl').value = today;
   document.getElementById('rekap-dari').value = `${year}-01-01`;
   document.getElementById('rekap-sampai').value = `${year}-12-31`;
+  document.getElementById('pengambilan-filter-tgl').value = today;
+  setRekapBahanBulanIni();
   mcSyncButtons();
   if (!sb) {
     showToast('Gagal memuat library Supabase. Cek koneksi internet.', 'error');
@@ -3307,10 +3346,16 @@ async function init() {
     await Promise.all([loadKategori(), loadCabang()]);
     setProgress(35, 'Memuat produk & pelanggan...');
     await Promise.all([loadPelanggan(), loadStokCabangAll()]);
-    setProgress(60, 'Memuat produk...');
+    setProgress(50, 'Memuat produk...');
     await loadProduk();
-    setProgress(75, 'Memuat riwayat retur & restok...');
+    setProgress(60, 'Memuat riwayat retur & restok...');
     await Promise.all([loadRetur(), loadRestok(), loadStokLog()]);
+    setProgress(75, 'Memuat bahan baku...');
+    await loadBahan();
+    setProgress(85, 'Memuat pegawai payroll...');
+    await loadPegawaiPayroll();
+    setProgress(95, 'Memuat pengambilan...');
+    await loadPengambilan();
     setProgress(100, 'Siap!');
     await new Promise(r => setTimeout(r, 400));
     hideLoading();
@@ -3321,38 +3366,9 @@ async function init() {
     showToast('Gagal koneksi ke server', 'error');
     console.error(e);
     setTimeout(() => hideLoading(), 3000);
-  } finally { updateTopbarBadge(); }
+  }
 }
 init();
-</script>
-
-<!-- PROMPT MODAL -->
-<div class="prompt-overlay" id="prompt-overlay">
-  <div class="prompt-card">
-    <div class="prompt-icon" id="prompt-icon">✏️</div>
-    <div class="prompt-title" id="prompt-title"></div>
-    <div class="prompt-info" id="prompt-info"></div>
-    <div class="prompt-label" id="prompt-label">Alasan perubahan (wajib):</div>
-    <input class="prompt-input" id="prompt-input" type="text" placeholder="Tulis alasan...">
-    <div class="prompt-actions">
-      <button class="prompt-btn-cancel" onclick="resolvePromptModal(null)">Batal</button>
-      <button class="prompt-btn-ok" id="prompt-ok-btn" onclick="resolvePromptModal()">Simpan</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── SERVICE WORKER REGISTRATION (offline support) ── -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Deteksi base path otomatis — aman untuk GitHub Pages subfolder
-    const swUrl = new URL('sw.js', document.baseURI).href;
-    const scope = new URL('./', document.baseURI).href;
-    navigator.serviceWorker.register(swUrl, { scope })
-      .then(reg => console.log('[SW] Terdaftar:', reg.scope))
-      .catch(err => console.warn('[SW] Gagal daftar:', err));
-  });
-}
 </script>
 </body>
 </html>
