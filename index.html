@@ -14,6 +14,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -806,9 +807,7 @@ body.fade-out {
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-var SUPABASE_URL = 'https://aowjbkirwxkbwdqvqlpy.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvd2pia2lyd3hrYndkcXZxbHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Nzc2MTAsImV4cCI6MjA5NzI1MzYxMH0.A913aR55dauEdkxq91LLEgmTXNRwaXiircUrMyzjCyM';
-var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
 
 // ============ DEVICE DETECTION ============
 var CURRENT_UA = navigator.userAgent || '';
