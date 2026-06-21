@@ -1984,7 +1984,60 @@ function selectEmoji(key, el) { selectedEmoji = key; document.querySelectorAll('
 function updateTopbarBadge() {}
 
 // ============ SWITCH TAB ============
+// 🔥 RESET SEMUA KOLOM FILTER/INPUT DI SETIAP TAB SAAT PINDAH TAB
+// Dipanggil setiap kali switchTab() dijalankan, supaya saat user balik lagi
+// ke tab manapun, semua kolom pencarian/filter/form sudah bersih (clear).
+function resetAllTabFields() {
+  // ── TAB PRODUK ──
+  const searchProduk = document.getElementById('search-produk');
+  if (searchProduk) searchProduk.value = '';
+  if (typeof renderGenericDropdown === 'function') {
+    renderGenericDropdown('filter-kategori-produk', '');
+    renderGenericDropdown('filter-status-produk', '');
+  }
+
+  // ── TAB PELANGGAN ──
+  const searchPelanggan = document.getElementById('search-pelanggan');
+  if (searchPelanggan) searchPelanggan.value = '';
+  if (document.getElementById('pel-cabang-value')) selectCabangDropdown('pel', null, 'SEMUA CABANG', true);
+  if (typeof renderGenericDropdown === 'function') renderGenericDropdown('filter-kredit-pel', '');
+
+  // ── TAB RETUR ──
+  if (document.getElementById('retur-cabang-value')) selectCabangDropdown('retur', null, 'SEMUA CABANG', true);
+  const returProduk = document.getElementById('retur-produk-select');
+  if (returProduk) { returProduk.value = ''; renderGenericDropdown('retur-produk-select', ''); }
+  const returQty = document.getElementById('retur-qty');
+  if (returQty) returQty.value = '1';
+  if (typeof renderGenericDropdown === 'function') renderGenericDropdown('retur-alasan', 'Rusak');
+  const returCatatan = document.getElementById('retur-catatan');
+  if (returCatatan) returCatatan.value = '';
+  const returFilterTgl = document.getElementById('retur-filter-tgl');
+  if (returFilterTgl) returFilterTgl.value = '';
+
+  // ── TAB RESTOK ──
+  if (document.getElementById('restokin-cabang-value')) {
+    document.getElementById('restokin-cabang-value').value = '';
+    document.getElementById('restokin-cabang-label').textContent = '— Pilih Cabang —';
+    const restokinBtn = document.getElementById('restokin-cabang-btn');
+    if (restokinBtn) { restokinBtn.classList.add('has-placeholder'); restokinBtn.classList.remove('has-value'); }
+  }
+  if (typeof resetRestokProduk === 'function') resetRestokProduk();
+  const restokFilterCabang = document.getElementById('restok-filter-cabang');
+  if (restokFilterCabang) restokFilterCabang.value = '';
+  const restokFilterTgl = document.getElementById('restok-filter-tgl');
+  if (restokFilterTgl) restokFilterTgl.value = '';
+
+  // ── TAB STOK CABANG ──
+  if (document.getElementById('stok-cabang-value')) selectCabangDropdown('stok', null, '— Pilih Cabang —', true);
+  if (typeof renderGenericDropdown === 'function') renderGenericDropdown('stok-filter-status', '');
+
+  // ── TAB LOG STOK ──
+  const stoklogFilterTgl = document.getElementById('stoklog-filter-tgl');
+  if (stoklogFilterTgl) stoklogFilterTgl.value = '';
+}
+
 function switchTab(name, btn) {
+  resetAllTabFields();
   activeTab = name;
   document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
