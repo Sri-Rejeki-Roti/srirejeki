@@ -510,24 +510,6 @@ body { padding-bottom: 78px; }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 
-/* OMSET CARD GROUP */
-.omset-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
-
-/* BREAKDOWN CABANG */
-.breakdown-cabang {
-  display:grid; grid-template-columns:1fr 1fr; gap:14px;
-}
-.cabang-mini-card {
-  background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius-sm);
-  padding:14px 16px; box-shadow:var(--shadow-sm);
-}
-.cabang-mini-card .cmc-header {
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
-}
-.cabang-mini-card .cmc-name { font-weight:700; font-size:14px; }
-.cabang-mini-card .cmc-value { font-weight:800; font-size:18px; color:var(--primary-dark); }
-.cabang-mini-card .cmc-sub { font-size:11px; color:var(--text-muted); }
-
 /* RINGKASAN TAB (Card per Cabang) */
 .ringkasan-grid {
   display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:24px;
@@ -571,13 +553,10 @@ body { padding-bottom: 78px; }
 
 @media(max-width:900px) {
   .grid-2, .grid-3 { grid-template-columns:1fr; }
-  .omset-row { grid-template-columns:repeat(2,1fr); }
-  .breakdown-cabang { grid-template-columns:1fr; }
 }
 @media(max-width:600px) {
   .main-content { padding:16px 14px; }
   .stats-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
-  .omset-row { grid-template-columns:repeat(2,1fr); gap:10px; }
   .tabs-nav { gap:0; }
   .tab-btn { padding:7px 2px 5px; font-size:9.5px; }
   .stat-value { font-size:20px; }
@@ -643,12 +622,12 @@ body { padding-bottom: 78px; }
     <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Owner Dashboard</div>
 
     <div id="lg-setup-fields" style="display:none;">
-      <input type="text" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
-      <input type="text" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+      <input type="tel" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:10px;box-sizing:border-box;letter-spacing:4px;">
+      <input type="tel" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;letter-spacing:4px;">
     </div>
 
     <div id="lg-login-fields">
-      <input type="text" id="lg-pass-input" placeholder="Password..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+      <input type="tel" id="lg-pass-input" placeholder="Password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;letter-spacing:4px;">
     </div>
 
     <div id="lg-error" style="display:none;color:#e8485f;font-size:12.5px;font-weight:600;text-align:center;margin-bottom:14px;padding:9px;background:#fdeaec;border-radius:8px;"></div>
@@ -858,98 +837,6 @@ body { padding-bottom: 78px; }
     </div>
   </div>
 
-  <!-- ===== TAB: OMSET ===== -->
-  <div class="tab-panel" id="panel-omset">
-
-    <!-- KPI Cards -->
-    <div class="omset-row" id="kpi-row">
-      <div class="stat-card amber">
-        <div class="stat-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="19" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg></div>
-        <div class="stat-label">Total Omset</div>
-        <div class="stat-value sm" id="kpi-omset">—</div>
-        <div class="stat-sub" id="kpi-omset-sub">Memuat...</div>
-      </div>
-      <div class="stat-card teal">
-        <div class="stat-icon teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/></svg></div>
-        <div class="stat-label">Jumlah Transaksi</div>
-        <div class="stat-value" id="kpi-trx">—</div>
-        <div class="stat-sub" id="kpi-trx-sub">Memuat...</div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div class="stat-label">Rata-rata / Transaksi</div>
-        <div class="stat-value sm" id="kpi-avg">—</div>
-        <div class="stat-sub">Per transaksi</div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div class="stat-label">Kredit Tertunggak</div>
-        <div class="stat-value sm" id="kpi-kredit">—</div>
-        <div class="stat-sub" id="kpi-kredit-sub">Memuat...</div>
-      </div>
-    </div>
-
-    <!-- Breakdown per Cabang (hanya muncul jika "Semua Cabang" dipilih) -->
-    <div id="breakdown-cabang-wrap" style="margin-bottom:24px;display:none">
-      <div class="section-header">
-        <div class="section-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M2 7l10-4 10 4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-          Breakdown per Cabang
-        </div>
-      </div>
-      <div class="breakdown-cabang" id="breakdown-cabang"></div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="grid-2" style="margin-bottom:24px">
-      <div class="chart-wrap">
-        <div class="chart-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="4" height="11" rx="1" fill="var(--accent)"/><rect x="10" y="5" width="4" height="16" rx="1" fill="#0f9b8e"/><rect x="17" y="8" width="4" height="13" rx="1" fill="#6366f1"/></svg>
-          Omset Harian
-        </div>
-        <div class="chart-canvas-wrap">
-          <canvas id="chart-omset"></canvas>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <div class="chart-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--accent)" stroke-width="1.8"/><path d="M12 12L12 5M12 12l5 3" stroke="#0f9b8e" stroke-width="1.8" stroke-linecap="round"/></svg>
-          Metode Pembayaran
-        </div>
-        <div class="chart-canvas-wrap">
-          <canvas id="chart-metode"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tipe transaksi + jam ramai -->
-    <div class="grid-2">
-      <div class="roti-card">
-        <div style="padding:16px 18px 12px; border-bottom:1px solid var(--border)">
-          <div class="section-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6h6c3.3 0 6 2.7 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Tipe Transaksi
-          </div>
-        </div>
-        <div id="tipe-transaksi-wrap" style="padding:16px 18px;">
-          <div class="empty-state"><div class="es-sub">Memuat...</div></div>
-        </div>
-      </div>
-      <div class="roti-card">
-        <div style="padding:16px 18px 12px; border-bottom:1px solid var(--border)">
-          <div class="section-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Jam Ramai
-          </div>
-        </div>
-        <div id="jam-ramai-wrap" style="padding:16px 18px;">
-          <div class="empty-state"><div class="es-sub">Memuat...</div></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
   <!-- ===== TAB: TRANSAKSI ===== -->
   <div class="tab-panel" id="panel-transaksi">
     <div class="section">
@@ -1133,8 +1020,6 @@ let allCabang = [];
 let allTrxRingkasan = []; // transaksi semua cabang (tanpa filter cabang) untuk tab Ringkasan
 let omsetSepanjangWaktu = 0; // total omset all-time, tidak terpengaruh filter periode
 let allPelangganRekap = null; // [id, {trx, total, kredit}] hasil agregasi untuk tab Pelanggan
-let chartOmset = null;
-let chartMetode = null;
 let chartProduk = null;
 
 // ============================================================
@@ -1404,7 +1289,6 @@ async function loadAll() {
     })));
 
     renderRingkasan();
-    renderOmset(cabangId);
     renderTrxList();
     renderProduk();
     renderPelanggan();
@@ -1603,208 +1487,6 @@ function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari, omsetTotal })
       </div>
     </div>
   </div>`;
-}
-
-// ============================================================
-// RENDER OMSET TAB
-// ============================================================
-function renderOmset(cabangId) {
-  const lunas = allTrx.filter(t => t.status === 'lunas' || !t.status);
-  const totalOmset = lunas.reduce((s, t) => s + (t.total || 0), 0);
-  const jumlahTrx = allTrx.length;
-  const avgTrx = jumlahTrx > 0 ? totalOmset / jumlahTrx : 0;
-  const kredit = allTrx.filter(t => t.status === 'kredit');
-  const totalKredit = kredit.reduce((s, t) => s + (t.total || 0), 0);
-
-  document.getElementById('kpi-omset').textContent = rp(totalOmset);
-  document.getElementById('kpi-omset-sub').textContent = `${jumlahTrx} transaksi`;
-  document.getElementById('kpi-trx').textContent = jumlahTrx;
-  document.getElementById('kpi-trx-sub').textContent = lunas.length + ' lunas · ' + kredit.length + ' kredit';
-  document.getElementById('kpi-avg').textContent = rp(avgTrx);
-  document.getElementById('kpi-kredit').textContent = rp(totalKredit);
-  document.getElementById('kpi-kredit-sub').textContent = kredit.length + ' transaksi kredit';
-
-  // Breakdown per cabang (hanya jika "Semua Cabang" dipilih)
-  const wrap = document.getElementById('breakdown-cabang-wrap');
-  if (!cabangId && allCabang.length > 1) {
-    wrap.style.display = 'block';
-    renderBreakdownCabang();
-  } else {
-    wrap.style.display = 'none';
-  }
-
-  renderChartOmset();
-  renderChartMetode();
-  renderTipeTrx();
-  renderJamRamai();
-}
-
-function renderBreakdownCabang() {
-  const container = document.getElementById('breakdown-cabang');
-
-  // Group transaksi per cabang
-  const cabangMap = {};
-  allCabang.forEach(c => {
-    cabangMap[c.id] = { ...c, total: 0, count: 0, kredit: 0 };
-  });
-
-  allTrx.forEach(t => {
-    const id = t.cabang_id;
-    if (id && cabangMap[id]) {
-      cabangMap[id].count++;
-      cabangMap[id].total += t.total || 0;
-      if (t.status === 'kredit') cabangMap[id].kredit += t.total || 0;
-    }
-  });
-
-  const sorted = Object.values(cabangMap).sort((a, b) => b.total - a.total);
-
-  container.innerHTML = sorted.map((c, i) => `
-    <div class="cabang-mini-card">
-      <div class="cmc-header">
-        <span class="cmc-name">🏪 ${c.nama}</span>
-        <span style="font-size:11px;color:var(--text-muted)">#${i+1}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <div>
-          <div class="cmc-value">${rp(c.total)}</div>
-          <div class="cmc-sub">${c.count} transaksi</div>
-        </div>
-        ${c.kredit > 0 ? `
-        <div style="text-align:right">
-          <div style="color:var(--danger);font-weight:800;font-size:14px">${rp(c.kredit)}</div>
-          <div class="cmc-sub">Kredit</div>
-        </div>` : ''}
-      </div>
-      <div style="margin-top:8px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden">
-        <div style="height:100%;width:${(c.total / Math.max(...sorted.map(s=>s.total)) * 100).toFixed(1)}%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px;"></div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderChartOmset() {
-  const map = {};
-  allTrx.forEach(t => {
-    const d = t.created_at.split('T')[0];
-    if (!map[d]) map[d] = 0;
-    map[d] += t.total || 0;
-  });
-  const labels = Object.keys(map).sort();
-  const vals = labels.map(l => map[l]);
-  const labelsFmt = labels.map(l => {
-    const d = new Date(l);
-    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
-  });
-
-  if (chartOmset) chartOmset.destroy();
-  chartOmset = new Chart(document.getElementById('chart-omset'), {
-    type: 'bar',
-    data: {
-      labels: labelsFmt,
-      datasets: [{
-        label: 'Omset',
-        data: vals,
-        backgroundColor: 'rgba(15,155,142,0.7)',
-        borderColor: '#0f9b8e',
-        borderWidth: 2,
-        borderRadius: 7,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { label: ctx => ' ' + rp(ctx.raw) }
-      }},
-      scales: {
-        y: { ticks: { callback: v => 'Rp ' + (v/1000).toFixed(0) + 'k', font:{size:10} }, grid:{color:'#f0ebe0'} },
-        x: { ticks: { font:{size:10} }, grid:{display:false} }
-      }
-    }
-  });
-}
-
-function renderChartMetode() {
-  const map = {};
-  allTrx.forEach(t => {
-    const m = t.metode_bayar || 'tunai';
-    map[m] = (map[m] || 0) + (t.total || 0);
-  });
-  const labels = Object.keys(map);
-  const vals = labels.map(l => map[l]);
-  const labelMap = { tunai:'Tunai', transfer:'Transfer', qris:'QRIS', kredit:'Kredit', bank:'Bank' };
-
-  if (chartMetode) chartMetode.destroy();
-  chartMetode = new Chart(document.getElementById('chart-metode'), {
-    type: 'doughnut',
-    data: {
-      labels: labels.map(l => labelMap[l] || l),
-      datasets: [{
-        data: vals,
-        backgroundColor: COLORS,
-        borderWidth: 2,
-        borderColor: '#ffffff',
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'right', labels: { boxWidth:12, font:{size:12}, padding:12 } },
-        tooltip: { callbacks: { label: ctx => ' ' + rp(ctx.raw) } }
-      },
-      cutout: '60%',
-    }
-  });
-}
-
-function renderTipeTrx() {
-  const umum = allTrx.filter(t => t.tipe === 'umum');
-  const pel = allTrx.filter(t => t.tipe === 'pelanggan');
-  const total = allTrx.length || 1;
-  const uTotal = umum.reduce((s,t) => s+(t.total||0), 0);
-  const pTotal = pel.reduce((s,t) => s+(t.total||0), 0);
-
-  document.getElementById('tipe-transaksi-wrap').innerHTML = `
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Umum</span><span>${umum.length} trx · ${rp(uTotal)}</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:${(umum.length/total*100).toFixed(1)}%;background:var(--primary);"></div></div>
-    </div>
-    <div class="progress-bar-wrap" style="margin-top:14px">
-      <div class="progress-label"><span>Pelanggan</span><span>${pel.length} trx · ${rp(pTotal)}</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:${(pel.length/total*100).toFixed(1)}%;background:var(--accent);"></div></div>
-    </div>
-    <div style="display:flex;gap:16px;margin-top:18px;font-size:12px;color:var(--text-muted)">
-      <span>Total: <strong style="color:var(--text)">${total} transaksi</strong></span>
-      <span>Omset: <strong style="color:var(--text)">${rp(uTotal+pTotal)}</strong></span>
-    </div>
-  `;
-}
-
-function renderJamRamai() {
-  const map = {};
-  for (let h = 0; h < 24; h++) map[h] = 0;
-  allTrx.forEach(t => {
-    const h = new Date(t.created_at).getHours();
-    map[h]++;
-  });
-  const sorted = Object.entries(map).sort((a,b) => b[1]-a[1]).filter(([,v]) => v > 0).slice(0,6);
-  const max = sorted[0]?.[1] || 1;
-
-  if (!sorted.length) {
-    document.getElementById('jam-ramai-wrap').innerHTML = '<div class="empty-state"><div class="es-sub">Tidak ada data</div></div>';
-    return;
-  }
-
-  document.getElementById('jam-ramai-wrap').innerHTML = sorted.map(([h, count]) => `
-    <div class="progress-bar-wrap">
-      <div class="progress-label">
-        <span>${String(h).padStart(2,'0')}:00 – ${String(parseInt(h)+1).padStart(2,'0')}:00</span>
-        <span>${count} trx</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${(count/max*100).toFixed(1)}%;background:var(--indigo);"></div></div>
-    </div>
-  `).join('');
 }
 
 // ============================================================
@@ -2113,7 +1795,6 @@ async function init() {
     await Promise.all([loadPayroll(from, to), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
     setProgress(90, 'Menyiapkan tampilan...');
     renderRingkasan();
-    renderOmset(cabangId);
     renderTrxList();
     renderProduk();
     renderPelanggan();
@@ -2170,10 +1851,6 @@ setupPayrollRealtimeSync();
   <button class="tab-btn active" onclick="switchTab('ringkasan', this)">
     <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
     Ringkasan
-  </button>
-  <button class="tab-btn" onclick="switchTab('omset', this)">
-    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20L8.5 13L12.5 17L17 10L24 20H4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-    Omset
   </button>
   <button class="tab-btn" onclick="switchTab('transaksi', this)">
     <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/><path d="M7 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
