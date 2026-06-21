@@ -34,6 +34,8 @@ if ('serviceWorker' in navigator) {
   --primary: #0f9b8e;
   --primary-light: #e3f9f5;
   --primary-dark: #0b756c;
+  --accent: #2dd4bf;
+  --accent-dark: #0c8478;
   --bg: #fef9ef;
   --card: #ffffff;
   --border: #ece4d3;
@@ -910,7 +912,7 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 .loading-sub { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 24px; }
 .loading-step { font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-bottom: 12px; min-height: 20px; }
 .loading-track { width: 100%; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
-.loading-fill { height: 100%; border-radius: 99px; width: 0%; background: linear-gradient(90deg, var(--primary), #f59e0b); transition: width 0.4s; }
+.loading-fill { height: 100%; border-radius: 99px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--primary)); transition: width 0.4s; }
 .loading-pct { font-size: 12px; color: var(--text-muted); font-weight: 600; }
 
 /* ── TOAST ── */
@@ -1024,7 +1026,7 @@ button, .clickable { min-height: 44px; min-width: 44px; }
     <div style="font-size:14px;color:#8a8071;line-height:1.55;margin-bottom:26px;">
       Halaman <b id="device-guard-appname" style="color:#2b2620;">ini</b> didesain khusus untuk diakses dari HP agar tampilan dan fungsinya optimal. Silakan buka dari smartphone Anda.
     </div>
-    <a href="index.html" style="display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(245,158,11,.30);">⬅ Kembali ke Menu</a>
+    <a href="index.html" style="display:inline-block;background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(15,155,142,.30);">⬅ Kembali ke Menu</a>
     <div style="margin-top:20px;">
       <a href="#" id="device-guard-force" style="font-size:12px;color:#8a8071;text-decoration:underline;">Tetap buka di perangkat ini</a>
     </div>
