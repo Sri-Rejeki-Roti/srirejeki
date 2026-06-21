@@ -5,7 +5,7 @@
   "start_url": "/srirejeki/index.html",
   "scope": "/srirejeki/",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait",
   "background_color": "#0b756c",
   "theme_color": "#0b756c",
   "lang": "id",
