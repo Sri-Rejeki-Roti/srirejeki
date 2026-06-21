@@ -1190,7 +1190,7 @@ function printRekap() {
           <!-- JUMLAH TAMBAH -->
           <div class="form-group" style="margin-top:12px;max-width:200px">
             <label>Jumlah Tambah *</label>
-            <input type="number" id="restok-qty" min="1" value="1" style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:18px;font-weight:700;font-family:inherit;height:46px;box-sizing:border-box">
+            <input type="number" id="restok-qty" min="1" value="1" style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:18px;font-weight:700;font-family:inherit;height:46px;box-sizing:border-box" onfocus="this.value=''" onblur="if(this.value==='' || isNaN(parseInt(this.value)) || parseInt(this.value)<1) this.value='1';">
           </div>
 
           <!-- TOMBOL SIMPAN -->
@@ -1763,17 +1763,8 @@ function selectCabangDropdown(prefix, value, labelText, isPlaceholder) {
     else { document.getElementById('tbl-stok-cabang').innerHTML = '<tr class="empty-row"><td colspan="6">Pilih cabang untuk melihat stok</td></tr>'; document.getElementById('stok-cabang-badge').innerHTML = ''; document.getElementById('stok-summary-cards').innerHTML = ''; }
   }
   if (prefix === 'restokin') {
-    // Update stok preview jika ada produk terpilih
-    const produkId = document.getElementById('restok-produk-id').value;
-    if (produkId) {
-      const p = produkList.find(x => x.id == produkId);
-      if (p) {
-        const cabangId = parseInt(value);
-        const stokDiCabang = stokCabangAll.find(s => s.produk_id === p.id && s.cabang_id === cabangId);
-        const stokCabang = stokDiCabang ? stokDiCabang.stok : 0;
-        document.getElementById('restok-preview-stok').textContent = `Stok di cabang ini: ${stokCabang} pcs`;
-      }
-    }
+    // 🔥 Saat ganti cabang, reset kolom-kolom di bawahnya (produk & qty)
+    resetRestokProduk();
   }
 
   // 🔒 RETUR: Disable semua field jika SEMUA CABANG (tidak ada cabang dipilih)
