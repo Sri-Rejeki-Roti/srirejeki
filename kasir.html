@@ -742,7 +742,7 @@ svg.icon { display: block; flex-shrink: 0; }
     <span id="banner-total">Rp 0</span>
     <span id="banner-items" ...>0 item</span>
   </div>
-  <button class="riwayat-btn" onclick="openRiwayat()"><span id="icon-history"></span>Riwayat</button>
+  <button class="riwayat-btn" id="riwayat-btn" onclick="openRiwayat()"><span id="icon-history"></span>Riwayat</button>
 </div>
   <!-- Network Indicator -->
   <div class="net-indicator online" id="net-indicator" title="Status jaringan: Online">
@@ -2246,6 +2246,15 @@ async function openRiwayat() {
 function closeRiwayat() {
   document.getElementById('riwayat-panel').classList.remove('open');
 }
+
+// Tutup panel Riwayat otomatis saat klik di luar panel
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('riwayat-panel');
+  const btn = document.getElementById('riwayat-btn');
+  if (!panel || !panel.classList.contains('open')) return;
+  if (panel.contains(e.target) || (btn && btn.contains(e.target))) return;
+  closeRiwayat();
+});
 
 async function loadRiwayat() {
   const tgl = document.getElementById('filter-tanggal').value;
