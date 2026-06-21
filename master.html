@@ -426,6 +426,53 @@ svg.icon { display:block; flex-shrink:0; }
   outline:none; border-color:var(--primary); box-shadow:0 0 0 4px rgba(15,155,142,0.1);
 }
 
+/* ── REKAP PENJUALAN — Filter Bar Redesign ── */
+.rkj-warning {
+  display:flex; align-items:center; gap:8px; background:#fff8e6; border:1.5px solid #f5d999;
+  border-radius:var(--radius-sm); padding:11px 16px; font-size:12.5px; font-weight:600;
+  color:#92400e; margin-bottom:18px;
+}
+.rkj-filter-card {
+  background:var(--card); border:2px solid var(--border); border-radius:var(--radius);
+  padding:18px 20px; margin-bottom:20px; box-shadow:var(--shadow-sm);
+  display:flex; flex-direction:column; gap:14px;
+}
+.rkj-filter-top { display:flex; gap:12px; flex-wrap:wrap; }
+.rkj-filter-top .rkj-search { flex:1 1 240px; min-width:200px; }
+.rkj-filter-top .rkj-cabang-select { width:190px; min-width:190px; flex:0 0 auto; }
+.rkj-filter-bottom {
+  display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  padding-top:14px; border-top:1.5px dashed var(--border);
+}
+.rkj-date-group {
+  display:flex; align-items:center; gap:10px; background:var(--bg);
+  border:2px solid var(--border); border-radius:var(--radius-sm); padding:6px 14px; flex-wrap:wrap;
+}
+.rkj-date-label { font-size:12.5px; font-weight:700; color:var(--text-muted); white-space:nowrap; }
+.rkj-date-input {
+  border:none; background:transparent; font-size:13.5px; font-weight:600; color:var(--text);
+  font-family:inherit; padding:6px 2px; outline:none; cursor:pointer;
+}
+.rkj-date-sep { font-size:12px; font-weight:700; color:var(--text-muted); }
+.rkj-pill-group { display:flex; gap:8px; flex-wrap:wrap; }
+.rkj-pill {
+  padding:9px 16px; border:2px solid var(--border); border-radius:999px; background:var(--card);
+  font-size:13px; font-weight:700; color:var(--text-muted); cursor:pointer; font-family:inherit;
+  transition:all 0.15s; outline:none; -webkit-tap-highlight-color:transparent;
+}
+.rkj-pill:hover { border-color:var(--primary); color:var(--primary); }
+.rkj-pill.active {
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark)); border-color:transparent;
+  color:#fff; box-shadow:0 4px 12px rgba(15,155,142,0.3);
+}
+.rkj-pill-reset { color:var(--danger); border-color:var(--danger-bg); background:var(--danger-bg); }
+.rkj-pill-reset:hover { border-color:var(--danger); color:var(--danger); background:var(--danger-bg); }
+@media(max-width:640px) {
+  .rkj-filter-bottom { flex-direction:column; align-items:stretch; }
+  .rkj-date-group { justify-content:center; }
+  .rkj-pill-group { justify-content:center; }
+}
+
 .modal-overlay {
   position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100;
   display:none; align-items:center; justify-content:center; padding:16px;
@@ -1123,15 +1170,20 @@ svg.icon { display:block; flex-shrink:0; }
     <!-- CARD PENDAPATAN -->
     <div class="stats-row" id="rekapjual-pendapatan-stats">
       <div class="stat-card"><div class="sv" id="rekapjual-sejak-awal" style="font-size:16px;color:var(--primary)">Rp 0</div><div class="sl">Pendapatan Sejak Awal</div></div>
+      <div class="stat-card"><div class="sv" id="rekapjual-laba-awal" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">💰 Laba Bersih Sejak Awal</div></div>
       <div class="stat-card"><div class="sv" id="rekapjual-sum-filter" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">Total Berdasarkan Filter</div></div>
+      <div class="stat-card"><div class="sv" id="rekapjual-laba-filter" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">💰 Laba Bersih (Filter)</div></div>
       <div class="stat-card"><div class="sv" id="rekapjual-sum-trx">0</div><div class="sl">Jumlah Transaksi (Filter)</div></div>
+    </div>
+    <div class="rkj-warning" id="rekapjual-hpp-warning" style="display:none">
+      <span>⚠️</span> Sebagian produk yang terjual belum punya HPP, jadi Laba Bersih di atas masih estimasi (lebih tinggi dari sebenarnya). Lengkapi HPP di tab <b>Produk Master</b>.
     </div>
 
     <!-- FILTER -->
-    <div class="retur-form-card" style="margin-bottom:20px">
-      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
-        <div class="search-wrap" style="flex:1 1 220px;min-width:200px"><span class="si"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><input type="text" placeholder="Cari nama (Umum / Pelanggan)..." id="rekapjual-search-nama" oninput="filterRekapJual()"></div>
-        <div class="custom-select-wrap" id="rekapjual-filter-cabang-wrap" style="width:170px;min-width:170px;flex:0 0 auto">
+    <div class="rkj-filter-card">
+      <div class="rkj-filter-top">
+        <div class="search-wrap rkj-search"><span class="si"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><input type="text" placeholder="Cari nama (Umum / Pelanggan)..." id="rekapjual-search-nama" oninput="filterRekapJual()"></div>
+        <div class="custom-select-wrap rkj-cabang-select" id="rekapjual-filter-cabang-wrap">
           <button type="button" class="custom-select-btn has-placeholder" id="rekapjual-filter-cabang-btn" onclick="toggleGenericDropdown('rekapjual-filter-cabang')">
             <span id="rekapjual-filter-cabang-label">Semua Cabang</span>
             <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1139,24 +1191,27 @@ svg.icon { display:block; flex-shrink:0; }
           <div class="custom-select-dropdown" id="rekapjual-filter-cabang-dropdown" role="listbox"></div>
         </div>
         <input type="hidden" id="rekapjual-filter-cabang" value="">
-        <div class="form-group" style="margin-bottom:0;flex:0 0 auto">
-          <input type="date" id="rekapjual-dari" class="flat-date" onchange="loadRekapJual()">
+      </div>
+      <div class="rkj-filter-bottom">
+        <div class="rkj-date-group">
+          <span class="rkj-date-label">📅 Periode</span>
+          <input type="date" id="rekapjual-dari" class="rkj-date-input" onchange="onRekapJualManualDate()">
+          <span class="rkj-date-sep">s/d</span>
+          <input type="date" id="rekapjual-sampai" class="rkj-date-input" onchange="onRekapJualManualDate()">
         </div>
-        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
-        <div class="form-group" style="margin-bottom:0;flex:0 0 auto">
-          <input type="date" id="rekapjual-sampai" class="flat-date" onchange="loadRekapJual()">
+        <div class="rkj-pill-group" id="rekapjual-pill-group">
+          <button type="button" class="rkj-pill" data-period="hari" onclick="setPeriodRekapJual('hari')">Hari Ini</button>
+          <button type="button" class="rkj-pill" data-period="bulan" onclick="setPeriodRekapJual('bulan')">Bulan Ini</button>
+          <button type="button" class="rkj-pill" data-period="tahun" onclick="setPeriodRekapJual('tahun')">Tahun Ini</button>
+          <button type="button" class="rkj-pill rkj-pill-reset" onclick="resetPeriodRekapJual()">✕ Reset</button>
         </div>
-        <button class="btn-secondary" onclick="resetPeriodRekapJual()">Reset</button>
-        <button class="btn-secondary" onclick="setPeriodRekapJual('hari')">Hari Ini</button>
-        <button class="btn-secondary" onclick="setPeriodRekapJual('bulan')">Bulan Ini</button>
-        <button class="btn-secondary" onclick="setPeriodRekapJual('tahun')">Tahun Ini</button>
       </div>
     </div>
 
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th style="width:48px">NO</th><th>NAMA (UMUM / PELANGGAN)</th><th style="width:140px">CABANG</th><th style="text-align:right">TOTAL TRANSAKSI</th><th style="width:120px">TANGGAL</th></tr></thead>
-        <tbody id="tbl-rekapjual"><tr class="empty-row"><td colspan="5">Memuat data...</td></tr></tbody>
+        <thead><tr><th style="width:48px">NO</th><th>NAMA (UMUM / PELANGGAN)</th><th style="width:140px">CABANG</th><th style="text-align:right">TOTAL TRANSAKSI</th><th style="text-align:right">LABA BERSIH</th><th style="width:120px">TANGGAL</th></tr></thead>
+        <tbody id="tbl-rekapjual"><tr class="empty-row"><td colspan="6">Memuat data...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -1653,6 +1708,10 @@ svg.icon { display:block; flex-shrink:0; }
         <div class="form-grid" style="grid-template-columns:1fr 1fr">
           <div class="form-group"><label>Harga Jual *</label><input type="text" id="fp-harga" placeholder="Rp 0" inputmode="numeric" autocomplete="off"></div>
           <div class="form-group"><label style="color:var(--text-muted)">Stok</label><div style="padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);background:#fafafa;height:46px;display:flex;align-items:center;">ℹ️ Stok diatur per cabang</div></div>
+        </div>
+        <div class="form-grid" style="grid-template-columns:1fr 1fr">
+          <div class="form-group"><label>HPP (Harga Pokok)</label><input type="text" id="fp-hpp" placeholder="Rp 0" inputmode="numeric" autocomplete="off"></div>
+          <div class="form-group"><label style="color:var(--text-muted)">Margin / Laba per Item</label><div id="fp-margin-display" style="padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-weight:700;background:#fafafa;height:46px;display:flex;align-items:center;color:var(--text-muted)">—</div></div>
         </div>
         <div class="form-group"><label>Kategori</label>
           <div class="custom-select-wrap" id="fp-kategori-wrap">
@@ -2212,6 +2271,7 @@ function mountIcons() {
   set('retur-info-icon','info',15); set('restok-info-icon','info',15); set('ambil-info-icon','info',15);
   buildEmojiGrid();
   setupRupiahInput('fp-harga');
+  setupRupiahInput('fp-hpp');
   setupRupiahInput('fp2-kredit');
   setupRupiahInput('fp2-diskon-rp');
   setupTitleCaseInput('fp-nama');
@@ -2222,6 +2282,17 @@ function mountIcons() {
 
 function toRupiah(val) { const num = parseInt(String(val).replace(/\D/g,'')) || 0; return num === 0 ? 'Rp 0' : 'Rp ' + num.toLocaleString('id'); }
 function fromRupiah(val) { return parseInt(String(val).replace(/\D/g,'')) || 0; }
+function updateMarginDisplay() {
+  const harga = fromRupiah(document.getElementById('fp-harga').value);
+  const hpp = fromRupiah(document.getElementById('fp-hpp').value);
+  const el = document.getElementById('fp-margin-display');
+  if (!hpp) { el.textContent = '—'; el.style.color = 'var(--text-muted)'; return; }
+  const margin = harga - hpp;
+  el.textContent = (margin >= 0 ? '+' : '') + 'Rp ' + margin.toLocaleString('id');
+  el.style.color = margin >= 0 ? 'var(--success)' : 'var(--danger)';
+}
+document.getElementById('fp-harga').addEventListener('input', updateMarginDisplay);
+document.getElementById('fp-hpp').addEventListener('input', updateMarginDisplay);
 function reSetupRupiah(id) { const el = document.getElementById(id); if (el) el._rupiahSetup = false; setupRupiahInput(id); }
 function setupRupiahInput(id) {
   const el = document.getElementById(id);
@@ -2420,12 +2491,14 @@ function renderProdukStats() {
   const habis = produkList.filter(p => (stokMap[p.id] || 0) <= 0).length;
   const low = produkList.filter(p => (stokMap[p.id] || 0) > 0 && (stokMap[p.id] || 0) <= 5).length;
   const aktif = produkList.filter(p => p.aktif).length;
+  const belumHpp = produkList.filter(p => !p.hpp).length;
   document.getElementById('produk-stats').innerHTML = `
     <div class="stat-card"><div class="sv">${produkList.length}</div><div class="sl">Total Produk</div></div>
     <div class="stat-card"><div class="sv" style="color:var(--success)">${aktif}</div><div class="sl">Aktif</div></div>
     <div class="stat-card"><div class="sv" style="color:#9a6800">${low}</div><div class="sl">Stok Menipis</div></div>
     <div class="stat-card"><div class="sv" style="color:var(--danger)">${habis}</div><div class="sl">Stok Habis</div></div>
     <div class="stat-card"><div class="sv" style="font-size:16px;color:var(--primary)">${totalStokGlobal.toLocaleString('id')}</div><div class="sl">Total Stok Semua Cabang</div></div>
+    <div class="stat-card"><div class="sv" style="color:${belumHpp>0?'var(--danger)':'var(--success)'}">${belumHpp}</div><div class="sl">Belum Ada HPP</div></div>
   `;
   document.getElementById('produk-total-label').textContent = `(${produkList.length} produk)`;
 }
@@ -2452,7 +2525,9 @@ function renderProduk(list) {
     const totalStok = stokMap[p.id] || 0;
     const produkThumb = p.foto ? `<div class="produk-icon-mini" style="overflow:hidden;padding:0"><img src="${p.foto}" alt="${p.nama}" style="width:100%;height:100%;object-fit:cover;border-radius:10px"></div>` : `<div class="produk-icon-mini" style="font-size:20px">${p.emoji || '🍞'}</div>`;
     const stokBadge = totalStok <= 0 ? `<span class="badge badge-stok-habis">Habis</span>` : totalStok <= 5 ? `<span class="badge badge-stok-low">⚠ ${totalStok}</span>` : `<span class="badge badge-stok-ok">${totalStok}</span>`;
-    return `<tr><td><div class="produk-info">${produkThumb}<div><div class="produk-name">${p.nama}</div></div></div></td><td><span style="font-size:13px;color:var(--text-muted);font-weight:600">${p.kategori?.nama || '—'}</span></td><td><span class="price">Rp ${p.harga.toLocaleString('id')}</span></td><td>${stokBadge}</td><td><span class="badge ${p.aktif ? 'badge-aktif' : 'badge-nonaktif'}">${p.aktif ? 'Aktif' : 'Non-aktif'}</span></td><td><div class="act-btns" style="justify-content:center"><button class="act-btn toggle" title="${p.aktif?'Non-aktifkan':'Aktifkan'}" onclick="toggleAktif(${p.id},${p.aktif})">${svgIcon('toggle',16)}</button><button class="act-btn edit master-only" title="Edit" onclick="openEditProduk(${p.id})" ${mDisp}>${svgIcon('edit',15)}</button><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapus('produk',${p.id},'${p.nama.replace(/'/g,"\\'")}',null)" ${mDisp}>${svgIcon('trash',14)}</button></div></td></tr>`;
+    const margin = p.harga - (p.hpp || 0);
+    const marginInfo = p.hpp ? `<div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">HPP Rp ${p.hpp.toLocaleString('id')} · <span style="color:${margin>=0?'var(--success)':'var(--danger)'};font-weight:700">${margin>=0?'+':''}Rp ${margin.toLocaleString('id')}</span></div>` : `<div style="font-size:10.5px;color:var(--text-muted);margin-top:2px">⚠️ HPP belum diisi</div>`;
+    return `<tr><td><div class="produk-info">${produkThumb}<div><div class="produk-name">${p.nama}</div></div></div></td><td><span style="font-size:13px;color:var(--text-muted);font-weight:600">${p.kategori?.nama || '—'}</span></td><td><span class="price">Rp ${p.harga.toLocaleString('id')}</span>${marginInfo}</td><td>${stokBadge}</td><td><span class="badge ${p.aktif ? 'badge-aktif' : 'badge-nonaktif'}">${p.aktif ? 'Aktif' : 'Non-aktif'}</span></td><td><div class="act-btns" style="justify-content:center"><button class="act-btn toggle" title="${p.aktif?'Non-aktifkan':'Aktifkan'}" onclick="toggleAktif(${p.id},${p.aktif})">${svgIcon('toggle',16)}</button><button class="act-btn edit master-only" title="Edit" onclick="openEditProduk(${p.id})" ${mDisp}>${svgIcon('edit',15)}</button><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapus('produk',${p.id},'${p.nama.replace(/'/g,"\\'")}',null)" ${mDisp}>${svgIcon('trash',14)}</button></div></td></tr>`;
   }).join('');
 }
 async function toggleAktif(id, isAktif) {
@@ -2470,6 +2545,8 @@ function openModalProduk() {
   document.getElementById('modal-produk-title').innerHTML = svgIcon('bread',18) + ' Tambah Produk';
   document.getElementById('fp-nama').value = '';
   reSetupRupiah('fp-harga'); setRupiahValue('fp-harga', 0);
+  reSetupRupiah('fp-hpp'); setRupiahValue('fp-hpp', 0);
+  updateMarginDisplay();
   document.getElementById('fp-aktif').checked = true;
   document.getElementById('fp-aktif-label').textContent = 'Aktif';
   document.getElementById('fp-aktif-label').style.color = 'var(--success)';
@@ -2484,6 +2561,8 @@ function openEditProduk(id) {
   document.getElementById('modal-produk-title').innerHTML = svgIcon('edit',18) + ' Edit Produk';
   document.getElementById('fp-nama').value = p.nama;
   reSetupRupiah('fp-harga'); setRupiahValue('fp-harga', p.harga);
+  reSetupRupiah('fp-hpp'); setRupiahValue('fp-hpp', p.hpp || 0);
+  updateMarginDisplay();
   document.getElementById('fp-aktif').checked = p.aktif;
   document.getElementById('fp-aktif-label').textContent = p.aktif ? 'Aktif' : 'Non-aktif';
   document.getElementById('fp-aktif-label').style.color = p.aktif ? 'var(--success)' : 'var(--text-muted)';
@@ -2527,6 +2606,7 @@ async function saveProduk() {
   const id = document.getElementById('edit-produk-id').value;
   const nama = document.getElementById('fp-nama').value.trim();
   const harga = fromRupiah(document.getElementById('fp-harga').value);
+  const hpp = fromRupiah(document.getElementById('fp-hpp').value);
   const kategori_id = document.getElementById('fp-kategori').value || null;
   const aktif = document.getElementById('fp-aktif').checked;
   const emojiItem = EMOJI_MAP.find(e => e.key === selectedEmoji);
@@ -2538,7 +2618,7 @@ async function saveProduk() {
   if (isDuplicate) { showToast(`Produk "${nama}" sudah ada`, 'warn'); const inp = document.getElementById('fp-nama'); inp.focus(); inp.select(); return; }
   const btn = document.getElementById('btn-save-produk'); btn.blur(); btn.disabled = true; btn.textContent = 'Menyimpan...';
   try {
-    const payload = { nama, harga, aktif, emoji, foto: selectedFotoBase64 };
+    const payload = { nama, harga, hpp, aktif, emoji, foto: selectedFotoBase64 };
     if (kategori_id) payload.kategori_id = kategori_id; else payload.kategori_id = null;
     if (id) { const { error } = await sb.from('produk').update(payload).eq('id', id); if (error) throw error; showToast('Produk berhasil diperbarui', 'success'); }
     else { const { error } = await sb.from('produk').insert(payload); if (error) throw error; showToast('Produk berhasil ditambahkan', 'success'); }
@@ -2926,12 +3006,18 @@ function setPeriodRekapJual(jenis) {
   }
   document.getElementById('rekapjual-dari').value = dari;
   document.getElementById('rekapjual-sampai').value = sampai;
+  document.querySelectorAll('#rekapjual-pill-group .rkj-pill[data-period]').forEach(b => b.classList.toggle('active', b.dataset.period === jenis));
+  loadRekapJual();
+}
+function onRekapJualManualDate() {
+  document.querySelectorAll('#rekapjual-pill-group .rkj-pill[data-period]').forEach(b => b.classList.remove('active'));
   loadRekapJual();
 }
 function resetPeriodRekapJual() {
   document.getElementById('rekapjual-dari').value = '';
   document.getElementById('rekapjual-sampai').value = '';
   document.getElementById('rekapjual-search-nama').value = '';
+  document.querySelectorAll('#rekapjual-pill-group .rkj-pill[data-period]').forEach(b => b.classList.remove('active'));
   if (document.getElementById('rekapjual-filter-cabang') && typeof renderGenericDropdown === 'function') renderGenericDropdown('rekapjual-filter-cabang', '');
   loadRekapJual();
 }
@@ -2944,14 +3030,30 @@ async function loadRekapJual() {
   if (refreshBtn) { refreshBtn.disabled = true; refreshBtn.style.opacity = '0.6'; }
   tbody.style.opacity = '0.4';
   try {
+    const hppMap = {};
+    let adaProdukTanpaHpp = false;
+    produkList.forEach(p => { hppMap[p.id] = p.hpp || 0; });
+    function hitungLabaItems(items) {
+      let cost = 0;
+      (items || []).forEach(it => {
+        const hpp = hppMap[it.produk_id];
+        if (!hpp) adaProdukTanpaHpp = true;
+        cost += (it.qty || 0) * (hpp || 0);
+      });
+      return cost;
+    }
+
     // Total pendapatan sejak awal (tanpa filter tanggal/nama sama sekali)
-    const { data: semuaTrx, error: errAll } = await sb.from('transaksi').select('total');
+    const { data: semuaTrx, error: errAll } = await sb.from('transaksi').select('total, transaksi_item(produk_id, qty)');
     if (errAll) throw errAll;
     const totalSejakAwal = (semuaTrx || []).reduce((s, t) => s + (t.total || 0), 0);
+    const biayaSejakAwal = (semuaTrx || []).reduce((s, t) => s + hitungLabaItems(t.transaksi_item), 0);
+    const labaSejakAwal = totalSejakAwal - biayaSejakAwal;
     document.getElementById('rekapjual-sejak-awal').textContent = `Rp ${totalSejakAwal.toLocaleString('id')}`;
+    document.getElementById('rekapjual-laba-awal').textContent = `Rp ${labaSejakAwal.toLocaleString('id')}`;
 
     // Data sesuai filter periode (kalau kosong = semua)
-    let query = sb.from('transaksi').select('id, nomor, tipe, pelanggan_id, cabang_id, total, created_at').order('created_at', { ascending: false });
+    let query = sb.from('transaksi').select('id, nomor, tipe, pelanggan_id, cabang_id, total, created_at, transaksi_item(produk_id, qty)').order('created_at', { ascending: false });
     if (dari) query = query.gte('created_at', dari + 'T00:00:00');
     if (sampai) query = query.lte('created_at', sampai + 'T23:59:59');
     const { data, error } = await query;
@@ -2962,12 +3064,15 @@ async function loadRekapJual() {
         ? (pelangganList.find(p => String(p.id) === String(t.pelanggan_id))?.nama || `Pelanggan #${t.pelanggan_id}`)
         : 'Umum';
       const cabangNama = cabangList.find(c => String(c.id) === String(t.cabang_id))?.nama || '—';
-      return { id: t.id, nama, cabang_id: t.cabang_id, cabangNama, total: t.total || 0, created_at: t.created_at };
+      const biaya = hitungLabaItems(t.transaksi_item);
+      const laba = (t.total || 0) - biaya;
+      return { id: t.id, nama, cabang_id: t.cabang_id, cabangNama, total: t.total || 0, laba, created_at: t.created_at };
     });
+    document.getElementById('rekapjual-hpp-warning').style.display = adaProdukTanpaHpp ? 'flex' : 'none';
     filterRekapJual();
   } catch(e) {
     console.error(e);
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="5" style="color:var(--danger)">⚠ Gagal memuat — pastikan tabel <b>transaksi</b> ada di Supabase</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6" style="color:var(--danger)">⚠ Gagal memuat — pastikan tabel <b>transaksi</b> ada di Supabase</td></tr>`;
     showToast('Gagal memuat rekap penjualan: ' + (e.message || 'cek tabel transaksi'), 'error');
   } finally {
     tbody.style.opacity = '1';
@@ -2985,12 +3090,14 @@ function filterRekapJual() {
   if (cabangId) rows = rows.filter(r => String(r.cabang_id) === String(cabangId));
 
   const totalFilter = rows.reduce((s, r) => s + r.total, 0);
+  const labaFilter = rows.reduce((s, r) => s + r.laba, 0);
   document.getElementById('rekapjual-sum-filter').textContent = `Rp ${totalFilter.toLocaleString('id')}`;
+  document.getElementById('rekapjual-laba-filter').textContent = `Rp ${labaFilter.toLocaleString('id')}`;
   document.getElementById('rekapjual-sum-trx').textContent = rows.length;
   document.getElementById('rekapjual-total-label').textContent = `(${rows.length} transaksi)`;
 
   if (!rows.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Tidak ada transaksi yang cocok</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Tidak ada transaksi yang cocok</td></tr>';
     return;
   }
   tbody.innerHTML = rows.map((r, i) => {
@@ -3005,6 +3112,7 @@ function filterRekapJual() {
       </div></td>
       <td style="font-size:12.5px;color:var(--text-muted)">${r.cabangNama}</td>
       <td style="text-align:right;font-weight:800;font-size:14px;color:var(--primary)">Rp ${r.total.toLocaleString('id')}</td>
+      <td style="text-align:right;font-weight:700;font-size:13px;color:${r.laba>=0?'var(--success)':'var(--danger)'}">Rp ${r.laba.toLocaleString('id')}</td>
       <td style="font-size:12.5px;color:var(--text-muted)">${tglStr}</td>
     </tr>`;
   }).join('');
