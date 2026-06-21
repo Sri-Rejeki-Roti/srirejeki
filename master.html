@@ -1719,7 +1719,7 @@ function renderCabangDropdown(prefix, selectedId = null) {
       btn.classList.add('has-value');
     }
   } else {
-    label.textContent = 'SEMUA CABANG';
+    label.textContent = (prefix === 'stok' || prefix === 'restokin') ? '— Pilih Cabang —' : 'SEMUA CABANG';
     valueInput.value = '';
     btn.classList.add('has-placeholder');
     btn.classList.remove('has-value');
@@ -1734,7 +1734,7 @@ function selectCabangDropdown(prefix, value, labelText, isPlaceholder) {
   if (!label || !valueInput || !btn || !dropdown) return;
   
   if (isPlaceholder || !value) {
-    label.textContent = 'SEMUA CABANG';
+    label.textContent = labelText || ((prefix === 'stok' || prefix === 'restokin') ? '— Pilih Cabang —' : 'SEMUA CABANG');
     valueInput.value = '';
     btn.classList.add('has-placeholder');
     btn.classList.remove('has-value');
@@ -1988,6 +1988,7 @@ function updateTopbarBadge() {}
 // Dipanggil setiap kali switchTab() dijalankan, supaya saat user balik lagi
 // ke tab manapun, semua kolom pencarian/filter/form sudah bersih (clear).
 function resetAllTabFields() {
+  const todayStr = new Date().toISOString().split('T')[0];
   // ── TAB PRODUK ──
   const searchProduk = document.getElementById('search-produk');
   if (searchProduk) searchProduk.value = '';
@@ -2012,7 +2013,7 @@ function resetAllTabFields() {
   const returCatatan = document.getElementById('retur-catatan');
   if (returCatatan) returCatatan.value = '';
   const returFilterTgl = document.getElementById('retur-filter-tgl');
-  if (returFilterTgl) returFilterTgl.value = '';
+  if (returFilterTgl) returFilterTgl.value = todayStr;
 
   // ── TAB RESTOK ──
   if (document.getElementById('restokin-cabang-value')) {
@@ -2025,7 +2026,7 @@ function resetAllTabFields() {
   const restokFilterCabang = document.getElementById('restok-filter-cabang');
   if (restokFilterCabang) restokFilterCabang.value = '';
   const restokFilterTgl = document.getElementById('restok-filter-tgl');
-  if (restokFilterTgl) restokFilterTgl.value = '';
+  if (restokFilterTgl) restokFilterTgl.value = todayStr;
 
   // ── TAB STOK CABANG ──
   if (document.getElementById('stok-cabang-value')) selectCabangDropdown('stok', null, '— Pilih Cabang —', true);
@@ -2033,7 +2034,7 @@ function resetAllTabFields() {
 
   // ── TAB LOG STOK ──
   const stoklogFilterTgl = document.getElementById('stoklog-filter-tgl');
-  if (stoklogFilterTgl) stoklogFilterTgl.value = '';
+  if (stoklogFilterTgl) stoklogFilterTgl.value = todayStr;
 }
 
 function switchTab(name, btn) {
