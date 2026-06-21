@@ -4,7 +4,7 @@
  * v6 — fix layout/zoom index.html (viewport lock + form font-size 16px)
  */
 
-const CACHE_NAME = 'sri-rejeki-v6';
+const CACHE_NAME = 'sri-rejeki-v1.0.0';
 const SUPABASE_ORIGIN = 'supabase.co';
 const CDN_ORIGINS = ['cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
