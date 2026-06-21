@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sri Rejeki">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1059,6 +1060,9 @@ svg.icon { display:block; flex-shrink:0; }
         <button class="tab-subitem" onclick="switchTab('setting-password',this)" id="tab-setting-btn">
           Setting Password
         </button>
+        <button class="tab-subitem" onclick="switchTab('backup',this)" id="tab-backup-btn">
+          🗄️ Backup & Migrasi
+        </button>
       </div>
     </div>
   </div>
@@ -1665,6 +1669,41 @@ svg.icon { display:block; flex-shrink:0; }
       </div>
     </div>
   </div>
+  <div class="tab-section" id="sec-backup">
+    <div class="sec-header">
+      <div class="sec-title">🗄️ Backup & Migrasi Supabase</div>
+    </div>
+    <div style="padding:16px;max-width:700px">
+      <div style="background:var(--warning-bg,#fffbeb);border:1.5px solid var(--warning,#f59e0b);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--text)">
+        <b>📋 Cara pakai:</b><br>
+        1. Klik <b>Generate SQL Backup</b> — sistem akan ambil semua master data dari Supabase<br>
+        2. Klik <b>Download .sql</b> untuk simpan file<br>
+        3. Di Supabase baru, buka <b>SQL Editor</b> → paste isi file → klik <b>Run</b><br>
+        4. Edit <code>config.js</code> → ganti URL & Key → upload ke GitHub
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+        <button onclick="generateBackupSQL()" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v10m0 0l-3-3m3 3l3-3"/><rect x="3" y="14" width="18" height="7" rx="2"/></svg>
+          Generate SQL Backup
+        </button>
+        <button onclick="downloadBackupSQL()" id="btn-download-sql" disabled style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--success,#22c55e);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;opacity:0.4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .sql
+        </button>
+        <button onclick="copyBackupSQL()" id="btn-copy-sql" disabled style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--secondary,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;opacity:0.4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy SQL
+        </button>
+      </div>
+      <div id="backup-status" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600"></div>
+      <div id="backup-sql-preview" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px;color:var(--text-muted);font-weight:600" id="backup-info-label"></span>
+        </div>
+        <textarea id="backup-sql-output" readonly style="width:100%;height:320px;font-family:monospace;font-size:11px;line-height:1.5;padding:12px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg-secondary,#f8fafc);color:var(--text);resize:vertical;box-sizing:border-box"></textarea>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="modal-kategori">
@@ -1785,12 +1824,10 @@ svg.icon { display:block; flex-shrink:0; }
 </div>
 
 <script>
-const SUPABASE_URL = 'https://aowjbkirwxkbwdqvqlpy.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvd2pia2lyd3hrYndkcXZxbHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Nzc2MTAsImV4cCI6MjA5NzI1MzYxMH0.A913aR55dauEdkxq91LLEgmTXNRwaXiircUrMyzjCyM';
 let sb = null;
 try {
   if (typeof supabase === 'undefined') throw new Error('Library Supabase gagal dimuat');
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
 } catch (e) { console.error('Supabase init error:', e); }
 
 const ICONS = {
@@ -2334,6 +2371,10 @@ function switchTab(name, btn) {
     document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-pengambilan').classList.add('active');
     loadPegawaiPayroll(); populateBahanSelect(); loadPengambilan();
+  } else if (name === 'backup') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
+    document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-backup').classList.add('active');
   } else if (name === 'setting-password') {
     mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
     document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
@@ -3758,6 +3799,7 @@ async function init() {
     await new Promise(r => setTimeout(r, 400));
     hideLoading();
     setTimeout(() => { openMasterLogin(); }, 500);
+    autoDeleteDataLama();
   } catch(e) {
     document.getElementById('ls-step').textContent = 'Gagal koneksi ke server';
     document.getElementById('ls-step').style.color = 'var(--danger)';
@@ -3767,6 +3809,178 @@ async function init() {
   }
 }
 init();
+
+// ============================================================
+// AUTO DELETE DATA LAMA (> 1.3 TAHUN / 475 HARI)
+// ============================================================
+const AUTO_DELETE_HARI = 475;
+const AUTO_DELETE_KEY  = 'sri_rejeki_last_autodelete';
+
+async function autoDeleteDataLama() {
+  try {
+    const lastRun = localStorage.getItem(AUTO_DELETE_KEY);
+    const sekarang = Date.now();
+    if (lastRun && (sekarang - parseInt(lastRun)) < 24 * 60 * 60 * 1000) return;
+
+    const batasISO = new Date(sekarang - AUTO_DELETE_HARI * 24 * 60 * 60 * 1000).toISOString();
+
+    const TABEL_HAPUS = [
+      { tabel: 'transaksi_item', join: 'transaksi_id', ref: 'transaksi', kolom: 'created_at' },
+      { tabel: 'transaksi',      kolom: 'created_at' },
+      { tabel: 'stok_log',       kolom: 'created_at' },
+      { tabel: 'absensi',        kolom: 'created_at' },
+      { tabel: 'lembur',         kolom: 'created_at' },
+      { tabel: 'restok',         kolom: 'created_at' },
+      { tabel: 'retur',          kolom: 'created_at' },
+      { tabel: 'pengambilan_bahan', kolom: 'created_at' },
+    ];
+
+    let totalHapus = 0;
+    for (const t of TABEL_HAPUS) {
+      if (t.join) {
+        // transaksi_item: hapus berdasarkan transaksi lama
+        const { data: oldTrx } = await sb.from(t.ref).select('id').lt(t.kolom, batasISO).limit(1000);
+        if (oldTrx && oldTrx.length > 0) {
+          const ids = oldTrx.map(r => r.id);
+          const { error } = await sb.from(t.tabel).delete().in(t.join, ids);
+          if (!error) totalHapus += ids.length;
+        }
+      } else {
+        const { error, count } = await sb.from(t.tabel).delete({ count: 'exact' }).lt(t.kolom, batasISO);
+        if (!error && count) totalHapus += count;
+      }
+    }
+
+    localStorage.setItem(AUTO_DELETE_KEY, String(sekarang));
+    if (totalHapus > 0) console.log(`[Auto-delete] ${totalHapus} baris data lama (>${AUTO_DELETE_HARI} hari) dihapus.`);
+  } catch(e) {
+    console.warn('[Auto-delete] Gagal:', e.message);
+  }
+}
+
+// ============================================================
+// BACKUP & MIGRASI
+// ============================================================
+let _backupSQL = '';
+
+function escSQL(val) {
+  if (val === null || val === undefined) return 'NULL';
+  if (typeof val === 'boolean') return val ? 'TRUE' : 'FALSE';
+  if (typeof val === 'number') return val;
+  return "'" + String(val).replace(/'/g, "''") + "'";
+}
+
+function rowsToInsert(table, rows, cols) {
+  if (!rows || rows.length === 0) return `-- Tabel ${table}: tidak ada data\n`;
+  let sql = '';
+  rows.forEach(row => {
+    const vals = cols.map(c => escSQL(row[c])).join(', ');
+    sql += `INSERT INTO ${table} (${cols.join(', ')}) VALUES (${vals}) ON CONFLICT DO NOTHING;\n`;
+  });
+  return sql;
+}
+
+async function generateBackupSQL() {
+  const statusEl = document.getElementById('backup-status');
+  const previewEl = document.getElementById('backup-sql-preview');
+  const outputEl = document.getElementById('backup-sql-output');
+  const infoEl = document.getElementById('backup-info-label');
+  const btnDown = document.getElementById('btn-download-sql');
+  const btnCopy = document.getElementById('btn-copy-sql');
+
+  statusEl.style.display = 'block';
+  statusEl.style.background = 'var(--primary-bg,#eff6ff)';
+  statusEl.style.color = 'var(--primary)';
+  statusEl.textContent = '⏳ Mengambil data dari Supabase...';
+  previewEl.style.display = 'none';
+  _backupSQL = '';
+
+  try {
+    const tanggal = new Date().toISOString().slice(0,19).replace('T',' ');
+    let sql = `-- ============================================================\n`;
+    sql += `-- BACKUP MASTER DATA - Sri Rejeki Bakery\n`;
+    sql += `-- Dibuat: ${tanggal}\n`;
+    sql += `-- Hanya master data (bukan transaksi/log)\n`;
+    sql += `-- Cara pakai: paste di Supabase SQL Editor lalu klik RUN\n`;
+    sql += `-- ============================================================\n\n`;
+
+    // Definisi tabel yang akan dibackup
+    const TABLES = [
+      { name: 'cabang',           cols: ['id','nama','password','aktif','created_at'] },
+      { name: 'kategori',         cols: ['id','nama','created_at'] },
+      { name: 'produk',           cols: ['id','nama','harga','kategori_id','aktif','satuan','created_at'] },
+      { name: 'stok_cabang',      cols: ['id','produk_id','cabang_id','stok','created_at'] },
+      { name: 'pegawai',          cols: ['id','nama','bagian','jabatan','aktif','gaji_pokok','created_at'] },
+      { name: 'bagian',           cols: ['id','nama','created_at'] },
+      { name: 'bahan_baku',       cols: ['id','nama','satuan','stok','stok_minimum','harga_satuan','created_at'] },
+      { name: 'pelanggan',        cols: ['id','nama','cabang_id','diskon_persen','diskon_nominal','tipe_diskon','kredit','aktif','created_at'] },
+      { name: 'payroll_settings', cols: ['id','tipe','nilai','keterangan','aktif','created_at'] },
+      { name: 'settings',         cols: ['id','key','value','created_at'] },
+    ];
+
+    let totalRows = 0;
+    let tableCount = 0;
+
+    for (const t of TABLES) {
+      statusEl.textContent = `⏳ Mengambil tabel: ${t.name}...`;
+      // Only select columns that exist — use * and filter client-side
+      const { data, error } = await sb.from(t.name).select('*').order('created_at', { ascending: true }).limit(10000);
+      if (error) {
+        sql += `-- SKIP ${t.name}: ${error.message}\n\n`;
+        continue;
+      }
+      const rows = data || [];
+      // Filter cols to only those that actually exist in the first row
+      const existCols = rows.length > 0 ? t.cols.filter(c => c in rows[0]) : t.cols;
+      sql += `-- ===== ${t.name.toUpperCase()} (${rows.length} baris) =====\n`;
+      sql += rowsToInsert(t.name, rows, existCols);
+      sql += '\n';
+      totalRows += rows.length;
+      tableCount++;
+    }
+
+    sql += `-- ============================================================\n`;
+    sql += `-- SELESAI: ${tableCount} tabel, ${totalRows} baris total\n`;
+    sql += `-- ============================================================\n`;
+
+    _backupSQL = sql;
+    outputEl.value = sql;
+    infoEl.textContent = `✅ ${tableCount} tabel • ${totalRows} baris • ${(sql.length/1024).toFixed(1)} KB`;
+    previewEl.style.display = 'block';
+    statusEl.style.background = '#dcfce7';
+    statusEl.style.color = '#166534';
+    statusEl.textContent = `✅ Backup berhasil! ${totalRows} baris dari ${tableCount} tabel master.`;
+    btnDown.disabled = false; btnDown.style.opacity = '1';
+    btnCopy.disabled = false; btnCopy.style.opacity = '1';
+  } catch(e) {
+    statusEl.style.background = 'var(--danger-bg,#fef2f2)';
+    statusEl.style.color = 'var(--danger,#dc2626)';
+    statusEl.textContent = '❌ Gagal: ' + e.message;
+  }
+}
+
+function downloadBackupSQL() {
+  if (!_backupSQL) return;
+  const tgl = new Date().toISOString().slice(0,10);
+  const blob = new Blob([_backupSQL], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `backup_sri_rejeki_${tgl}.sql`;
+  a.click();
+}
+
+async function copyBackupSQL() {
+  if (!_backupSQL) return;
+  try {
+    await navigator.clipboard.writeText(_backupSQL);
+    const btn = document.getElementById('btn-copy-sql');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ Tersalin!';
+    setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  } catch(e) {
+    alert('Copy gagal, silakan select teks di kotak preview lalu Ctrl+C');
+  }
+}
 </script>
 </body>
 </html>
