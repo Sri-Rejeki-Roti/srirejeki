@@ -1426,8 +1426,8 @@ async function loadTrx(from, to, cabangId) {
   let query = sb
     .from('transaksi')
     .select('*, transaksi_item(*)')
-    .gte('created_at', from + 'T00:00:00')
-    .lte('created_at', to + 'T23:59:59')
+    .gte('created_at', new Date(from + 'T00:00:00').toISOString())
+    .lte('created_at', new Date(to + 'T23:59:59.999').toISOString())
     .order('created_at', { ascending: false });
 
   if (cabangId) {
@@ -1448,8 +1448,8 @@ async function loadTrxRingkasan(from, to) {
   const { data: trx, error } = await sb
     .from('transaksi')
     .select('id, total, status, cabang_id, created_at, transaksi_item(produk_id, qty, subtotal, harga)')
-    .gte('created_at', from + 'T00:00:00')
-    .lte('created_at', to + 'T23:59:59');
+    .gte('created_at', new Date(from + 'T00:00:00').toISOString())
+    .lte('created_at', new Date(to + 'T23:59:59.999').toISOString());
   if (error) throw error;
   allTrxRingkasan = trx || [];
 }
