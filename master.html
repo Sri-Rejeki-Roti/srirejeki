@@ -1226,7 +1226,7 @@ function printRekap() {
     <!-- Riwayat Restok -->
     <div class="sec-header">
       <div class="sec-title"><span id="sh-icon-restok"></span>Riwayat Restok <small id="restok-total-label"></small></div>
-      <div style="display:flex;gap:8px"><input type="date" id="restok-filter-tgl" class="flat-date" onchange="loadRestok()"><button class="btn-secondary" onclick="document.getElementById('restok-filter-tgl').value='';loadRestok()">Semua</button></div>
+      <div style="display:flex;gap:8px"><select id="restok-filter-cabang" class="flat-date" onchange="loadRestok()" style="cursor:pointer"><option value="">Semua Cabang</option></select><input type="date" id="restok-filter-tgl" class="flat-date" onchange="loadRestok()"><button class="btn-secondary" onclick="document.getElementById('restok-filter-tgl').value='';document.getElementById('restok-filter-cabang').value='';loadRestok()">Semua</button></div>
     </div>
     <div class="tbl-wrap">
       <table>
@@ -2650,6 +2650,14 @@ async function loadCabang() {
   }
   document.getElementById('count-cabang').textContent = cabangList.length;
   document.getElementById('cabang-total-label').textContent = `(${cabangList.length} cabang)`;
+
+  // 🔥 Isi dropdown filter cabang di Riwayat Restok
+  const selRestokFilter = document.getElementById('restok-filter-cabang');
+  if (selRestokFilter) {
+    const currentVal = selRestokFilter.value;
+    selRestokFilter.innerHTML = '<option value="">Semua Cabang</option>' + cabangList.map(c => `<option value="${c.id}">${c.nama}</option>`).join('');
+    selRestokFilter.value = currentVal;
+  }
 }
 function renderCabang() {
   const grid = document.getElementById('grid-cabang');
@@ -3072,19 +3080,22 @@ function konfirmHapusRetur(id, produkId, qty) {
 
 async function loadRestok() {
   const tgl = document.getElementById('restok-filter-tgl').value;
+  const cabangId = document.getElementById('restok-filter-cabang').value;
 
   let query = sb.from('restok')
     .select('*, produk(nama, emoji), cabang(nama)')
     .order('created_at', { ascending: false });
 
   if (tgl) { query = query.gte('created_at', tgl + 'T00:00:00').lte('created_at', tgl + 'T23:59:59'); }
+  if (cabangId) { query = query.eq('cabang_id', cabangId); }
 
   const { data, error } = await query;
   if (error) { console.error(error); return; }
   restokList = data || [];
   renderRestok();
   document.getElementById('count-restok').textContent = restokList.length;
-  document.getElementById('restok-total-label').textContent = `(${restokList.length} restok — Semua Cabang)`;
+  const cabangNamaLabel = cabangId ? (cabangList.find(c => String(c.id) === String(cabangId))?.nama || '') : 'Semua Cabang';
+  document.getElementById('restok-total-label').textContent = `(${restokList.length} restok — ${cabangNamaLabel})`;
 }
 function renderRestok() {
   const tbody = document.getElementById('tbl-restok');
