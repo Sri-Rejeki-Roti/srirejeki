@@ -553,13 +553,20 @@ body { padding-bottom: 78px; }
 .rk-title { font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800; line-height:1.2; }
 .rk-sub { font-size:11.5px; color:var(--text-muted); font-weight:600; margin-top:1px; }
 .rk-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.rk-stats-3 { grid-template-columns:1fr 1fr; }
+.rk-stat-grand { grid-column:1 / -1; }
 .rk-stat {
   background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
   padding:14px 14px;
 }
+.rk-stat-grand {
+  background:linear-gradient(135deg, #eef2ff, #f5f3ff);
+  border-color:#c7d2fe;
+}
 .rk-stat-label { font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
 .rk-stat-value { font-family:'Baloo 2',sans-serif; font-size:21px; font-weight:800; color:var(--text); line-height:1.3; padding-top:2px; }
 .rk-stat-value.sm { font-size:16px; }
+.rk-stat-note { font-size:10px; color:var(--text-muted); font-weight:600; margin-top:4px; }
 
 
 @media(max-width:900px) {
@@ -1124,6 +1131,7 @@ let allAbsensi = [];
 let allLembur = []; // tabel lembur terpisah dari absensi
 let allCabang = [];
 let allTrxRingkasan = []; // transaksi semua cabang (tanpa filter cabang) untuk tab Ringkasan
+let omsetSepanjangWaktu = 0; // total omset all-time, tidak terpengaruh filter periode
 let allPelangganRekap = null; // [id, {trx, total, kredit}] hasil agregasi untuk tab Pelanggan
 let chartOmset = null;
 let chartMetode = null;
@@ -1386,6 +1394,7 @@ async function loadAll() {
       loadPayroll(from, to),
       loadTrx(from, to, cabangId),
       loadTrxRingkasan(from, to),
+      loadOmsetSepanjangWaktu(),
     ];
     let doneCount = 0;
     await Promise.all(tasks.map(p => p.then(res => {
@@ -1443,6 +1452,20 @@ async function loadTrxRingkasan(from, to) {
     .lte('created_at', to + 'T23:59:59');
   if (error) throw error;
   allTrxRingkasan = trx || [];
+}
+
+// ============================================================
+// LOAD TOTAL OMSET SEPANJANG WAKTU (tanpa filter tanggal/periode,
+// dipakai untuk card "Total Omset Keseluruhan" yang tidak terpengaruh
+// pilihan Hari ini / 7 Hari / Bulan ini / Tahun ini)
+// ============================================================
+async function loadOmsetSepanjangWaktu() {
+  const { data: trx, error } = await sb
+    .from('transaksi')
+    .select('total, status');
+  if (error) throw error;
+  const lunas = (trx || []).filter(t => t.status === 'lunas' || !t.status);
+  omsetSepanjangWaktu = lunas.reduce((s, t) => s + (t.total || 0), 0);
 }
 
 // ============================================================
@@ -1528,7 +1551,8 @@ function renderRingkasan() {
     title: 'Total Gabungan',
     sub: 'Semua cabang',
     trx: trxAll,
-    omsetPerHari: omsetAll / jumlahHari
+    omsetPerHari: omsetAll / jumlahHari,
+    omsetTotal: omsetSepanjangWaktu
   });
 
   // Card per cabang
@@ -1553,7 +1577,8 @@ function renderRingkasan() {
   container.innerHTML = html;
 }
 
-function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari }) {
+function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari, omsetTotal }) {
+  const hasTotal = typeof omsetTotal === 'number';
   return `<div class="ringkasan-card ${cls}">
     <div class="rk-header">
       <div class="rk-icon">${icon}</div>
@@ -1562,7 +1587,12 @@ function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari }) {
         <div class="rk-sub">${sub}</div>
       </div>
     </div>
-    <div class="rk-stats">
+    <div class="rk-stats${hasTotal ? ' rk-stats-3' : ''}">
+      ${hasTotal ? `<div class="rk-stat rk-stat-grand">
+        <div class="rk-stat-label">Total Omset Keseluruhan</div>
+        <div class="rk-stat-value sm">${rp(omsetTotal)}</div>
+        <div class="rk-stat-note">Sejak awal · tidak terpengaruh filter periode</div>
+      </div>` : ''}
       <div class="rk-stat">
         <div class="rk-stat-label">Total Transaksi</div>
         <div class="rk-stat-value">${trx}</div>
@@ -2080,7 +2110,7 @@ async function init() {
     const from = document.getElementById('date-from').value;
     const to = document.getElementById('date-to').value;
     const cabangId = document.getElementById('filter-cabang').value;
-    await Promise.all([loadPayroll(from, to), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to)]);
+    await Promise.all([loadPayroll(from, to), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
     setProgress(90, 'Menyiapkan tampilan...');
     renderRingkasan();
     renderOmset(cabangId);
