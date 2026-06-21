@@ -114,8 +114,6 @@ svg.icon { display: block; flex-shrink: 0; }
 /* MODE LIST (grid ke bawah dengan gambar) */
 .produk-grid.view-list { grid-template-columns: 1fr; gap: 8px; }
 .produk-grid.view-list .produk-card { display: flex; align-items: center; text-align: left; padding: 0; gap: 0; }
-.produk-grid.view-list .produk-card::before { width: 4px; height: 100%; top: 0; left: 0; right: auto; transform: scaleY(0) scaleX(1); transform-origin: top; }
-.produk-grid.view-list .produk-card:hover::before { transform: scaleY(1) scaleX(1); }
 .produk-grid.view-list .pmedia { width: 64px; height: 64px; flex-shrink: 0; margin-bottom: 0; border-radius: 0; }
 .produk-grid.view-list .pinfo { padding: 10px 14px; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .produk-grid.view-list .pname { font-size: 13px; margin-bottom: 0; }
@@ -127,8 +125,6 @@ svg.icon { display: block; flex-shrink: 0; }
 /* MODE COMPACT (teks saja) */
 .produk-grid.view-compact { grid-template-columns: 1fr; gap: 4px; }
 .produk-grid.view-compact .produk-card { display: flex; align-items: center; text-align: left; padding: 10px 14px; gap: 0; }
-.produk-grid.view-compact .produk-card::before { width: 4px; height: 100%; top: 0; left: 0; right: auto; transform: scaleY(0) scaleX(1); transform-origin: top; }
-.produk-grid.view-compact .produk-card:hover::before { transform: scaleY(1) scaleX(1); }
 .produk-grid.view-compact .pmedia { display: none; }
 .produk-grid.view-compact .pinfo { padding: 0; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .produk-grid.view-compact .pname { font-size: 13px; margin-bottom: 0; }
@@ -141,13 +137,10 @@ svg.icon { display: block; flex-shrink: 0; }
   padding: 0 0 8px; cursor: pointer; text-align: center; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   user-select: none; position: relative; overflow: hidden;
 }
-.produk-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--accent)); transform: scaleX(0); transform-origin: left;
-  transition: transform 0.2s;
+.produk-card:hover {
+  border-color: var(--primary); transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15,155,142,0.22), var(--shadow-pop);
 }
-.produk-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-pop); }
-.produk-card:hover::before { transform: scaleX(1); }
 .produk-card:active { transform: scale(0.96) translateY(-1px); }
 
 /* Media area: sama tinggi untuk varian foto maupun ikon, supaya tinggi kartu selalu konsisten */
