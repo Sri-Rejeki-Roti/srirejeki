@@ -1555,7 +1555,7 @@ function getCache(key) {
 // ============================================================
 // UTILS
 // ============================================================
-function toStr(d) { return d.toISOString().split('T')[0]; }
+function toStr(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function todayStr() { return toStr(new Date()); }
 function rp(n) { if (n == null || isNaN(n)) return 'Rp 0'; return 'Rp ' + Math.round(n).toLocaleString('id'); }
 
