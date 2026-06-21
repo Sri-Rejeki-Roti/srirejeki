@@ -79,26 +79,92 @@ svg.icon { display:block; flex-shrink:0; }
 }
 .topbar-back.master-only:hover { background: rgba(45,212,191,0.4); }
 
-.tabs-nav {
-  background: var(--card); border-bottom:2px solid var(--border);
-  display:flex; gap:2px; padding:10px 12px 0; position:sticky; top:62px; z-index:40;
-  box-shadow:var(--shadow-sm);
-  overflow-x:visible; flex-wrap:nowrap;
+/* ── HAMBURGER (buka sidebar tabs) ── */
+.hamburger-btn {
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,0.18);
+  border:none; cursor:pointer; flex-shrink:0; color:white;
 }
+.hamburger-btn:hover { background:rgba(255,255,255,0.28); }
+
+/* ── SIDEBAR (slide-in drawer dari kiri) ── */
+.sidebar-overlay {
+  position:fixed; inset:0; background:rgba(20,18,14,0.45);
+  z-index:90; opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+}
+.sidebar-overlay.open { opacity:1; pointer-events:auto; }
+
+.tabs-nav {
+  position:fixed; top:0; left:0; bottom:0; width:268px; max-width:82vw;
+  background:var(--card); z-index:91; box-shadow:8px 0 32px rgba(20,18,14,0.18);
+  display:flex; flex-direction:column; gap:2px; padding:14px 10px;
+  transform:translateX(-100%); transition:transform 0.28s cubic-bezier(.22,.85,.32,1.1);
+  overflow-y:auto;
+}
+.tabs-nav.open { transform:translateX(0); }
+.tabs-nav-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:4px 8px 14px; margin-bottom:6px; border-bottom:1.5px solid var(--border);
+}
+.tabs-nav-header span { font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:800; color:var(--text); }
+.sidebar-close-btn {
+  width:30px; height:30px; border-radius:8px; border:none; background:var(--bg);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-muted);
+}
+.sidebar-close-btn:hover { background:var(--border); }
 .tab-btn {
-  display:flex; align-items:center; justify-content:center; gap:4px; padding:8px 6px 9px;
-  font-size:12.5px; font-weight:600; border:none; background:none; cursor:pointer;
-  color:var(--text-muted); border-bottom:3px solid transparent; transition:all 0.15s;
-  font-family:inherit; border-radius:8px 8px 0 0; white-space:nowrap;
-  flex:1 1 0; min-width:0;
+  display:flex; align-items:center; gap:10px; padding:12px 12px;
+  font-size:14px; font-weight:600; border:none; background:none; cursor:pointer;
+  color:var(--text-muted); border-bottom:none; border-left:3px solid transparent; transition:all 0.15s;
+  font-family:inherit; border-radius:10px; white-space:nowrap;
+  width:100%; text-align:left; justify-content:flex-start;
 }
 .tab-btn:hover { color:var(--primary); background:var(--primary-light); }
-.tab-btn.active { color:var(--primary); border-bottom-color:var(--primary); background:var(--primary-light); }
+.tab-btn.active { color:var(--primary); border-left-color:var(--primary); background:var(--primary-light); }
 .tab-btn .tab-count {
   background:var(--primary); color:white; border-radius:20px;
-  padding:1px 6px; font-size:10px; font-weight:700;
+  padding:1px 6px; font-size:10px; font-weight:700; margin-left:auto;
 }
 .tab-btn:not(.active) .tab-count { background:var(--border); color:var(--text-muted); }
+
+/* ── SUBMENU SIDEBAR (Stok & Cabang > Stok per Cabang / Log Stok) ── */
+.tab-group { display:flex; flex-direction:column; }
+.tab-group-btn {
+  display:flex; align-items:center; gap:10px; padding:12px 12px;
+  font-size:14px; font-weight:600; border:none; background:none; cursor:pointer;
+  color:var(--text-muted); border-left:3px solid transparent; transition:all 0.15s;
+  font-family:inherit; border-radius:10px; white-space:nowrap;
+  width:100%; text-align:left;
+}
+.tab-group-btn:hover { color:var(--primary); background:var(--primary-light); }
+.tab-group-btn.parent-active { color:var(--primary); }
+.tab-group-btn .tab-count {
+  background:var(--border); color:var(--text-muted); border-radius:20px;
+  padding:1px 6px; font-size:10px; font-weight:700; margin-left:auto;
+}
+.tab-group-btn .group-chevron { margin-left:auto; flex-shrink:0; transition:transform 0.2s ease; color:var(--text-muted); }
+.tab-group-btn.parent-active .group-chevron { color:var(--primary); }
+.tab-group-btn .tab-count + .group-chevron { margin-left:6px; }
+.tab-group.open .group-chevron { transform:rotate(90deg); }
+.tab-subitems {
+  display:grid; grid-template-rows:0fr; transition:grid-template-rows 0.22s ease;
+}
+.tab-group.open .tab-subitems { grid-template-rows:1fr; }
+.tab-subitems-inner { overflow:hidden; display:flex; flex-direction:column; padding-left:14px; gap:1px; }
+.tab-subitem {
+  display:flex; align-items:center; gap:9px; padding:10px 12px 10px 18px;
+  font-size:13px; font-weight:600; border:none; background:none; cursor:pointer;
+  color:var(--text-muted); border-left:2px solid var(--border); transition:all 0.15s;
+  font-family:inherit; border-radius:8px; white-space:nowrap;
+  width:100%; text-align:left;
+}
+.tab-subitem:hover { color:var(--primary); background:var(--primary-light); }
+.tab-subitem.active { color:var(--primary); border-left-color:var(--primary); background:var(--primary-light); font-weight:700; }
+.tab-subitem .tab-count {
+  background:var(--border); color:var(--text-muted); border-radius:20px;
+  padding:1px 6px; font-size:9.5px; font-weight:700; margin-left:auto;
+}
+.tab-subitem.active .tab-count { background:var(--primary); color:white; }
 
 .main-content { padding:24px 22px; max-width:1400px; margin:0 auto; }
 
@@ -534,9 +600,6 @@ svg.icon { display:block; flex-shrink:0; }
 .progress-pct { font-size:12px; color:var(--text-muted); font-weight:600; }
 
 @media (max-width:768px) {
-  .tabs-nav { gap:2px; padding:8px 8px 0; overflow-x:visible; flex-wrap:wrap; }
-  .tab-btn { padding:7px 4px 8px; font-size:11px; white-space:nowrap; flex:1 1 auto; min-width:calc(25% - 2px); gap:2px; }
-  .tab-btn .tab-count { padding:0 5px; font-size:9px; }
   .main-content { padding:16px 14px; }
   .tbl-wrap { overflow-x:auto; }
   .tbl-wrap table { min-width:560px; }
@@ -852,6 +915,9 @@ svg.icon { display:block; flex-shrink:0; }
 
 <!-- TOPBAR -->
 <div class="topbar">
+  <button class="hamburger-btn" onclick="openSidebar()" aria-label="Buka menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
   <div class="brand">
     <div class="brand-icon" id="icon-brand"></div>
     <div>
@@ -870,14 +936,37 @@ svg.icon { display:block; flex-shrink:0; }
   </a>
 </div>
 
-<!-- TABS NAV -->
-<div class="tabs-nav">
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- TABS NAV (SIDEBAR) -->
+<div class="tabs-nav" id="tabs-nav">
+  <div class="tabs-nav-header">
+    <span>Menu</span>
+    <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Tutup menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
   <button class="tab-btn active" onclick="switchTab('produk',this)" id="tab-produk-btn">
     <span id="ti-produk"></span> Produk <span class="tab-count" id="count-produk">0</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('kategori',this)" id="tab-kategori-btn">
-    <span id="ti-kategori"></span> Kategori <span class="tab-count" id="count-kategori">0</span>
-  </button>
+  <div class="tab-group" id="group-kategori">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-kategori')" id="tab-kategori-group-btn">
+      <span id="ti-kategori"></span> Kategori
+      <span class="tab-count" id="count-kategori-group">0</span>
+      <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="tab-subitems">
+      <div class="tab-subitems-inner">
+        <button class="tab-subitem" onclick="switchTab('kategori',this)" id="tab-kategori-btn">
+          Daftar Kategori <span class="tab-count" id="count-kategori">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('rekapjual',this)" id="tab-rekapjual-btn">
+          Rekap Penjualan
+        </button>
+      </div>
+    </div>
+  </div>
   <button class="tab-btn" onclick="switchTab('pelanggan',this)" id="tab-pelanggan-btn">
     <span id="ti-pelanggan"></span> Pelanggan <span class="tab-count" id="count-pelanggan">0</span>
   </button>
@@ -887,12 +976,23 @@ svg.icon { display:block; flex-shrink:0; }
   <button class="tab-btn" onclick="switchTab('restok',this)" id="tab-restok-btn">
     <span id="ti-restok"></span> Restok <span class="tab-count" id="count-restok">0</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('stok',this)" id="tab-stok-btn">
-    <span id="ti-stok"></span> Stok &amp; Cabang <span class="tab-count" id="count-stok">0</span>
-  </button>
-  <button class="tab-btn" onclick="switchTab('stoklog',this)" id="tab-stoklog-btn">
-    <span id="ti-stoklog"></span> Log Stok <span class="tab-count" id="count-stoklog">0</span>
-  </button>
+  <div class="tab-group" id="group-stok">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-stok')" id="tab-stok-group-btn">
+      <span id="ti-stok"></span> Stok &amp; Cabang
+      <span class="tab-count" id="count-stok-group">0</span>
+      <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="tab-subitems">
+      <div class="tab-subitems-inner">
+        <button class="tab-subitem" onclick="switchTab('stok',this)" id="tab-stok-btn">
+          Stok per Cabang <span class="tab-count" id="count-stok">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('stoklog',this)" id="tab-stoklog-btn">
+          <span id="ti-stoklog"></span> Log Stok <span class="tab-count" id="count-stoklog">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
   <button class="tab-btn" onclick="switchTab('bahan',this)" id="tab-bahan-btn">
     <span id="ti-bahan"></span> Bahan Baku <span class="tab-count" id="count-bahan">0</span>
   </button>
@@ -941,6 +1041,54 @@ svg.icon { display:block; flex-shrink:0; }
       <button class="btn-add master-only" onclick="openModalKategori()" style="display:none"><span id="btn-add-kat-icon"></span> Tambah Kategori</button>
     </div>
     <div class="cards-grid" id="grid-kategori"></div>
+  </div>
+
+  <!-- TAB REKAP PENJUALAN -->
+  <div class="tab-section" id="sec-rekapjual">
+    <div class="sec-header">
+      <div class="sec-title">📊 Rekap Penjualan <small id="rekapjual-total-label"></small></div>
+      <button class="btn-secondary" onclick="loadRekapJual()" id="btn-rekapjual-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
+    </div>
+
+    <!-- CARD PENDAPATAN -->
+    <div class="stats-row" id="rekapjual-pendapatan-stats">
+      <div class="stat-card"><div class="sv" id="rekapjual-sejak-awal" style="font-size:16px;color:var(--primary)">Rp 0</div><div class="sl">Pendapatan Sejak Awal</div></div>
+      <div class="stat-card"><div class="sv" id="rekapjual-sum-filter" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">Total Berdasarkan Filter</div></div>
+      <div class="stat-card"><div class="sv" id="rekapjual-sum-trx">0</div><div class="sl">Jumlah Transaksi (Filter)</div></div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="retur-form-card" style="margin-bottom:20px">
+      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
+        <div class="search-wrap" style="flex:1 1 220px;min-width:200px"><span class="si"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><input type="text" placeholder="Cari nama (Umum / Pelanggan)..." id="rekapjual-search-nama" oninput="filterRekapJual()"></div>
+        <div class="custom-select-wrap" id="rekapjual-filter-cabang-wrap" style="width:170px;min-width:170px;flex:0 0 auto">
+          <button type="button" class="custom-select-btn has-placeholder" id="rekapjual-filter-cabang-btn" onclick="toggleGenericDropdown('rekapjual-filter-cabang')">
+            <span id="rekapjual-filter-cabang-label">Semua Cabang</span>
+            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="custom-select-dropdown" id="rekapjual-filter-cabang-dropdown" role="listbox"></div>
+        </div>
+        <input type="hidden" id="rekapjual-filter-cabang" value="">
+        <div class="form-group" style="margin-bottom:0;flex:0 0 auto">
+          <input type="date" id="rekapjual-dari" class="flat-date" onchange="loadRekapJual()">
+        </div>
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
+        <div class="form-group" style="margin-bottom:0;flex:0 0 auto">
+          <input type="date" id="rekapjual-sampai" class="flat-date" onchange="loadRekapJual()">
+        </div>
+        <button class="btn-secondary" onclick="resetPeriodRekapJual()">Reset</button>
+        <button class="btn-secondary" onclick="setPeriodRekapJual('hari')">Hari Ini</button>
+        <button class="btn-secondary" onclick="setPeriodRekapJual('bulan')">Bulan Ini</button>
+        <button class="btn-secondary" onclick="setPeriodRekapJual('tahun')">Tahun Ini</button>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:48px">NO</th><th>NAMA (UMUM / PELANGGAN)</th><th style="width:140px">CABANG</th><th style="text-align:right">TOTAL TRANSAKSI</th><th style="width:120px">TANGGAL</th></tr></thead>
+        <tbody id="tbl-rekapjual"><tr class="empty-row"><td colspan="5">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- TAB PELANGGAN -->
@@ -1951,12 +2099,46 @@ function resetAllTabFields() {
   if (ambilFilterTgl) ambilFilterTgl.value = todayStr;
 }
 
+// ============ SIDEBAR (slide-in drawer) ============
+function openSidebar() {
+  document.getElementById('tabs-nav').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('tabs-nav').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+function toggleTabGroup(groupId, forceOpen) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  if (forceOpen) { group.classList.add('open'); return; }
+  group.classList.toggle('open');
+}
+function syncStokGroupCount() {
+  const a = parseInt(document.getElementById('count-stok').textContent) || 0;
+  const b = parseInt(document.getElementById('count-stoklog').textContent) || 0;
+  const el = document.getElementById('count-stok-group');
+  if (el) el.textContent = a + b;
+}
+
 function switchTab(name, btn) {
   resetAllTabFields();
   activeTab = name;
   document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn, .tab-subitem').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-group-btn').forEach(b => b.classList.remove('parent-active'));
   btn.classList.add('active');
+  const parentGroup = btn.closest('.tab-group');
+  document.querySelectorAll('.tab-group').forEach(g => { if (g !== parentGroup) g.classList.remove('open'); });
+  if (parentGroup) {
+    parentGroup.querySelector('.tab-group-btn').classList.add('parent-active');
+    if (!parentGroup.classList.contains('open')) toggleTabGroup(parentGroup.id, true);
+  }
+  closeSidebar();
   const mainDefault = document.getElementById('main-default');
   const mainStok = document.getElementById('main-stok');
   const mainStoklog = document.getElementById('main-stoklog');
@@ -1981,6 +2163,10 @@ function switchTab(name, btn) {
     document.getElementById('sec-bahan').classList.add('active');
     loadBahan();
     loadPegawaiPayroll();
+  } else if (name === 'rekapjual') {
+    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
+    document.getElementById('sec-rekapjual').classList.add('active');
+    loadRekapJual();
   } else {
     mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
     document.getElementById('sec-' + name).classList.add('active');
@@ -2163,6 +2349,8 @@ async function loadKategori() {
   populateFilterKategori();
   document.getElementById('count-kategori').textContent = kategoriList.length;
   document.getElementById('kategori-total-label').textContent = `(${kategoriList.length} kategori)`;
+  const kgEl = document.getElementById('count-kategori-group');
+  if (kgEl) kgEl.textContent = kategoriList.length;
 }
 function populateFilterKategori() {
   const options = [{ value:'', label:'Semua Kategori' }, ...kategoriList.map(k => ({ value:String(k.id), label:k.nama }))];
@@ -2512,6 +2700,108 @@ async function loadRekapPelanggan() {
   finally { clearTimeout(dimTimer); tbody.style.opacity = '1'; sumEl.style.opacity = '1'; if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.style.opacity = ''; } }
 }
 
+// ============ REKAP PENJUALAN (per transaksi, tidak digabung) ============
+let rekapJualRows = []; // cache hasil load (sebelum filter nama)
+
+function setPeriodRekapJual(jenis) {
+  const today = new Date();
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  let dari, sampai;
+  if (jenis === 'hari') {
+    dari = sampai = fmt(today);
+  } else if (jenis === 'bulan') {
+    dari = fmt(new Date(today.getFullYear(), today.getMonth(), 1));
+    sampai = fmt(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+  } else if (jenis === 'tahun') {
+    dari = fmt(new Date(today.getFullYear(), 0, 1));
+    sampai = fmt(new Date(today.getFullYear(), 11, 31));
+  }
+  document.getElementById('rekapjual-dari').value = dari;
+  document.getElementById('rekapjual-sampai').value = sampai;
+  loadRekapJual();
+}
+function resetPeriodRekapJual() {
+  document.getElementById('rekapjual-dari').value = '';
+  document.getElementById('rekapjual-sampai').value = '';
+  document.getElementById('rekapjual-search-nama').value = '';
+  if (document.getElementById('rekapjual-filter-cabang') && typeof renderGenericDropdown === 'function') renderGenericDropdown('rekapjual-filter-cabang', '');
+  loadRekapJual();
+}
+
+async function loadRekapJual() {
+  const tbody = document.getElementById('tbl-rekapjual');
+  const refreshBtn = document.getElementById('btn-rekapjual-refresh');
+  const dari = document.getElementById('rekapjual-dari').value;
+  const sampai = document.getElementById('rekapjual-sampai').value;
+  if (refreshBtn) { refreshBtn.disabled = true; refreshBtn.style.opacity = '0.6'; }
+  tbody.style.opacity = '0.4';
+  try {
+    // Total pendapatan sejak awal (tanpa filter tanggal/nama sama sekali)
+    const { data: semuaTrx, error: errAll } = await sb.from('transaksi').select('total');
+    if (errAll) throw errAll;
+    const totalSejakAwal = (semuaTrx || []).reduce((s, t) => s + (t.total || 0), 0);
+    document.getElementById('rekapjual-sejak-awal').textContent = `Rp ${totalSejakAwal.toLocaleString('id')}`;
+
+    // Data sesuai filter periode (kalau kosong = semua)
+    let query = sb.from('transaksi').select('id, nomor, tipe, pelanggan_id, cabang_id, total, created_at').order('created_at', { ascending: false });
+    if (dari) query = query.gte('created_at', dari + 'T00:00:00');
+    if (sampai) query = query.lte('created_at', sampai + 'T23:59:59');
+    const { data, error } = await query;
+    if (error) throw error;
+
+    rekapJualRows = (data || []).map(t => {
+      const nama = t.tipe === 'pelanggan'
+        ? (pelangganList.find(p => String(p.id) === String(t.pelanggan_id))?.nama || `Pelanggan #${t.pelanggan_id}`)
+        : 'Umum';
+      const cabangNama = cabangList.find(c => String(c.id) === String(t.cabang_id))?.nama || '—';
+      return { id: t.id, nama, cabang_id: t.cabang_id, cabangNama, total: t.total || 0, created_at: t.created_at };
+    });
+    filterRekapJual();
+  } catch(e) {
+    console.error(e);
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="5" style="color:var(--danger)">⚠ Gagal memuat — pastikan tabel <b>transaksi</b> ada di Supabase</td></tr>`;
+    showToast('Gagal memuat rekap penjualan: ' + (e.message || 'cek tabel transaksi'), 'error');
+  } finally {
+    tbody.style.opacity = '1';
+    if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.style.opacity = ''; }
+  }
+}
+
+function filterRekapJual() {
+  const tbody = document.getElementById('tbl-rekapjual');
+  const q = (document.getElementById('rekapjual-search-nama').value || '').toLowerCase().trim();
+  const cabangFilterEl = document.getElementById('rekapjual-filter-cabang');
+  const cabangId = cabangFilterEl ? cabangFilterEl.value : '';
+  let rows = rekapJualRows;
+  if (q) rows = rows.filter(r => r.nama.toLowerCase().includes(q));
+  if (cabangId) rows = rows.filter(r => String(r.cabang_id) === String(cabangId));
+
+  const totalFilter = rows.reduce((s, r) => s + r.total, 0);
+  document.getElementById('rekapjual-sum-filter').textContent = `Rp ${totalFilter.toLocaleString('id')}`;
+  document.getElementById('rekapjual-sum-trx').textContent = rows.length;
+  document.getElementById('rekapjual-total-label').textContent = `(${rows.length} transaksi)`;
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Tidak ada transaksi yang cocok</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map((r, i) => {
+    const dt = new Date(r.created_at);
+    const tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
+    const isUmum = r.nama === 'Umum';
+    return `<tr>
+      <td style="width:48px;font-weight:700;color:var(--text-muted)">${i+1}</td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:50%;background:${isUmum ? 'var(--border)' : 'linear-gradient(135deg,var(--primary),var(--accent))'};display:flex;align-items:center;justify-content:center;color:${isUmum ? 'var(--text-muted)' : 'white'};font-weight:800;font-size:12px;flex-shrink:0;font-family:'Baloo 2'">${r.nama.charAt(0).toUpperCase()}</div>
+        <span style="font-weight:700;font-size:14px">${r.nama}</span>
+      </div></td>
+      <td style="font-size:12.5px;color:var(--text-muted)">${r.cabangNama}</td>
+      <td style="text-align:right;font-weight:800;font-size:14px;color:var(--primary)">Rp ${r.total.toLocaleString('id')}</td>
+      <td style="font-size:12.5px;color:var(--text-muted)">${tglStr}</td>
+    </tr>`;
+  }).join('');
+}
+
 // ============ CABANG ============
 async function loadCabang() {
   const { data, error } = await sb.from('cabang').select('*').order('nama');
@@ -2532,6 +2822,11 @@ async function loadCabang() {
     setGenericDropdownOptions('restok-filter-cabang', [
       { value: '', label: 'Semua Cabang' }, ...cabangList.map(c => ({ value: c.id, label: c.nama }))
     ], 'Semua Cabang', loadRestok);
+  }
+  if (document.getElementById('rekapjual-filter-cabang')) {
+    setGenericDropdownOptions('rekapjual-filter-cabang', [
+      { value: '', label: 'Semua Cabang' }, ...cabangList.map(c => ({ value: c.id, label: c.nama }))
+    ], 'Semua Cabang', filterRekapJual);
   }
 }
 function renderCabang() {
@@ -2593,6 +2888,7 @@ async function loadStokCabangAll() {
   const lowCount = stokCabangAll.filter(s => s.stok > 0 && s.stok <= 5).length;
   const habisCount = stokCabangAll.filter(s => s.stok <= 0).length;
   document.getElementById('count-stok').textContent = lowCount + habisCount;
+  syncStokGroupCount();
   renderCabang();
 }
 async function loadStokCabang() {
@@ -2686,11 +2982,13 @@ async function loadStokLog() {
       else { tbody.innerHTML = `<tr class="empty-row"><td colspan="8">❌ Gagal memuat data: ${error.message}</td></tr>`; }
       document.getElementById('count-stoklog').textContent = '0';
       document.getElementById('stoklog-total-label').textContent = '(0 log)';
+      syncStokGroupCount();
       return;
     }
-    if (!data || !data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Belum ada perubahan stok manual</td></tr>'; document.getElementById('count-stoklog').textContent = '0'; document.getElementById('stoklog-total-label').textContent = '(0 log)'; return; }
+    if (!data || !data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Belum ada perubahan stok manual</td></tr>'; document.getElementById('count-stoklog').textContent = '0'; document.getElementById('stoklog-total-label').textContent = '(0 log)'; syncStokGroupCount(); return; }
     document.getElementById('count-stoklog').textContent = data.length;
     document.getElementById('stoklog-total-label').textContent = `(${data.length} log)`;
+    syncStokGroupCount();
     tbody.innerHTML = data.map(r => {
       const dt = new Date(r.created_at);
       const tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
