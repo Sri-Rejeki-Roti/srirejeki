@@ -166,6 +166,10 @@ svg.icon { display:block; flex-shrink:0; }
 }
 .tab-subitem.active .tab-count { background:var(--primary); color:white; }
 
+/* Badge angka di sidebar Menu disembunyikan agar tampilan lebih bersih */
+#tabs-nav .tab-count { display:none; }
+#tabs-nav .tab-group-btn .tab-count + .group-chevron { margin-left:auto; }
+
 .main-content { padding:24px 22px; max-width:1400px; margin:0 auto; }
 
 .subtabs-nav {
@@ -309,29 +313,63 @@ svg.icon { display:block; flex-shrink:0; }
   box-shadow:0 1px 4px rgba(43,38,32,0.10);
 }
 
-#page-rekap {
-  position:fixed;inset:0;z-index:80;
-  background:var(--bg);
-  background-image:radial-gradient(circle at 8% 12%,rgba(15,155,142,0.07) 0,transparent 45%),radial-gradient(circle at 95% 85%,rgba(45,212,191,0.10) 0,transparent 40%);
-  display:flex;flex-direction:column;
-  transform:translateX(100%);
-  transition:transform 0.28s cubic-bezier(.4,0,.2,1);
-  pointer-events:none;
-}
-#page-rekap.open {
-  transform:translateX(0);
-  pointer-events:all;
-}
-.rekap-body {
-  flex:1; overflow-y:auto; padding:24px 22px;
-  max-width:1200px; width:100%; margin:0 auto; box-sizing:border-box;
-}
-
 .retur-form-card {
   background:var(--card); border:2px solid var(--border); border-radius:var(--radius);
   padding:22px; margin-bottom:20px; box-shadow:var(--shadow-sm);
 }
 .retur-form-card h3 { font-size:16px; font-weight:700; margin-bottom:16px; color:var(--primary); }
+
+/* ── Setting Password Redesign ── */
+.setp-hero {
+  display:flex; align-items:center; gap:16px;
+  background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius:var(--radius); padding:20px 24px; margin-bottom:24px;
+  box-shadow:var(--shadow-md);
+}
+.setp-hero-icon { font-size:36px; line-height:1; }
+.setp-hero-title { font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; color:#fff; line-height:1.1; }
+.setp-hero-sub { font-size:12px; color:rgba(255,255,255,0.72); font-weight:500; margin-top:2px; letter-spacing:0.3px; }
+.setp-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:20px;
+}
+.setp-card {
+  background:var(--card); border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow-sm); border:1.5px solid var(--border);
+  transition:box-shadow 0.2s, transform 0.2s;
+}
+.setp-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.setp-card-header {
+  display:flex; align-items:center; gap:14px; padding:16px 20px;
+}
+.setp-card-icon { font-size:28px; line-height:1; }
+.setp-card-label { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; opacity:0.75; margin-bottom:1px; }
+.setp-card-name { font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:800; line-height:1.1; }
+.setp-color-master { background:linear-gradient(135deg,#0f9b8e,#0b756c); color:#fff; }
+.setp-color-owner  { background:linear-gradient(135deg,#0f9b8e,#0b756c); color:#fff; }
+.setp-color-payroll{ background:linear-gradient(135deg,#0f9b8e,#0b756c); color:#fff; }
+.setp-card-body { padding:20px; display:flex; flex-direction:column; gap:14px; }
+.setp-field { display:flex; flex-direction:column; gap:5px; }
+.setp-field label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+.setp-input-wrap { display:flex; align-items:center; gap:8px; background:var(--bg); border:2px solid var(--border); border-radius:var(--radius-sm); padding:0 12px; transition:border-color 0.15s, box-shadow 0.15s; }
+.setp-input-wrap:focus-within { border-color:var(--primary); box-shadow:0 0 0 4px rgba(15,155,142,0.1); background:#fff; }
+.setp-input-icon { font-size:15px; flex-shrink:0; }
+.setp-input-wrap input {
+  flex:1; border:none; background:transparent; outline:none;
+  padding:11px 0; font-size:18px; color:var(--text);
+  font-family:'Inter',sans-serif;
+}
+.setp-btn {
+  width:100%; padding:12px; border:none; border-radius:var(--radius-sm);
+  font-size:14px; font-weight:700; font-family:'Baloo 2',sans-serif;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
+  transition:opacity 0.15s, transform 0.1s; margin-top:4px;
+  color:#fff; letter-spacing:0.2px;
+}
+.setp-btn:active { transform:scale(0.97); }
+.setp-btn-master  { background:linear-gradient(135deg,#0f9b8e,#0b756c); box-shadow:0 4px 14px rgba(15,155,142,0.3); }
+.setp-btn-owner   { background:linear-gradient(135deg,#0f9b8e,#0b756c); box-shadow:0 4px 14px rgba(15,155,142,0.3); }
+.setp-btn-payroll { background:linear-gradient(135deg,#0f9b8e,#0b756c); box-shadow:0 4px 14px rgba(15,155,142,0.3); }
+.setp-btn:hover { opacity:0.9; }
 .form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
 .form-group { display:flex; flex-direction:column; gap:6px; }
 .form-group label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px; }
@@ -780,22 +818,21 @@ svg.icon { display:block; flex-shrink:0; }
 @media print {
   body { background:white !important; background-image:none !important; }
   body * { visibility: hidden; }
-  #page-rekap, #page-rekap * { visibility: visible; }
-  #page-rekap {
+  #sec-rekappel, #sec-rekappel * { visibility: visible; }
+  #sec-rekappel {
     position: absolute; left:0; top:0; width:100%; margin:0; padding:0;
     background:white !important;
   }
   @page { size: A4; margin: 14mm 14mm 16mm; }
-  #page-rekap .topbar, #page-rekap .controls-row, #page-rekap .retur-form-card { display: none !important; }
+  #sec-rekappel .sec-header, #sec-rekappel .controls-row, #sec-rekappel .retur-form-card { display: none !important; }
   .print-only { display: block !important; }
-  #page-rekap, #page-rekap * {
+  #sec-rekappel, #sec-rekappel * {
     color: #1a1a1a !important;
     background: white !important;
     box-shadow: none !important;
     text-shadow: none !important;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .rekap-body { padding:0 !important; }
   #rekap-print-header {
     display: flex; align-items: flex-end; justify-content: space-between;
     margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2.5px solid #111 !important;
@@ -921,15 +958,11 @@ svg.icon { display:block; flex-shrink:0; }
   <div class="brand">
     <div class="brand-icon" id="icon-brand"></div>
     <div>
-      <h1>Master Data</h1>
-      <div class="tagline">Manajemen Produk & Data</div>
+      <h1 id="topbar-title">Produk</h1>
+      <div class="tagline" id="topbar-tagline">Manajemen Produk & Data</div>
     </div>
   </div>
   <div class="spacer"></div>
-  <button class="topbar-back master-only" onclick="openGantiPassword()" style="display:none;background:rgba(45,212,191,0.3);border:1px solid rgba(45,212,191,0.35)">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-linecap="round"/></svg>
-    Ganti Password
-  </button>
   <a href="index.html" class="topbar-back">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Dashboard
@@ -947,55 +980,88 @@ svg.icon { display:block; flex-shrink:0; }
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
   </div>
-  <button class="tab-btn active" onclick="switchTab('produk',this)" id="tab-produk-btn">
-    <span id="ti-produk"></span> Produk <span class="tab-count" id="count-produk">0</span>
-  </button>
-  <div class="tab-group" id="group-kategori">
-    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-kategori')" id="tab-kategori-group-btn">
-      <span id="ti-kategori"></span> Kategori
-      <span class="tab-count" id="count-kategori-group">0</span>
+  <div class="tab-group" id="group-produk">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-produk')" id="tab-produk-group-btn">
+      <span id="ti-produk"></span> Produk
+      <span class="tab-count" id="count-produk-group">0</span>
       <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </button>
     <div class="tab-subitems">
       <div class="tab-subitems-inner">
-        <button class="tab-subitem" onclick="switchTab('kategori',this)" id="tab-kategori-btn">
-          Daftar Kategori <span class="tab-count" id="count-kategori">0</span>
+        <button class="tab-subitem active" onclick="switchTab('produk',this)" id="tab-produk-btn">
+          Produk Master <span class="tab-count" id="count-produk">0</span>
         </button>
-        <button class="tab-subitem" onclick="switchTab('rekapjual',this)" id="tab-rekapjual-btn">
-          Rekap Penjualan
+        <button class="tab-subitem" onclick="switchTab('stok',this)" id="tab-stok-btn">
+          Produk Stok <span class="tab-count" id="count-stok">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('restok',this)" id="tab-restok-btn">
+        </span> Produk Restok <span class="tab-count" id="count-restok">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('stoklog',this)" id="tab-stoklog-btn">
+        </span> Log Stok <span class="tab-count" id="count-stoklog">0</span>
         </button>
       </div>
     </div>
   </div>
-  <button class="tab-btn" onclick="switchTab('pelanggan',this)" id="tab-pelanggan-btn">
-    <span id="ti-pelanggan"></span> Pelanggan <span class="tab-count" id="count-pelanggan">0</span>
+  <button class="tab-btn" onclick="switchTab('rekapjual',this)" id="tab-rekapjual-btn">
+    <span id="ti-Rekap Penjualan"></span>Rekap Penjualan
   </button>
+  <div class="tab-group" id="group-pelanggan">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-pelanggan')" id="tab-pelanggan-group-btn">
+      <span id="ti-pelanggan"></span> Pelanggan
+      <span class="tab-count" id="count-pelanggan-group">0</span>
+      <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="tab-subitems">
+      <div class="tab-subitems-inner">
+        <button class="tab-subitem" onclick="switchTab('pelanggan',this)" id="tab-pelanggan-btn">
+          Data Pelanggan <span class="tab-count" id="count-pelanggan">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('rekappel',this)" id="tab-rekappel-btn">
+          Rekap Pelanggan
+        </button>
+      </div>
+    </div>
+  </div>
   <button class="tab-btn" onclick="switchTab('retur',this)" id="tab-retur-btn">
     <span id="ti-retur"></span> Retur <span class="tab-count" id="count-retur">0</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('restok',this)" id="tab-restok-btn">
-    <span id="ti-restok"></span> Restok <span class="tab-count" id="count-restok">0</span>
-  </button>
-  <div class="tab-group" id="group-stok">
-    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-stok')" id="tab-stok-group-btn">
-      <span id="ti-stok"></span> Stok &amp; Cabang
-      <span class="tab-count" id="count-stok-group">0</span>
+  <div class="tab-group" id="group-bahan">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-bahan')" id="tab-bahan-group-btn">
+      <span id="ti-bahan"></span> Bahan Baku
+      <span class="tab-count" id="count-bahan-group">0</span>
       <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </button>
     <div class="tab-subitems">
       <div class="tab-subitems-inner">
-        <button class="tab-subitem" onclick="switchTab('stok',this)" id="tab-stok-btn">
-          Stok per Cabang <span class="tab-count" id="count-stok">0</span>
+        <button class="tab-subitem" onclick="switchTab('bahan',this)" id="tab-bahan-btn">
+          Stok Bahan Baku <span class="tab-count" id="count-bahan">0</span>
         </button>
-        <button class="tab-subitem" onclick="switchTab('stoklog',this)" id="tab-stoklog-btn">
-          <span id="ti-stoklog"></span> Log Stok <span class="tab-count" id="count-stoklog">0</span>
+        <button class="tab-subitem" onclick="switchTab('pengambilan-bahan',this)" id="tab-pengambilan-bahan-btn">
+          Pengambilan Bahan Baku <span class="tab-count" id="count-pengambilan">0</span>
         </button>
       </div>
     </div>
   </div>
-  <button class="tab-btn" onclick="switchTab('bahan',this)" id="tab-bahan-btn">
-    <span id="ti-bahan"></span> Bahan Baku <span class="tab-count" id="count-bahan">0</span>
-  </button>
+  <div class="tab-group" id="group-setting">
+    <button class="tab-group-btn" type="button" onclick="toggleTabGroup('group-setting')" id="tab-setting-group-btn">
+      <span id="ti-setting"></span> Setting
+      <svg class="group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="tab-subitems">
+      <div class="tab-subitems-inner">
+        <button class="tab-subitem" onclick="switchTab('setting-cabang',this)" id="tab-setting-cabang-btn">
+          Tambah Toko Cabang <span class="tab-count" id="count-cabang">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('kategori',this)" id="tab-kategori-btn">
+          Tambah Kategori <span class="tab-count" id="count-kategori">0</span>
+        </button>
+        <button class="tab-subitem" onclick="switchTab('setting-password',this)" id="tab-setting-btn">
+          Setting Password
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- MAIN DEFAULT -->
@@ -1004,7 +1070,7 @@ svg.icon { display:block; flex-shrink:0; }
   <div class="tab-section active" id="sec-produk">
     <div class="stats-row" id="produk-stats"></div>
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-produk"></span>Daftar Produk <small id="produk-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-produk"></span>PRODUK MASTER <small id="produk-total-label"></small></div>
       <button class="btn-add master-only" onclick="openModalProduk()" style="display:none"><span id="btn-add-produk-icon"></span> Tambah Produk</button>
     </div>
     <div class="controls-row">
@@ -1046,7 +1112,7 @@ svg.icon { display:block; flex-shrink:0; }
   <!-- TAB REKAP PENJUALAN -->
   <div class="tab-section" id="sec-rekapjual">
     <div class="sec-header">
-      <div class="sec-title">📊 Rekap Penjualan <small id="rekapjual-total-label"></small></div>
+      <div class="sec-title">📊 REKAP PENJUALAN <small id="rekapjual-total-label"></small></div>
       <button class="btn-secondary" onclick="loadRekapJual()" id="btn-rekapjual-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
     </div>
 
@@ -1095,7 +1161,7 @@ svg.icon { display:block; flex-shrink:0; }
   <div class="tab-section" id="sec-pelanggan">
     <div class="stats-row" id="pel-stats"></div>
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-pelanggan"></span>Data Pelanggan <small id="pelanggan-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-pelanggan"></span>DATA PELANGGAN <small id="pelanggan-total-label"></small></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button class="btn-add master-only" onclick="openModalPelanggan()" style="display:none"><span id="btn-add-pel-icon"></span> Tambah Pelanggan</button>
       </div>
@@ -1118,9 +1184,46 @@ svg.icon { display:block; flex-shrink:0; }
         <div class="custom-select-dropdown" id="filter-kredit-pel-dropdown" role="listbox"></div>
       </div>
       <input type="hidden" id="filter-kredit-pel" value="">
-      <button class="btn-secondary" onclick="openRekap()" id="btn-toggle-rekap" style="flex:0 0 auto;white-space:nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Rekap Transaksi</button>
     </div>
     <div class="tbl-wrap" id="wrap-pelanggan"><div id="list-pelanggan"></div></div>
+  </div>
+
+  <!-- TAB REKAP PELANGGAN -->
+  <div class="tab-section" id="sec-rekappel">
+    <div id="rekap-print-header" class="print-only">
+      <div class="rph-left"><h2>Rekap Transaksi Pelanggan</h2><div id="rekap-print-period"></div></div>
+      <div class="rph-right"><div class="rph-brand">Sri Rejeki</div><div class="rph-date" id="rekap-print-date"></div></div>
+    </div>
+    <div class="sec-header">
+      <div class="sec-title">📊 REKAP PELANGGAN <small id="rekap-period-label">Pilih periode</small></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-secondary" onclick="window.print()" id="btn-rekap-print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
+        <button class="btn-secondary" onclick="loadRekapPelanggan()" id="btn-rekap-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
+      </div>
+    </div>
+    <div class="retur-form-card" style="margin-bottom:20px">
+      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">Periode</span>
+        <div class="mini-cal-wrap" id="mc-wrap-dari"><button type="button" class="flat-date mini-cal-trigger" id="rekap-dari-btn" onclick="miniCalToggle('dari')"></button><input type="hidden" id="rekap-dari"></div>
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
+        <div class="mini-cal-wrap" id="mc-wrap-sampai"><button type="button" class="flat-date mini-cal-trigger" id="rekap-sampai-btn" onclick="miniCalToggle('sampai')"></button><input type="hidden" id="rekap-sampai"></div>
+        <button class="btn-submit" style="height:46px" onclick="loadRekapPelanggan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
+        <button class="btn-secondary" onclick="resetPeriodRekap()">Reset</button>
+        <button class="btn-secondary" onclick="setPeriodBulanIni()">Bulan Ini</button>
+        <button class="btn-secondary" onclick="setPeriodTahunIni()">Tahun Ini</button>
+        <button class="btn-secondary" onclick="setPeriod3Bulan()">3 Bulan</button>
+      </div>
+    </div>
+    <div class="stats-row" id="rekap-summary">
+      <div class="stat-card"><div class="sv" id="rekap-sum-pelanggan">0</div><div class="sl">Pelanggan</div></div>
+      <div class="stat-card"><div class="sv" id="rekap-sum-transaksi">0</div><div class="sl">Total Transaksi</div></div>
+      <div class="stat-card"><div class="sv" id="rekap-sum-nominal" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">Total Nominal</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th style="width:48px">#</th><th>Nama Pelanggan</th><th style="text-align:center">Jumlah Transaksi</th><th style="text-align:right">Total Nominal</th></tr></thead><tbody id="tbl-rekap-pel"><tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr></tbody></table>
+    </div>
+    <div id="rekap-print-footer" class="print-only"><span>Dokumen ini dibuat otomatis oleh sistem Master Data — Sri Rejeki</span></div>
   </div>
 
   <!-- TAB RETUR -->
@@ -1259,10 +1362,6 @@ svg.icon { display:block; flex-shrink:0; }
 
 <!-- MAIN STOK -->
 <div class="main-content" id="main-stok" style="display:none">
-  <div class="subtabs-nav">
-    <button class="subtab-btn active" onclick="switchSubTab('stok',this)" id="subtab-stok-btn">📦 Stok per Cabang</button>
-    <button class="subtab-btn" onclick="switchSubTab('cabang',this)" id="subtab-cabang-btn">🏪 Manajemen Cabang <span class="subtab-count" id="count-cabang">0</span></button>
-  </div>
   <div class="tab-section active" id="sec-stok">
     <div class="cabang-selector-bar">
       <label>📍 Pilih Cabang</label>
@@ -1279,7 +1378,7 @@ svg.icon { display:block; flex-shrink:0; }
       <div id="stok-summary-cards" class="stok-summary-bar"></div>
     </div>
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-stok"></span>Stok per Cabang <small id="stok-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-stok"></span>PRODUK STOK <small id="stok-total-label"></small></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <div class="custom-select-wrap" id="stok-filter-status-wrap">
           <button type="button" class="custom-select-btn has-placeholder" id="stok-filter-status-btn" onclick="toggleGenericDropdown('stok-filter-status')">
@@ -1298,20 +1397,13 @@ svg.icon { display:block; flex-shrink:0; }
       </table>
     </div>
   </div>
-  <div class="tab-section" id="sec-cabang">
-    <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-cabang"></span>Manajemen Cabang <small id="cabang-total-label"></small></div>
-      <button class="btn-add master-only" onclick="openModalCabang()" style="display:none"><span id="btn-add-cabang-icon"></span> Tambah Cabang</button>
-    </div>
-    <div class="cards-grid" id="grid-cabang"></div>
-  </div>
 </div>
 
 <!-- MAIN STOKLOG -->
 <div class="main-content" id="main-stoklog" style="display:none">
   <div class="tab-section active" id="sec-stoklog">
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-stoklog"></span>Riwayat Perubahan Stok <small id="stoklog-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-stoklog"></span>PERUBAHAN STOK <small id="stoklog-total-label"></small></div>
       <div style="display:flex;gap:8px"><input type="date" id="stoklog-filter-tgl" class="flat-date" onchange="loadStokLog()"><button class="btn-secondary" onclick="document.getElementById('stoklog-filter-tgl').value='';loadStokLog()">Semua</button></div>
     </div>
     <div class="tbl-wrap">
@@ -1325,15 +1417,10 @@ svg.icon { display:block; flex-shrink:0; }
 
 <!-- MAIN BAHAN BAKU -->
 <div class="main-content" id="main-bahan" style="display:none">
-  <div class="subtabs-nav">
-    <button class="subtab-btn active" onclick="switchSubTabBahan('bahan',this)" id="subtab-bahan-btn">📦 Stok Bahan Baku <span class="subtab-count" id="count-bahan">0</span></button>
-    <button class="subtab-btn" onclick="switchSubTabBahan('pengambilan',this)" id="subtab-pengambilan-btn">📤 Pengambilan <span class="subtab-count" id="count-pengambilan">0</span></button>
-    <button class="subtab-btn" onclick="switchSubTabBahan('rekapbahan',this)" id="subtab-rekapbahan-btn">📊 Rekap</button>
-  </div>
 
   <div class="tab-section active" id="sec-bahan">
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-bahan"></span>Daftar Bahan Baku <small id="bahan-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-bahan"></span>DAFTAR BAHAN BAKU <small id="bahan-total-label"></small></div>
       <button class="btn-add master-only" onclick="openModalBahan()" style="display:none"><span id="btn-add-bahan-icon"></span> Tambah Bahan</button>
     </div>
     <div class="controls-row">
@@ -1389,7 +1476,7 @@ svg.icon { display:block; flex-shrink:0; }
       </div>
     </div>
     <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-riwayat-ambil"></span>Riwayat Pengambilan <small id="pengambilan-total-label"></small></div>
+      <div class="sec-title"><span id="sh-icon-riwayat-ambil"></span>RIWAYAT PENGAMBILAN <small id="pengambilan-total-label"></small></div>
       <div style="display:flex;gap:8px;flex-shrink:0"><input type="date" id="pengambilan-filter-tgl" class="flat-date" onchange="loadPengambilan()"><button class="btn-secondary" onclick="document.getElementById('pengambilan-filter-tgl').value='';loadPengambilan()">Semua</button></div>
     </div>
     <div class="tbl-wrap">
@@ -1400,33 +1487,142 @@ svg.icon { display:block; flex-shrink:0; }
     </div>
   </div>
 
-  <div class="tab-section" id="sec-rekapbahan">
-    <div class="sec-header">
-      <div class="sec-title"><span id="sh-icon-rekapbahan"></span>Rekap Pengambilan Bahan</div>
-    </div>
-    <div class="retur-form-card" style="margin-bottom:16px">
-      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
-        <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">Periode</span>
-        <input type="date" id="rekapbahan-dari" class="flat-date" style="width:auto">
-        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
-        <input type="date" id="rekapbahan-sampai" class="flat-date" style="width:auto">
-        <button class="btn-submit" style="height:46px;padding:0 20px" onclick="loadRekapBahan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
-        <button class="btn-secondary" onclick="setRekapBahanBulanIni()">Bulan Ini</button>
-        <button class="btn-secondary" onclick="document.getElementById('rekapbahan-dari').value='';document.getElementById('rekapbahan-sampai').value='';loadRekapBahan()">Reset</button>
-        <button class="btn-secondary" onclick="printRekapBahan()">🖨️ Print</button>
+</div>
+
+<!-- MAIN SETTING -->
+<div class="main-content" id="main-setting" style="display:none">
+  <div class="tab-section active" id="sec-setting-password">
+    <div class="setp-hero">
+      <div class="setp-hero-icon">🔑</div>
+      <div>
+        <div class="setp-hero-title">Ganti Password</div>
+        <div class="setp-hero-sub">Password hanya boleh berisi angka</div>
       </div>
     </div>
-    <div class="stats-row" id="rekapbahan-summary">
-      <div class="stat-card"><div class="sv" id="rekapbahan-total-ambil">0</div><div class="sl">Total Pengambilan</div></div>
-      <div class="stat-card"><div class="sv" id="rekapbahan-total-jumlah">0</div><div class="sl">Total Jumlah</div></div>
-      <div class="stat-card"><div class="sv" id="rekapbahan-total-pegawai">0</div><div class="sl">Pegawai</div></div>
+    <div class="setp-grid">
+
+      <!-- Master Data -->
+      <div class="setp-card">
+        <div class="setp-card-header setp-color-master">
+          <div class="setp-card-icon">🗂️</div>
+          <div>
+            <div class="setp-card-label">AKSES</div>
+            <div class="setp-card-name">Master Data</div>
+          </div>
+        </div>
+        <div class="setp-card-body">
+          <div class="setp-field">
+            <label>Password Lama</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔓</span>
+              <input type="tel" id="setp-master-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔒</span>
+              <input type="tel" id="setp-master-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Konfirmasi Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">✅</span>
+              <input type="tel" id="setp-master-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
+            </div>
+          </div>
+          <div id="setp-master-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
+          <button class="setp-btn setp-btn-master" id="btn-setp-master" onclick="saveSettingPassword('master')">
+            <span>💾</span> Simpan Password Master
+          </button>
+        </div>
+      </div>
+
+      <!-- Owner -->
+      <div class="setp-card">
+        <div class="setp-card-header setp-color-owner">
+          <div class="setp-card-icon">👑</div>
+          <div>
+            <div class="setp-card-label">AKSES</div>
+            <div class="setp-card-name">Owner</div>
+          </div>
+        </div>
+        <div class="setp-card-body">
+          <div class="setp-field">
+            <label>Password Lama</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔓</span>
+              <input type="tel" id="setp-owner-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔒</span>
+              <input type="tel" id="setp-owner-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Konfirmasi Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">✅</span>
+              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
+            </div>
+          </div>
+          <div id="setp-owner-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
+          <button class="setp-btn setp-btn-owner" id="btn-setp-owner" onclick="saveSettingPassword('owner')">
+            <span>💾</span> Simpan Password Owner
+          </button>
+        </div>
+      </div>
+
+      <!-- Payroll -->
+      <div class="setp-card">
+        <div class="setp-card-header setp-color-payroll">
+          <div class="setp-card-icon">💰</div>
+          <div>
+            <div class="setp-card-label">AKSES</div>
+            <div class="setp-card-name">Payroll</div>
+          </div>
+        </div>
+        <div class="setp-card-body">
+          <div class="setp-field">
+            <label>Password Lama</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔓</span>
+              <input type="tel" id="setp-payroll-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">🔒</span>
+              <input type="tel" id="setp-payroll-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="setp-field">
+            <label>Konfirmasi Password Baru</label>
+            <div class="setp-input-wrap">
+              <span class="setp-input-icon">✅</span>
+              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
+            </div>
+          </div>
+          <div id="setp-payroll-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
+          <button class="setp-btn setp-btn-payroll" id="btn-setp-payroll" onclick="saveSettingPassword('payroll')">
+            <span>💾</span> Simpan Password Payroll
+          </button>
+        </div>
+      </div>
+
     </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th style="width:48px">#</th><th>Nama Pegawai</th><th style="text-align:center">Jumlah Pengambilan</th><th style="text-align:right">Total Unit</th></tr></thead>
-        <tbody id="tbl-rekapbahan"><tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr></tbody>
-      </table>
+  </div>
+  <div class="tab-section" id="sec-cabang">
+    <div class="sec-header">
+      <div class="sec-title"><span id="sh-icon-cabang"></span>Manajemen Cabang <small id="cabang-total-label"></small></div>
+      <button class="btn-add master-only" onclick="openModalCabang()" style="display:none"><span id="btn-add-cabang-icon"></span> Tambah Cabang</button>
     </div>
+    <div class="cards-grid" id="grid-cabang"></div>
   </div>
 </div>
 
@@ -1555,52 +1751,12 @@ svg.icon { display:block; flex-shrink:0; }
 
 <div class="toast" id="toast"></div>
 
-<!-- REKAP PELANGGAN -->
-<div id="page-rekap">
-  <div class="topbar">
-    <button class="topbar-back" onclick="closeRekap()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12H4M4 12l6-6M4 12l6 6"/></svg>Kembali</button>
-    <div class="brand"><div class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div><div><h1>Rekap Transaksi</h1><div class="tagline" id="rekap-period-label">Pilih periode</div></div></div>
-    <div class="spacer"></div>
-    <button class="topbar-back" onclick="printRekap()" id="btn-rekap-print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
-    <button class="topbar-back" onclick="loadRekapPelanggan()" id="btn-rekap-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
-  </div>
-  <div class="rekap-body">
-    <div id="rekap-print-header" class="print-only">
-      <div class="rph-left"><h2>Rekap Transaksi Pelanggan</h2><div id="rekap-print-period"></div></div>
-      <div class="rph-right"><div class="rph-brand">Sri Rejeki</div><div class="rph-date" id="rekap-print-date"></div></div>
-    </div>
-    <div class="retur-form-card" style="margin-bottom:20px">
-      <div class="controls-row" style="margin-bottom:0;flex-wrap:wrap;align-items:center">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">Periode</span>
-        <div class="mini-cal-wrap" id="mc-wrap-dari"><button type="button" class="flat-date mini-cal-trigger" id="rekap-dari-btn" onclick="miniCalToggle('dari')"></button><input type="hidden" id="rekap-dari"></div>
-        <span style="font-size:13px;font-weight:600;color:var(--text-muted)">s/d</span>
-        <div class="mini-cal-wrap" id="mc-wrap-sampai"><button type="button" class="flat-date mini-cal-trigger" id="rekap-sampai-btn" onclick="miniCalToggle('sampai')"></button><input type="hidden" id="rekap-sampai"></div>
-        <button class="btn-submit" style="height:46px" onclick="loadRekapPelanggan()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Tampilkan</button>
-        <button class="btn-secondary" onclick="resetPeriodRekap()">Reset</button>
-        <button class="btn-secondary" onclick="setPeriodBulanIni()">Bulan Ini</button>
-        <button class="btn-secondary" onclick="setPeriodTahunIni()">Tahun Ini</button>
-        <button class="btn-secondary" onclick="setPeriod3Bulan()">3 Bulan</button>
-      </div>
-    </div>
-    <div class="stats-row" id="rekap-summary">
-      <div class="stat-card"><div class="sv" id="rekap-sum-pelanggan">0</div><div class="sl">Pelanggan</div></div>
-      <div class="stat-card"><div class="sv" id="rekap-sum-transaksi">0</div><div class="sl">Total Transaksi</div></div>
-      <div class="stat-card"><div class="sv" id="rekap-sum-nominal" style="font-size:16px;color:var(--success)">Rp 0</div><div class="sl">Total Nominal</div></div>
-    </div>
-    <div class="tbl-wrap">
-      <table><thead><tr><th style="width:48px">#</th><th>Nama Pelanggan</th><th style="text-align:center">Jumlah Transaksi</th><th style="text-align:right">Total Nominal</th></tr></thead><tbody id="tbl-rekap-pel"><tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr></tbody></table>
-    </div>
-    <div id="rekap-print-footer" class="print-only"><span>Dokumen ini dibuat otomatis oleh sistem Master Data — Sri Rejeki</span></div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="modal-master-login">
   <div class="modal" style="max-width:380px">
     <h3>🔐 Akses Master Data</h3>
     <div class="form-group">
       <label>Password Master</label>
-      <input type="text" id="master-password-input" placeholder="Masukkan password..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
+      <input type="tel" id="master-password-input" placeholder="Masukkan password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
     </div>
     <div id="master-login-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Password salah. Silakan coba lagi.</div>
     <div class="modal-actions">
@@ -1613,17 +1769,6 @@ svg.icon { display:block; flex-shrink:0; }
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-ganti-password">
-  <div class="modal" style="max-width:400px">
-    <h3>🔑 Ganti Password Master</h3>
-    <div class="modal-sub">Ubah password untuk akses Master Data</div>
-    <div class="form-group"><label>Password Lama</label><input type="text" id="gp-password-lama" placeholder="Masukkan password lama..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc"></div>
-    <div class="form-group"><label>Password Baru</label><input type="text" id="gp-password-baru" placeholder="Masukkan password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') document.getElementById('gp-password-konfirmasi').focus()"></div>
-    <div class="form-group"><label>Konfirmasi Password Baru</label><input type="text" id="gp-password-konfirmasi" placeholder="Konfirmasi password baru..." maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" onkeydown="if(event.key==='Enter') saveGantiPassword()"></div>
-    <div id="gp-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Pesan error akan muncul di sini</div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeGantiPassword()">Batal</button><button class="btn-confirm-modal" onclick="saveGantiPassword()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7"/></svg>Simpan Password</button></div>
-  </div>
-</div>
 
 <div class="prompt-overlay" id="prompt-overlay">
   <div class="prompt-card">
@@ -1665,6 +1810,7 @@ const ICONS = {
   store:`<svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="currentColor" fill-opacity="0.13" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
   warehouse:`<svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="1.5" fill="currentColor" fill-opacity="0.13" stroke="currentColor" stroke-width="1.7"/><path d="M2 7l10-4 10 4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>`,
   list:`<svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 7h8M8 12h6M8 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  gear:`<svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5a1.7 1.7 0 000-3l1-1.7-1.7-2.9-2 .5a7 7 0 00-2.6-1.5L13.5 3h-3l-.6 2.4a7 7 0 00-2.6 1.5l-2-.5L3.6 9.3l1 1.7a1.7 1.7 0 000 3l-1 1.7 1.7 2.9 2-.5a7 7 0 002.6 1.5l.6 2.4h3l.6-2.4a7 7 0 002.6-1.5l2 .5 1.7-2.9-1-1.7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
 };
 
 const EMOJI_MAP = [
@@ -1699,6 +1845,28 @@ let selectedCabangId = null;
 let selectedEmoji = 'bread';
 let selectedFotoBase64 = null;
 let activeTab = 'produk';
+
+// ============ TOPBAR JUDUL PER MENU ============
+const TAB_TITLES = {
+  produk:    { title: 'Produk Master',          tagline: 'Manajemen Produk & Data' },
+  kategori:  { title: 'Kategori',         tagline: 'Manajemen Kategori Produk' },
+  rekapjual: { title: 'Rekap Penjualan',  tagline: 'Rekap & Riwayat Penjualan' },
+  pelanggan: { title: 'Pelanggan',        tagline: 'Manajemen Data Pelanggan' },
+  rekappel:  { title: 'Rekap Pelanggan',  tagline: 'Rekap Transaksi Pelanggan' },
+  retur:     { title: 'Retur',            tagline: 'Manajemen Retur Produk' },
+  restok:    { title: 'Produk Restok',           tagline: 'Manajemen Restok Produk' },
+  stok:      { title: 'Produk Stok',  tagline: 'Stok Produk per Cabang' },
+  stoklog:   { title: 'Log Stok',         tagline: 'Riwayat Perubahan Stok' },
+  bahan:     { title: 'Bahan Baku',       tagline: 'Manajemen Stok Bahan Baku' },
+  'pengambilan-bahan': { title: 'Pengambilan Bahan', tagline: 'Riwayat Pengambilan Bahan Baku' },
+  'setting-password': { title: 'Setting',  tagline: 'Setting Password Aplikasi' },
+  'setting-cabang':   { title: 'Setting',  tagline: 'Manajemen Cabang' },
+};
+function updateTopbarTitle(name) {
+  const info = TAB_TITLES[name] || TAB_TITLES.produk;
+  document.getElementById('topbar-title').textContent = info.title;
+  document.getElementById('topbar-tagline').textContent = info.tagline;
+}
 let masterAuthorized = false;
 let restokSearchResults = [];
 let bahanList = [];
@@ -1748,44 +1916,51 @@ async function verifyMasterPassword() {
 function openMasterLogin() { document.getElementById('modal-master-login').classList.add('open'); document.getElementById('master-password-input').value = ''; document.getElementById('master-login-error').style.display = 'none'; setTimeout(() => document.getElementById('master-password-input').focus(), 100); }
 function closeMasterLogin() { document.getElementById('modal-master-login').classList.remove('open'); }
 
-function openGantiPassword() {
-  if (!masterAuthorized) { showToast('🔐 Login terlebih dahulu', 'warn'); openMasterLogin(); return; }
-  document.getElementById('modal-ganti-password').classList.add('open');
-  document.getElementById('gp-password-lama').value = '';
-  document.getElementById('gp-password-baru').value = '';
-  document.getElementById('gp-password-konfirmasi').value = '';
-  document.getElementById('gp-error').style.display = 'none';
-  setTimeout(() => document.getElementById('gp-password-lama').focus(), 100);
-}
-function closeGantiPassword() { document.getElementById('modal-ganti-password').classList.remove('open'); }
-async function saveGantiPassword() {
-  const passwordLama = document.getElementById('gp-password-lama').value.trim();
-  const passwordBaru = document.getElementById('gp-password-baru').value.trim();
-  const passwordKonfirmasi = document.getElementById('gp-password-konfirmasi').value.trim();
-  const errorEl = document.getElementById('gp-error');
-  if (!passwordLama) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Password lama wajib diisi'; document.getElementById('gp-password-lama').focus(); return; }
-  if (!passwordBaru) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Password baru wajib diisi'; document.getElementById('gp-password-baru').focus(); return; }
-  if (passwordBaru.length < 4) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Password baru minimal 4 karakter'; document.getElementById('gp-password-baru').focus(); return; }
-  if (passwordBaru !== passwordKonfirmasi) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Konfirmasi password tidak cocok'; document.getElementById('gp-password-konfirmasi').value = ''; document.getElementById('gp-password-konfirmasi').focus(); return; }
+// ============ SETTING: PASSWORD MASTER/OWNER/PAYROLL ============
+const SETTING_PASSWORD_KEYS = { master: 'master_password', owner: 'owner_password', payroll: 'payroll_password' };
+const SETTING_PASSWORD_LABELS = { master: 'Master Data', owner: 'Owner', payroll: 'Payroll' };
+async function saveSettingPassword(type) {
+  if (!masterAuthorized) { showToast('🔐 Login Master Data terlebih dahulu', 'warn'); openMasterLogin(); return; }
+  const key = SETTING_PASSWORD_KEYS[type];
+  const label = SETTING_PASSWORD_LABELS[type];
+  const elLama = document.getElementById(`setp-${type}-lama`);
+  const elBaru = document.getElementById(`setp-${type}-baru`);
+  const elKonfirmasi = document.getElementById(`setp-${type}-konfirmasi`);
+  const errorEl = document.getElementById(`setp-${type}-error`);
+  const showErr = (msg) => { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ ' + msg; };
+  errorEl.style.display = 'none';
+  const passwordLama = elLama.value.trim();
+  const passwordBaru = elBaru.value.trim();
+  const passwordKonfirmasi = elKonfirmasi.value.trim();
+  if (!passwordLama) { showErr('Password lama wajib diisi'); elLama.focus(); return; }
+  if (!/^\d+$/.test(passwordLama)) { showErr('Password hanya boleh berisi angka'); elLama.focus(); return; }
+  if (!passwordBaru) { showErr('Password baru wajib diisi'); elBaru.focus(); return; }
+  if (!/^\d+$/.test(passwordBaru)) { showErr('Password baru hanya boleh berisi angka'); elBaru.focus(); return; }
+  if (passwordBaru.length < 4) { showErr('Password baru minimal 4 angka'); elBaru.focus(); return; }
+  if (passwordBaru !== passwordKonfirmasi) { showErr('Konfirmasi password tidak cocok'); elKonfirmasi.value = ''; elKonfirmasi.focus(); return; }
+  const btn = document.getElementById(`btn-setp-${type}`);
+  const oldHTML = btn.innerHTML; btn.disabled = true; btn.innerHTML = '⏳ Menyimpan...';
   try {
-    const { data, error } = await sb.from('settings').select('value').eq('key', 'master_password').single();
-    if (error || !data) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Gagal memverifikasi password lama'; return; }
-    if (data.value !== passwordLama) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Password lama salah'; document.getElementById('gp-password-lama').value = ''; document.getElementById('gp-password-lama').focus(); return; }
-    const { error: updateError } = await sb.from('settings').update({ value: passwordBaru }).eq('key', 'master_password');
+    const { data, error } = await sb.from('settings').select('value').eq('key', key).single();
+    if (error || !data) { showErr(`Gagal memverifikasi password ${label} lama`); return; }
+    if (data.value !== passwordLama) { showErr('Password lama salah'); elLama.value = ''; elLama.focus(); return; }
+    const { error: updateError } = await sb.from('settings').update({ value: passwordBaru }).eq('key', key);
     if (updateError) throw updateError;
-    closeGantiPassword();
-    showToast('✅ Password berhasil diubah!', 'success');
-    masterAuthorized = false;
-    document.querySelectorAll('.master-only').forEach(el => { el.style.display = 'none'; });
-    document.querySelectorAll('.btn-stok-inline').forEach(btn => { btn.disabled = true; });
-    document.querySelectorAll('.stok-input-cell input').forEach(inp => { inp.disabled = true; });
-    document.getElementById('btn-retur-submit').style.display = 'none';
-    document.getElementById('btn-restok-submit').style.display = 'none';
-    document.getElementById('btn-ambil-submit').style.display = 'none';
-    setTimeout(() => { openMasterLogin(); }, 500);
-  } catch(e) { console.error(e); errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Gagal menyimpan: ' + (e.message || 'Unknown error'); }
+    showToast(`✅ Password ${label} berhasil diubah!`, 'success');
+    elLama.value = ''; elBaru.value = ''; elKonfirmasi.value = '';
+    if (type === 'master') {
+      masterAuthorized = false;
+      document.querySelectorAll('.master-only').forEach(el => { el.style.display = 'none'; });
+      document.querySelectorAll('.btn-stok-inline').forEach(b => { b.disabled = true; });
+      document.querySelectorAll('.stok-input-cell input').forEach(inp => { inp.disabled = true; });
+      document.getElementById('btn-retur-submit').style.display = 'none';
+      document.getElementById('btn-restok-submit').style.display = 'none';
+      document.getElementById('btn-ambil-submit').style.display = 'none';
+      setTimeout(() => { openMasterLogin(); }, 500);
+    }
+  } catch(e) { console.error(e); showErr('Gagal menyimpan: ' + (e.message || 'Unknown error')); }
+  finally { btn.disabled = false; btn.innerHTML = oldHTML; }
 }
-
 // ============ CUSTOM DROPDOWN ============
 function getCabangOptions() {
   return [...cabangList].sort((a, b) => {
@@ -1984,11 +2159,12 @@ function mountIcons() {
   set('ti-produk','bread',15); set('ti-kategori','tag',15); set('ti-pelanggan','users',15);
   set('ti-retur','retur',15); set('ti-restok','boxIn',15); set('ti-stok','warehouse',15);
   set('ti-cabang','store',15); set('ti-stoklog','list',15); set('ti-bahan','warehouse',15);
+  set('ti-setting','gear',15); set('ti-Rekap Penjualan','list',15);
   set('sh-icon-produk','bread',18); set('sh-icon-kategori','tag',18); set('sh-icon-pelanggan','users',18);
   set('sh-icon-retur','retur',18); set('sh-icon-retur-form','retur',16); set('sh-icon-restok','boxIn',18);
   set('sh-icon-restok-form','boxIn',16); set('sh-icon-stok','warehouse',18); set('sh-icon-cabang','store',18);
   set('sh-icon-stoklog','list',18); set('sh-icon-bahan','warehouse',18); set('sh-icon-pengambilan','boxIn',18);
-  set('sh-icon-riwayat-ambil','list',18); set('sh-icon-rekapbahan','list',18);
+  set('sh-icon-riwayat-ambil','list',18);
   set('btn-add-produk-icon','plus',15); set('btn-add-kat-icon','plus',15); set('btn-add-pel-icon','plus',15);
   set('btn-add-cabang-icon','plus',15); set('btn-add-bahan-icon','plus',15);
   set('btn-retur-icon','check',15); set('btn-restok-icon','check',15); set('btn-ambil-icon','check',15);
@@ -2087,14 +2263,6 @@ function resetAllTabFields() {
   document.getElementById('ambil-pegawai-label').textContent = '— Pilih Pegawai —';
   document.getElementById('ambil-jumlah').value = '1';
   document.getElementById('ambil-catatan').value = '';
-  const rekapDari = document.getElementById('rekapbahan-dari');
-  const rekapSampai = document.getElementById('rekapbahan-sampai');
-  if (rekapDari && rekapSampai) {
-    const now = new Date();
-    rekapDari.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
-    const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-    rekapSampai.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${lastDay}`;
-  }
   const ambilFilterTgl = document.getElementById('pengambilan-filter-tgl');
   if (ambilFilterTgl) ambilFilterTgl.value = todayStr;
 }
@@ -2128,6 +2296,7 @@ function syncStokGroupCount() {
 function switchTab(name, btn) {
   resetAllTabFields();
   activeTab = name;
+  updateTopbarTitle(name);
   document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn, .tab-subitem').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-group-btn').forEach(b => b.classList.remove('parent-active'));
@@ -2143,56 +2312,52 @@ function switchTab(name, btn) {
   const mainStok = document.getElementById('main-stok');
   const mainStoklog = document.getElementById('main-stoklog');
   const mainBahan = document.getElementById('main-bahan');
+  const mainSetting = document.getElementById('main-setting');
   if (name === 'stok') {
-    mainDefault.style.display = 'none'; mainStok.style.display = 'block'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
-    document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('subtab-stok-btn').classList.add('active');
+    mainDefault.style.display = 'none'; mainStok.style.display = 'block'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-stok').classList.add('active');
     const val = document.getElementById('stok-cabang-value').value;
     if (val) { loadStokCabang(); }
     else { document.getElementById('tbl-stok-cabang').innerHTML = '<tr class="empty-row"><td colspan="6">Pilih cabang untuk melihat stok</td></tr>'; }
   } else if (name === 'stoklog') {
-    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'block'; mainBahan.style.display = 'none';
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'block'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-stoklog').classList.add('active');
     loadStokLog();
   } else if (name === 'bahan') {
-    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'block';
-    document.querySelectorAll('#main-bahan .subtab-btn').forEach(b => b.classList.remove('active'));
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'block'; mainSetting.style.display = 'none';
     document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('subtab-bahan-btn').classList.add('active');
     document.getElementById('sec-bahan').classList.add('active');
     loadBahan();
     loadPegawaiPayroll();
+  } else if (name === 'pengambilan-bahan') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'block'; mainSetting.style.display = 'none';
+    document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-pengambilan').classList.add('active');
+    loadPegawaiPayroll(); populateBahanSelect(); loadPengambilan();
+  } else if (name === 'setting-password') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
+    document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-setting-password').classList.add('active');
+    loadCabang();
+  } else if (name === 'setting-cabang') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
+    document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-cabang').classList.add('active');
+    loadCabang();
   } else if (name === 'rekapjual') {
-    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
+    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-rekapjual').classList.add('active');
     loadRekapJual();
+  } else if (name === 'rekappel') {
+    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
+    document.getElementById('sec-rekappel').classList.add('active');
+    mcSyncButtons(); updatePeriodLabel(); loadRekapPelanggan();
   } else {
-    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none';
+    mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-' + name).classList.add('active');
   }
   if (name === 'retur') loadRetur();
   if (name === 'restok') loadRestok();
-}
-
-function switchSubTab(name, btn) {
-  document.querySelectorAll('#main-stok .tab-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('sec-' + name).classList.add('active');
-}
-
-function switchSubTabBahan(name, btn) {
-  document.querySelectorAll('#main-bahan .tab-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('#main-bahan .subtab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('sec-' + name).classList.add('active');
-  if (name === 'bahan') loadBahan();
-  else if (name === 'pengambilan') { loadPegawaiPayroll(); populateBahanSelect(); loadPengambilan(); }
-  else if (name === 'rekapbahan') {
-    if (!document.getElementById('rekapbahan-dari').value) setRekapBahanBulanIni();
-    else loadRekapBahan();
-  }
 }
 
 // ============ PRODUK ============
@@ -2204,6 +2369,8 @@ async function loadProduk() {
   renderProduk();
   populateReturProdukSelect();
   document.getElementById('count-produk').textContent = produkList.length;
+  const pgEl = document.getElementById('count-produk-group');
+  if (pgEl) pgEl.textContent = produkList.length;
 }
 function renderProdukStats() {
   const stokMap = {};
@@ -2408,6 +2575,8 @@ async function loadPelanggan() {
   renderPelanggan();
   document.getElementById('count-pelanggan').textContent = pelangganList.length;
   document.getElementById('pelanggan-total-label').textContent = `(${pelangganList.length} pelanggan)`;
+  const pgEl = document.getElementById('count-pelanggan-group');
+  if (pgEl) pgEl.textContent = pelangganList.length;
   renderCabangDropdown('pel');
 }
 function renderPelStats() {
@@ -2561,8 +2730,6 @@ function setDiskonTipe(tipe) {
 function closeModalPelanggan() { document.getElementById('modal-pelanggan').classList.remove('open'); }
 
 // ============ REKAP PELANGGAN ============
-function openRekap() { const page = document.getElementById('page-rekap'); page.classList.add('open'); mcSyncButtons(); updatePeriodLabel(); loadRekapPelanggan(); }
-function closeRekap() { const page = document.getElementById('page-rekap'); page.classList.remove('open'); }
 function updatePeriodLabel() {
   const dari = document.getElementById('rekap-dari').value;
   const sampai = document.getElementById('rekap-sampai').value;
@@ -3272,6 +3439,7 @@ async function loadBahan() {
   renderBahan();
   populateBahanSelect();
   document.getElementById('count-bahan').textContent = bahanList.length;
+  document.getElementById('count-bahan-group').textContent = bahanList.length;
   document.getElementById('bahan-total-label').textContent = `(${bahanList.length} bahan)`;
 }
 
@@ -3528,81 +3696,11 @@ function konfirmHapusPengambilan(id, bahanId, jumlah) {
   document.getElementById('modal-confirm').classList.add('open');
 }
 
-// ============ REKAP BAHAN ============
-function setRekapBahanBulanIni() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth()+1).padStart(2,'0');
-  document.getElementById('rekapbahan-dari').value = `${y}-${m}-01`;
-  const lastDay = new Date(y, now.getMonth()+1, 0).getDate();
-  document.getElementById('rekapbahan-sampai').value = `${y}-${m}-${lastDay}`;
-  loadRekapBahan();
-}
-async function loadRekapBahan() {
-  const dari = document.getElementById('rekapbahan-dari').value;
-  const sampai = document.getElementById('rekapbahan-sampai').value;
-  const tbody = document.getElementById('tbl-rekapbahan');
-  if (!dari || !sampai) { tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Pilih periode lalu klik Tampilkan</td></tr>'; return; }
-  const { data, error } = await sb.from('pengambilan_bahan')
-    .select('*, pegawai(nama)')
-    .gte('created_at', dari + 'T00:00:00')
-    .lte('created_at', sampai + 'T23:59:59');
-  if (error) { console.error(error); tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Gagal memuat data</td></tr>'; return; }
-  const map = {};
-  let totalJumlah = 0;
-  (data || []).forEach(r => {
-    const pid = r.pegawai_id;
-    if (!map[pid]) map[pid] = { nama: r.pegawai?.nama || 'Unknown', count: 0, total: 0 };
-    map[pid].count++;
-    map[pid].total += (r.jumlah || 0);
-    totalJumlah += (r.jumlah || 0);
-  });
-  const rows = Object.values(map).sort((a, b) => b.total - a.total);
-  document.getElementById('rekapbahan-total-ambil').textContent = rows.reduce((s, r) => s + r.count, 0);
-  document.getElementById('rekapbahan-total-jumlah').textContent = totalJumlah;
-  document.getElementById('rekapbahan-total-pegawai').textContent = rows.length;
-  if (!rows.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Tidak ada pengambilan pada periode ini</td></tr>'; return; }
-  tbody.innerHTML = rows.map((r, i) => {
-    const rankColor = i === 0 ? '#f59e0b' : i === 1 ? '#94a3b8' : i === 2 ? '#b45309' : 'var(--text-muted)';
-    const rankIcon = i < 3 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="${rankColor}" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>` : '';
-    return `<tr><td style="width:44px"><div style="display:flex;align-items:center;gap:4px;font-weight:700;color:${rankColor};font-size:13px">${rankIcon}${i+1}</div></td><td><span style="font-weight:700">${r.nama}</span></td><td style="text-align:center"><span class="badge badge-stok-ok" style="font-size:12px">${r.count}x</span></td><td style="text-align:right;font-weight:800;font-size:14px;color:var(--primary-dark)">${r.total}</td></tr>`;
-  }).join('');
-}
-function printRekapBahan() {
-  const tbody = document.getElementById('tbl-rekapbahan');
-  const dari = document.getElementById('rekapbahan-dari').value;
-  const sampai = document.getElementById('rekapbahan-sampai').value;
-  if (!dari || !sampai) { showToast('Pilih periode terlebih dahulu', 'warn'); return; }
-  const rows = tbody.querySelectorAll('tr:not(.empty-row)');
-  if (!rows.length) { showToast('Tidak ada data untuk dicetak', 'warn'); return; }
-  const printWindow = window.open('', '_blank', 'width=600,height=500');
-  if (!printWindow) { showToast('Izinkan popup untuk mencetak', 'warn'); return; }
-  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return `${dd} ${bulan[parseInt(m)-1]} ${y}`; };
-  let tableRows = '';
-  rows.forEach((row, i) => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length >= 4) tableRows += `<tr><td>${cells[0].textContent.trim()}</td><td>${cells[1].textContent.trim()}</td><td style="text-align:center">${cells[2].textContent.trim()}</td><td style="text-align:right">${cells[3].textContent.trim()}</td></tr>`;
-  });
-  printWindow.document.write(`<html><head><title>Rekap Pengambilan Bahan</title>
-    <style>body{font-family:'Inter',sans-serif;font-size:12px;padding:30px;line-height:1.6}.header{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:16px}.header h2{margin:0;font-size:18px}.header .sub{font-size:11px;color:#666;margin-top:4px}table{width:100%;border-collapse:collapse;margin-top:12px}th{background:#1a1a1a;color:#fff;padding:8px 10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:0.5px}td{padding:6px 10px;border-bottom:1px solid #e5e5e5}.summary{display:flex;gap:16px;margin-top:8px;font-weight:600}.summary span{background:#f5f5f5;padding:6px 14px;border-radius:6px}.footer{margin-top:20px;padding-top:10px;border-top:1px solid #ccc;font-size:10px;color:#888;text-align:center}</style>
-    </head><body><div class="header"><h2>📊 Rekap Pengambilan Bahan Baku</h2><div class="sub">Periode: ${fmt(dari)} — ${fmt(sampai)}</div></div>
-    <div class="summary"><span>👥 Total Pegawai: ${document.getElementById('rekapbahan-total-pegawai').textContent}</span>
-    <span>📦 Total Pengambilan: ${document.getElementById('rekapbahan-total-ambil').textContent}</span>
-    <span>📈 Total Jumlah: ${document.getElementById('rekapbahan-total-jumlah').textContent}</span></div>
-    <table><thead><tr><th>#</th><th>Nama Pegawai</th><th style="text-align:center">Pengambilan</th><th style="text-align:right">Total Jumlah</th></tr></thead><tbody>${tableRows}</tbody></table>
-    <div class="footer">Dicetak dari Sri Rejeki · Master Data</div>
-    <script>window.onload=function(){window.print();window.close();};<\/script></body></html>`);
-  printWindow.document.close();
-}
-
 // ============ ESCAPE KEY ============
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    if (document.getElementById('modal-ganti-password').classList.contains('open')) closeGantiPassword();
     closeMasterLogin();
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-    const rekapPage = document.getElementById('page-rekap');
-    if (rekapPage && rekapPage.classList.contains('open')) closeRekap();
   }
 });
 
@@ -3620,6 +3718,7 @@ if ('serviceWorker' in navigator) {
 // ============ INIT ============
 async function init() {
   mountIcons();
+  toggleTabGroup('group-produk', true);
   initStaticGenericDropdowns();
   const lsIcon = document.getElementById('ls-icon');
   if (lsIcon) lsIcon.innerHTML = svgIcon('bread', 28).replace(/currentColor/g, 'white');
@@ -3631,7 +3730,6 @@ async function init() {
   document.getElementById('rekap-dari').value = `${year}-01-01`;
   document.getElementById('rekap-sampai').value = `${year}-12-31`;
   document.getElementById('pengambilan-filter-tgl').value = today;
-  setRekapBahanBulanIni();
   mcSyncButtons();
   if (!sb) {
     showToast('Gagal memuat library Supabase. Cek koneksi internet.', 'error');
