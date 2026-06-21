@@ -22,6 +22,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script src="config.js"></script>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1487,12 +1488,10 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 // ============================================================
 // SUPABASE
 // ============================================================
-const SUPABASE_URL = 'https://aowjbkirwxkbwdqvqlpy.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvd2pia2lyd3hrYndkcXZxbHB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Nzc2MTAsImV4cCI6MjA5NzI1MzYxMH0.A913aR55dauEdkxq91LLEgmTXNRwaXiircUrMyzjCyM';
 let sb = null;
 try {
   if (typeof supabase === 'undefined') throw new Error('Library Supabase gagal dimuat');
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
 } catch (e) { console.error('Supabase init error:', e); }
 
 // ============================================================
