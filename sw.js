@@ -2,6 +2,7 @@
  * Service Worker — Sri Rejeki
  * https://sri-rejeki-roti.github.io/srirejeki/
  * v6 — fix layout/zoom index.html (viewport lock + form font-size 16px)
+ * v7 — tambah push notification (stok menipis/habis)
  */
 
 const CACHE_NAME = 'sri-rejeki-v1.0.0';
@@ -90,3 +91,56 @@ async function networkFirst(request) {
     return cached || new Response('Offline — koneksi tidak tersedia', { status: 503 });
   }
 }
+
+// ─── PUSH NOTIFICATION — Stok Menipis/Habis ──────────────────
+// Terima push dari server (dikirim oleh Edge Function send-stock-alert)
+self.addEventListener('push', (event) => {
+  let data = { title: 'Notifikasi', body: '' };
+  try { data = event.data ? event.data.json() : data; } catch (e) { /* ignore */ }
+
+  const options = {
+    body: data.body || '',
+    icon: 'icon-192.png',
+    badge: 'icon-192.png',
+    tag: data.tag || 'stok-alert',
+    data: { url: data.url || './owner.html' },
+    vibrate: [120, 60, 120],
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title || 'Notifikasi', options));
+});
+
+// Saat notifikasi di-tap: fokus ke tab owner.html yang sudah terbuka,
+// atau buka tab baru kalau belum ada yang terbuka
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || './owner.html';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes('owner.html') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
+});
+
+// Kalau browser rotate push subscription secara otomatis (jarang terjadi,
+// tapi bisa muncul), re-subscribe dan simpan ulang ke Supabase supaya
+// device tidak "tuli" diam-diam
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil(
+    self.registration.pushManager
+      .subscribe(event.oldSubscription ? event.oldSubscription.options : { userVisibleOnly: true })
+      .then((newSub) => {
+        return self.clients.matchAll().then((clientList) => {
+          clientList.forEach((client) => {
+            client.postMessage({ type: 'PUSH_SUBSCRIPTION_RENEWED', subscription: newSub.toJSON() });
+          });
+        });
+      })
+  );
+});
