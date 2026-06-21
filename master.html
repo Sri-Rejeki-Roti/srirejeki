@@ -25,8 +25,8 @@ html {
   --primary: #0f9b8e;
   --primary-light: #e3f9f5;
   --primary-dark: #0b756c;
-  --accent: #ffb703;
-  --accent-dark: #e09a00;
+  --accent: #2dd4bf;
+  --accent-dark: #0c8478;
   --pink: #ff6b9d;
   --bg: #fef9ef;
   --card: #ffffff;
@@ -48,7 +48,7 @@ body {
   background: var(--bg);
   background-image:
     radial-gradient(circle at 8% 12%, rgba(15,155,142,0.07) 0, transparent 45%),
-    radial-gradient(circle at 95% 85%, rgba(255,183,3,0.10) 0, transparent 40%);
+    radial-gradient(circle at 95% 85%, rgba(45,212,191,0.10) 0, transparent 40%);
   color: var(--text);
   min-height: 100vh;
 }
@@ -83,11 +83,11 @@ svg.icon { display:block; flex-shrink:0; }
 }
 .topbar-back:hover { background:rgba(255,255,255,0.28); }
 .topbar-back.master-only {
-  background: rgba(255,183,3,0.2);
-  border: 1px solid rgba(255,183,3,0.3);
+  background: rgba(45,212,191,0.25);
+  border: 1px solid rgba(45,212,191,0.35);
 }
 .topbar-back.master-only:hover {
-  background: rgba(255,183,3,0.35);
+  background: rgba(45,212,191,0.4);
 }
 
 .tabs-nav {
@@ -174,7 +174,7 @@ svg.icon { display:block; flex-shrink:0; }
 .act-btn:hover { box-shadow:0 2px 8px rgba(43,38,32,0.15); }
 .act-btn.edit:hover { background:var(--primary-light); color:var(--primary); }
 .act-btn.del:hover { background:var(--danger-bg); color:var(--danger); }
-.act-btn.toggle:hover { background:#fff7e0; color:var(--accent-dark); }
+.act-btn.toggle:hover { background:#d7f3ee; color:var(--accent-dark); }
 .act-btns { display:flex; gap:5px; }
 
 .produk-icon-mini {
@@ -239,7 +239,7 @@ svg.icon { display:block; flex-shrink:0; }
 #page-rekap {
   position:fixed;inset:0;z-index:80;
   background:var(--bg);
-  background-image:radial-gradient(circle at 8% 12%,rgba(15,155,142,0.07) 0,transparent 45%),radial-gradient(circle at 95% 85%,rgba(255,183,3,0.10) 0,transparent 40%);
+  background-image:radial-gradient(circle at 8% 12%,rgba(15,155,142,0.07) 0,transparent 45%),radial-gradient(circle at 95% 85%,rgba(45,212,191,0.10) 0,transparent 40%);
   display:flex;flex-direction:column;
   transform:translateX(100%);
   transition:transform 0.28s cubic-bezier(.4,0,.2,1);
@@ -953,7 +953,6 @@ function printRekap() {
   <div class="loading-card">
     <div class="loading-brand-icon" id="ls-icon"></div>
     <div class="loading-title">Sri Rejeki</div>
-    <div class="loading-sub">Master Data — Manajemen Produk & Data</div>
     <div class="loading-step" id="ls-step">Menghubungkan ke server...</div>
     <div class="progress-track"><div class="progress-fill" id="ls-bar"></div></div>
     <div class="progress-pct" id="ls-pct">0%</div>
@@ -970,7 +969,7 @@ function printRekap() {
     </div>
   </div>
   <div class="spacer"></div>
-  <button class="topbar-back master-only" onclick="openGantiPassword()" style="display:none;background:rgba(255,183,3,0.25);border:1px solid rgba(255,183,3,0.3)">
+  <button class="topbar-back master-only" onclick="openGantiPassword()" style="display:none;background:rgba(45,212,191,0.3);border:1px solid rgba(45,212,191,0.35)">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-linecap="round"/></svg>
     Ganti Password
   </button>
@@ -2661,7 +2660,7 @@ function renderCabang() {
   grid.innerHTML = cabangList.map(c => {
     const info = cabangStokMap[c.id] || { total: 0, count: 0, low: 0 };
     const isPusat = c.nama.toLowerCase().includes('pusat');
-    return `<div class="cat-card"><div class="cat-info"><div class="cat-icon" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2)">🏪</div><div><div class="cat-name">${c.nama}${isPusat ? ' ⭐' : ''}</div><div class="cat-count">${info.count} produk • ${info.total} pcs ${info.low > 0 ? `• ⚠ ${info.low} stok menipis` : ''}</div></div></div><div class="act-btns"><button class="act-btn edit master-only" title="Edit" onclick="openEditCabang(${c.id})" ${mDisp}>${svgIcon('edit',15)}</button><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapus('cabang',${c.id},'${c.nama.replace(/'/g,"\\'")}',null)" ${mDisp}>${svgIcon('trash',14)}</button></div></div>`;
+    return `<div class="cat-card"><div class="cat-info"><div class="cat-icon" style="background:linear-gradient(135deg,var(--primary),var(--primary-dark))">🏪</div><div><div class="cat-name">${c.nama}${isPusat ? ' ⭐' : ''}</div><div class="cat-count">${info.count} produk • ${info.total} pcs ${info.low > 0 ? `• ⚠ ${info.low} stok menipis` : ''}</div></div></div><div class="act-btns"><button class="act-btn edit master-only" title="Edit" onclick="openEditCabang(${c.id})" ${mDisp}>${svgIcon('edit',15)}</button><button class="act-btn del master-only" title="Hapus" onclick="konfirmHapus('cabang',${c.id},'${c.nama.replace(/'/g,"\\'")}',null)" ${mDisp}>${svgIcon('trash',14)}</button></div></div>`;
   }).join('');
 }
 function openModalCabang() {
