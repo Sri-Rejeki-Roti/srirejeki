@@ -1,10 +1,10 @@
 /**
  * Service Worker — Sri Rejeki
  * https://sri-rejeki-roti.github.io/srirejeki/
- * v4 — gabungan index + kasir + master + owner + payroll
+ * v6 — fix layout/zoom index.html (viewport lock + form font-size 16px)
  */
 
-const CACHE_NAME = 'sri-rejeki-v5';
+const CACHE_NAME = 'sri-rejeki-v6';
 const SUPABASE_ORIGIN = 'supabase.co';
 const CDN_ORIGINS = ['cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
