@@ -31,6 +31,7 @@ body {
   color: var(--text);
   height: 100vh;
   height: 100dvh;
+  height: var(--app-height, 100dvh);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -607,6 +608,30 @@ body.fade-out {
   .card-go { display: none; }
 }
 </style>
+<script>
+// ============ FIX TINGGI VIEWPORT DINAMIS (ANTI TERPOTONG SAAT BACK) ============
+// 100dvh tidak selalu dihitung ulang oleh browser HP (terutama saat halaman
+// dipulihkan dari cache navigasi / bfcache setelah tombol "back" ditekan).
+// Solusinya: hitung tinggi viewport asli via JS dan simpan sebagai CSS variable,
+// lalu hitung ulang di setiap event yang relevan.
+(function () {
+  function setAppHeight() {
+    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  window.__setAppHeight = setAppHeight;
+  setAppHeight();
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', function () { setTimeout(setAppHeight, 60); });
+  window.addEventListener('pageshow', function () { setTimeout(setAppHeight, 60); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') setTimeout(setAppHeight, 60);
+  });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setAppHeight);
+  }
+})();
+</script>
 </head>
 <body>
 
@@ -1090,6 +1115,10 @@ function resetViewportState() {
   document.body.classList.remove('fade-out');
   window.scrollTo(0, 0);
 
+  // Hitung ulang tinggi viewport asli (memperbaiki bug terpotong di bawah
+  // saat halaman dipulihkan dari cache navigasi / tombol back)
+  if (window.__setAppHeight) window.__setAppHeight();
+
   // Paksa browser hitung ulang scale viewport dengan re-apply meta tag
   var vp = document.querySelector('meta[name="viewport"]');
   if (vp) {
@@ -1097,6 +1126,7 @@ function resetViewportState() {
     vp.setAttribute('content', content + ', shrink-to-fit=no');
     requestAnimationFrame(function () {
       vp.setAttribute('content', content);
+      if (window.__setAppHeight) window.__setAppHeight();
     });
   }
 }
