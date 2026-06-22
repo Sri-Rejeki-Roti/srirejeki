@@ -448,6 +448,43 @@ body { padding-bottom: 78px; }
   font-weight:800; color:var(--text); font-size:13.5px;
 }
 
+/* STOK SUMMARY CARDS (gradient, tab Stok) */
+.stok-summary-grid {
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;
+}
+.stok-summary-card {
+  border-radius:var(--radius); padding:20px 18px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; gap:4px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.10);
+  transition:transform 0.15s, box-shadow 0.15s;
+}
+.stok-summary-card:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,0,0,0.14); }
+.stok-summary-card::after {
+  content:''; position:absolute; bottom:-20px; right:-20px;
+  width:90px; height:90px; border-radius:50%;
+  background:rgba(255,255,255,0.15); pointer-events:none;
+}
+.stok-summary-card.green  { background:linear-gradient(135deg,#087a46,#0a9d5c,#34d399); }
+.stok-summary-card.amber  { background:linear-gradient(135deg,#b45309,#d97706,#fbbf24); }
+.stok-summary-card.red    { background:linear-gradient(135deg,#b91c1c,#e8485f,#f87171); }
+.stok-summary-card.teal   { background:linear-gradient(135deg,#0b756c,#0f9b8e,#2dd4bf); }
+.ssc-icon {
+  width:44px; height:44px; border-radius:13px;
+  background:rgba(255,255,255,0.22); color:white;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:10px;
+}
+.ssc-value {
+  font-family:'Baloo 2',sans-serif; font-size:36px; font-weight:800;
+  color:white; line-height:1;
+}
+.ssc-label {
+  font-size:12px; font-weight:700; color:rgba(255,255,255,0.9);
+  text-transform:uppercase; letter-spacing:0.5px; margin-top:4px;
+}
+.ssc-sub { font-size:11px; color:rgba(255,255,255,0.65); font-weight:500; }
+
 /* STOK ITEM */
 .stok-item {
   display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border);
@@ -549,46 +586,89 @@ body { padding-bottom: 78px; }
 .ringkasan-grid {
   display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:24px;
 }
+/* ── RINGKASAN CARD REDESIGN ── */
 .ringkasan-card {
-  background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius);
-  box-shadow:var(--shadow-sm); padding:20px; position:relative; overflow:hidden;
+  border-radius:var(--radius);
+  padding:22px 20px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  position:relative; overflow:hidden;
+  transition:transform 0.18s, box-shadow 0.18s;
+  border:none;
 }
-.ringkasan-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:5px;
+.ringkasan-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,0.15); }
+
+/* Decorative blob di kanan atas */
+.ringkasan-card::after {
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:110px; height:110px; border-radius:50%;
+  opacity:0.18; pointer-events:none;
 }
-.ringkasan-card.total::before { background:linear-gradient(90deg, var(--indigo), #4f46e5); }
-.ringkasan-card.pusat::before { background:linear-gradient(90deg, #f59e0b, #d97706); }
-.ringkasan-card.cabang::before { background:linear-gradient(90deg, var(--primary), var(--primary-dark)); }
-.rk-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+
+.ringkasan-card.total {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 60%, #818cf8 100%);
+  color: white;
+}
+.ringkasan-card.total::after { background:white; }
+
+.ringkasan-card.pusat {
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 60%, #fbbf24 100%);
+  color: white;
+}
+.ringkasan-card.pusat::after { background:white; }
+
+.ringkasan-card.cabang {
+  background: linear-gradient(135deg, #0b756c 0%, #0f9b8e 60%, #2dd4bf 100%);
+  color: white;
+}
+.ringkasan-card.cabang::after { background:white; }
+
+/* Header */
+.rk-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
 .rk-icon {
-  width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
-  flex-shrink:0;
+  width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; background:rgba(255,255,255,0.22); color:white; backdrop-filter:blur(4px);
 }
-.ringkasan-card.total .rk-icon { background:#eef2ff; color:#3730a3; }
-.ringkasan-card.pusat .rk-icon { background:#fff8e6; color:#92400e; }
-.ringkasan-card.cabang .rk-icon { background:var(--primary-light); color:var(--primary-dark); }
-.rk-title { font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800; line-height:1.2; }
-.rk-sub { font-size:11.5px; color:var(--text-muted); font-weight:600; margin-top:1px; }
-.rk-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.rk-title { font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:800; line-height:1.2; color:white; }
+.rk-sub { font-size:11.5px; font-weight:600; margin-top:1px; color:rgba(255,255,255,0.75); }
+
+/* Stat mini-cards inside ringkasan card */
+.rk-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .rk-stats-3 { grid-template-columns:1fr 1fr; }
 .rk-stat-grand { grid-column:1 / -1; }
+.rk-stat-laba  { grid-column:1 / -1; }
+
 .rk-stat {
-  background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
-  padding:14px 14px;
+  background:rgba(255,255,255,0.16);
+  border:1.5px solid rgba(255,255,255,0.25);
+  border-radius:12px;
+  padding:12px 14px;
+  backdrop-filter:blur(2px);
 }
 .rk-stat-grand {
-  background:linear-gradient(135deg, #eef2ff, #f5f3ff);
-  border-color:#c7d2fe;
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.35);
 }
 .rk-stat-laba {
-  grid-column:1 / -1;
-  background:linear-gradient(135deg, #e6f9ef, #f0fdf6);
-  border-color:#a7e8c5;
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.35);
 }
-.rk-stat-label { font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
-.rk-stat-value { font-family:'Baloo 2',sans-serif; font-size:21px; font-weight:800; color:var(--text); line-height:1.3; padding-top:2px; }
+.rk-stat-label {
+  font-size:10px; font-weight:700; color:rgba(255,255,255,0.72);
+  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;
+}
+.rk-stat-value {
+  font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;
+  color:white; line-height:1.3; padding-top:2px;
+}
 .rk-stat-value.sm { font-size:16px; }
-.rk-stat-note { font-size:10px; color:var(--text-muted); font-weight:600; margin-top:4px; }
+.rk-stat-note { font-size:10px; color:rgba(255,255,255,0.65); font-weight:600; margin-top:4px; }
+
+/* Override laba bersih warna teks agar tetap terbaca di atas card berwarna */
+.rk-stat-laba .rk-stat-value { color:white !important; }
+.rk-stat-laba .rk-stat-value.laba-pos::before { content:'▲ '; font-size:11px; opacity:0.85; }
+.rk-stat-laba .rk-stat-value.laba-neg::before { content:'▼ '; font-size:11px; opacity:0.85; }
+.rk-stat-laba .rk-stat-value.laba-pos { text-shadow: 0 0 12px rgba(134,239,172,0.6); }
+.rk-stat-laba .rk-stat-value.laba-neg { text-shadow: 0 0 12px rgba(252,165,165,0.6); }
 
 
 @media(max-width:900px) {
@@ -701,6 +781,8 @@ body { padding-bottom: 78px; }
   function unlockGate() {
     isAuthorized = true;
     if (lgOverlay) lgOverlay.style.display = 'none';
+    // FIX: init() dipanggil di sini, setelah login berhasil — bukan dari window.load
+    if (typeof init === 'function') init();
   }
 
   // Kunci lagi setiap kali aplikasi disembunyikan/ditinggal (pindah app, minimize, tutup tab)
@@ -998,30 +1080,38 @@ body { padding-bottom: 78px; }
 
   <!-- ===== TAB: STOK ===== -->
   <div class="tab-panel" id="panel-stok">
-    <div class="stats-grid" style="margin-bottom:24px">
-      <div class="stat-card green">
-        <div class="stat-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="stat-label">Stok Aman</div>
-        <div class="stat-value" id="stok-aman">—</div>
-        <div class="stat-sub">Produk</div>
+    <div class="stok-summary-grid" style="margin-bottom:24px">
+      <div class="stok-summary-card green">
+        <div class="ssc-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ssc-value" id="stok-aman">—</div>
+        <div class="ssc-label">Stok Aman</div>
+        <div class="ssc-sub">Produk siap jual</div>
       </div>
-      <div class="stat-card amber">
-        <div class="stat-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.3 4.3l-8 13.4A2 2 0 004 21h16a2 2 0 001.7-3.3l-8-13.4a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg></div>
-        <div class="stat-label">Stok Menipis</div>
-        <div class="stat-value" id="stok-tipis">—</div>
-        <div class="stat-sub">≤ 5 unit</div>
+      <div class="stok-summary-card amber">
+        <div class="ssc-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 4.3l-8 13.4A2 2 0 004 21h16a2 2 0 001.7-3.3l-8-13.4a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <div class="ssc-value" id="stok-tipis">—</div>
+        <div class="ssc-label">Stok Menipis</div>
+        <div class="ssc-sub">≤ 5 unit tersisa</div>
       </div>
-      <div class="stat-card red">
-        <div class="stat-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M5 5l14 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div class="stat-label">Stok Habis</div>
-        <div class="stat-value" id="stok-habis">—</div>
-        <div class="stat-sub">Produk</div>
+      <div class="stok-summary-card red">
+        <div class="ssc-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M5 5l14 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="ssc-value" id="stok-habis">—</div>
+        <div class="ssc-label">Stok Habis</div>
+        <div class="ssc-sub">Perlu restock segera</div>
       </div>
-      <div class="stat-card teal">
-        <div class="stat-icon teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="7.5" r="1" fill="currentColor"/><circle cx="12" cy="7.5" r="1" fill="currentColor"/></svg></div>
-        <div class="stat-label">Total Produk</div>
-        <div class="stat-value" id="stok-total">—</div>
-        <div class="stat-sub">Aktif</div>
+      <div class="stok-summary-card teal">
+        <div class="ssc-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 11c0-3.5 2.8-7 8-7s8 3.5 8 7v6.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ssc-value" id="stok-total">—</div>
+        <div class="ssc-label">Total Produk</div>
+        <div class="ssc-sub">Aktif terdaftar</div>
       </div>
     </div>
     <div class="section">
@@ -1278,14 +1368,33 @@ function switchTab(name, btn) {
   document.getElementById('panel-' + name).classList.add('active');
 
   const globalBar = document.getElementById('global-filter-bar');
+  const filterDate = document.querySelector('.filter-row-date');
+  const presetBtns = document.querySelectorAll('.preset-btn');
+
   if (name === 'payroll') {
     globalBar.style.display = 'none';
     const prFrom = document.getElementById('pr-date-from');
     const prTo = document.getElementById('pr-date-to');
     if (prFrom && !prFrom.value) prFrom.value = document.getElementById('date-from').value;
     if (prTo && !prTo.value) prTo.value = document.getElementById('date-to').value;
-  } else {
+  } else if (name === 'stok') {
     globalBar.style.display = '';
+    if (filterDate) filterDate.style.display = 'none';
+    // Sembunyikan semua preset (termasuk Hari ini)
+    presetBtns.forEach(b => b.style.display = 'none');
+    document.querySelector('.filter-row-preset').style.display = 'none';
+    // Set tanggal ke hari ini secara diam-diam
+    const now = new Date();
+    const toStr = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const today = toStr(now);
+    document.getElementById('date-from').value = today;
+    document.getElementById('date-to').value = today;
+  } else {
+    // Tab lain: restore semua elemen filter
+    globalBar.style.display = '';
+    if (filterDate) filterDate.style.display = '';
+    presetBtns.forEach(b => b.style.display = '');
+    document.querySelector('.filter-row-preset').style.display = '';
   }
 }
 
@@ -1313,7 +1422,7 @@ async function reloadPayrollPeriod() {
   if (!from || !to) return;
   try {
     await loadPayroll(from, to);
-    renderPayroll(from, to);
+    renderPayroll();
   } catch (e) {
     console.error(e);
     showToast('Gagal memuat data payroll: ' + (e.message || e), 'error');
@@ -1467,7 +1576,8 @@ async function loadAll() {
   showMiniLoading(true);
   try {
     const tasks = [
-      loadCabang(),
+      // BUG FIX: loadCabang() tidak dipanggil ulang di sini — sudah di-load saat init
+      // agar pilihan cabang user tidak ter-reset ke default setiap klik "Muat Data"
       loadProduk(),
       loadPelanggan(),
       loadPayroll(from, to),
@@ -1486,7 +1596,7 @@ async function loadAll() {
     renderTrxList();
     renderProduk();
     renderStok();
-    renderPayroll(from, to);
+    renderPayroll();
     showToast('Data berhasil dimuat', 'success');
   } catch(e) {
     console.error(e);
@@ -1698,7 +1808,7 @@ function renderRingkasan() {
 
   const lunasAll = allTrxRingkasan.filter(t => t.status === 'lunas' || !t.status);
   const omsetAll = lunasAll.reduce((s, t) => s + (t.total || 0), 0);
-  const trxAll = allTrxRingkasan.length;
+  const trxAll = lunasAll.length; // BUG FIX: hanya hitung transaksi lunas agar konsisten dengan omset
 
   // Map HPP produk untuk hitung laba bersih (omset - HPP x qty terjual)
   const hppMap = {};
@@ -1727,6 +1837,7 @@ function renderRingkasan() {
     title: 'Total Gabungan',
     sub: 'Semua cabang',
     trx: trxAll,
+    omsetPeriode: omsetAll,
     omsetPerHari: omsetAll / jumlahHari,
     omsetTotal: omsetSepanjangWaktu,
     labaBersih: labaAll
@@ -1748,22 +1859,24 @@ function renderRingkasan() {
         : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="9" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M3 9l3-6h12l3 6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21v-5h6v5" stroke="currentColor" stroke-width="1.8"/></svg>`,
       title: c.nama,
       sub: isPusat ? 'Toko Pusat' : 'Cabang',
-      trx: trxCabang.length,
+      trx: lunasCabang.length,
+      omsetPeriode: omsetCabang,
       omsetPerHari: omsetCabang / jumlahHari,
-      labaBersih: labaCabang
+      // labaBersih tidak dikirim → tidak tampil di card cabang/pusat
     });
   });
 
   if (adaProdukTanpaHpp) {
-    html += `<div style="grid-column:1/-1;background:#fff8e6;border:1.5px solid #f5d999;border-radius:var(--radius-sm);padding:12px 16px;font-size:12.5px;font-weight:600;color:#92400e">⚠️ Beberapa produk yang terjual belum punya HPP, jadi Laba Bersih di atas masih estimasi (terlalu tinggi). Lengkapi HPP di Master Data → Produk.</div>`;
+    html += `<div style="grid-column:1/-1;background:linear-gradient(135deg,#78350f,#92400e);border:none;border-radius:var(--radius-sm);padding:14px 16px;font-size:12.5px;font-weight:600;color:#fef3c7;box-shadow:0 4px 12px rgba(120,53,15,0.25)">⚠️ Beberapa produk yang terjual belum punya HPP, jadi Laba Bersih di atas masih estimasi (terlalu tinggi). Lengkapi HPP di Master Data → Produk.</div>`;
   }
 
   container.innerHTML = html;
 }
 
-function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari, omsetTotal, labaBersih }) {
+function ringkasanCard({ cls, icon, title, sub, trx, omsetPeriode, omsetPerHari, omsetTotal, labaBersih }) {
   const hasTotal = typeof omsetTotal === 'number';
   const hasLaba = typeof labaBersih === 'number';
+  const labaCls = hasLaba ? (labaBersih >= 0 ? 'laba-pos' : 'laba-neg') : '';
   return `<div class="ringkasan-card ${cls}">
     <div class="rk-header">
       <div class="rk-icon">${icon}</div>
@@ -1774,22 +1887,23 @@ function ringkasanCard({ cls, icon, title, sub, trx, omsetPerHari, omsetTotal, l
     </div>
     <div class="rk-stats${hasTotal ? ' rk-stats-3' : ''}">
       ${hasTotal ? `<div class="rk-stat rk-stat-grand">
-        <div class="rk-stat-label">Total Omset Keseluruhan</div>
+        <div class="rk-stat-label">💰 Total Omset Keseluruhan</div>
         <div class="rk-stat-value sm">${rp(omsetTotal)}</div>
         <div class="rk-stat-note">Sejak awal · tidak terpengaruh filter periode</div>
       </div>` : ''}
       ${hasLaba ? `<div class="rk-stat rk-stat-laba">
-        <div class="rk-stat-label">Estimasi Laba Bersih</div>
-        <div class="rk-stat-value sm" style="color:${labaBersih>=0?'var(--success)':'var(--danger)'}">${rp(labaBersih)}</div>
+        <div class="rk-stat-label">📊 Estimasi Laba Bersih</div>
+        <div class="rk-stat-value sm ${labaCls}">${rp(labaBersih)}</div>
         <div class="rk-stat-note">Omset − HPP × qty terjual · periode terpilih</div>
       </div>` : ''}
       <div class="rk-stat">
-        <div class="rk-stat-label">Total Transaksi</div>
+        <div class="rk-stat-label">🧾 Total Transaksi</div>
         <div class="rk-stat-value">${trx}</div>
       </div>
       <div class="rk-stat">
-        <div class="rk-stat-label">Omset / Hari</div>
-        <div class="rk-stat-value sm">${rp(omsetPerHari)}</div>
+        <div class="rk-stat-label">💵 Omset Periode Ini</div>
+        <div class="rk-stat-value sm">${rp(omsetPeriode)}</div>
+        <div class="rk-stat-note">Rata-rata ${rp(omsetPerHari)}/hari</div>
       </div>
     </div>
   </div>`;
@@ -1871,14 +1985,31 @@ function getPelangganNama(id) {
 function renderProduk() {
   const hppMap = {};
   allProduk.forEach(p => { hppMap[p.id] = p.hpp || 0; });
+
+  // BUG FIX: pakai allTrxRingkasan (semua cabang, lunas saja) bukan allTrxItems
+  // agar tab Produk konsisten dengan tab Ringkasan
+  const namaMap = {}; // fallback: ambil nama dari allProduk jika nama_produk di item kosong
+  allProduk.forEach(p => { namaMap[p.id] = p.nama; });
+
   const salesMap = {};
-  allTrxItems.forEach(item => {
-    const id = item.produk_id;
-    if (!salesMap[id]) salesMap[id] = { qty: 0, omset: 0, nama: item.nama_produk };
-    salesMap[id].qty += item.qty || 0;
-    salesMap[id].omset += item.subtotal || (item.qty * item.harga) || 0;
-    salesMap[id].laba = (salesMap[id].laba || 0) + ((item.qty || 0) * ((item.subtotal && item.qty ? (item.subtotal/item.qty) : (item.harga||0)) - (hppMap[id] || 0)));
-  });
+  allTrxRingkasan
+    .filter(t => t.status === 'lunas' || !t.status)
+    .forEach(t => {
+      (t.transaksi_item || []).forEach(item => {
+        const id = item.produk_id;
+        // FIX: nama diambil dari item.nama_produk, fallback ke namaMap, fallback ke 'Produk #id'
+        const nama = item.nama_produk || namaMap[id] || ('Produk #' + id);
+        if (!salesMap[id]) salesMap[id] = { qty: 0, omset: 0, laba: 0, nama };
+        else if (!salesMap[id].nama) salesMap[id].nama = nama; // isi jika sebelumnya undefined
+        const qty = item.qty || 0;
+        const subtotal = item.subtotal || (qty * (item.harga || 0));
+        const hpp = hppMap[id] || 0;
+        salesMap[id].qty   += qty;
+        salesMap[id].omset += subtotal;
+        // BUG FIX: laba = subtotal (harga jual aktual) - HPP × qty
+        salesMap[id].laba  += subtotal - (hpp * qty);
+      });
+    });
 
   const sorted = Object.entries(salesMap).sort((a,b) => b[1].qty - a[1].qty);
   const terlaris = sorted.slice(0, 10);
@@ -1888,7 +2019,7 @@ function renderProduk() {
     const hasHpp = hppMap[id];
     return `<tr>
       <td><span class="rank ${rClass}">${i+1}</span></td>
-      <td style="font-weight:600">${d.nama}</td>
+      <td style="font-weight:600">${d.nama || namaMap[id] || ('Produk #' + id)}</td>
       <td class="right">${d.qty}</td>
       <td class="right">${rp(d.omset)}</td>
       <td class="right" style="color:${hasHpp ? (d.laba>=0?'var(--success)':'var(--danger)') : 'var(--text-muted)'};font-weight:700">${hasHpp ? rp(d.laba) : '⚠️ HPP kosong'}</td>
@@ -1902,7 +2033,10 @@ function renderProduk() {
   chartProduk = new Chart(document.getElementById('chart-produk'), {
     type: 'bar',
     data: {
-      labels: topN.map(([,d]) => d.nama.length > 15 ? d.nama.slice(0,15)+'…' : d.nama),
+      labels: topN.map(([id, d]) => {
+        const nama = d.nama || namaMap[id] || ('Produk #' + id);
+        return nama.length > 15 ? nama.slice(0, 15) + '…' : nama;
+      }),
       datasets: [
         { label: 'Qty Terjual', data: topN.map(([,d]) => d.qty), backgroundColor: 'rgba(15,155,142,0.75)', borderRadius:6, borderColor:'#0f9b8e', borderWidth:1.5 },
       ]
@@ -1925,11 +2059,11 @@ function renderStok() {
   const cabangId = document.getElementById('filter-cabang').value;
   const aktif = allProduk
     .filter(p => p.aktif !== false)
-    .map(p => ({ ...p, stok: getStokProduk(p.id, cabangId) }));
+    .map(p => ({ ...p, stok: Math.max(0, getStokProduk(p.id, cabangId)) })); // BUG FIX: clamp stok negatif ke 0
 
-  const aman = aktif.filter(p => p.stok > 5);
+  const aman  = aktif.filter(p => p.stok > 5);
   const tipis = aktif.filter(p => p.stok > 0 && p.stok <= 5);
-  const habis = aktif.filter(p => p.stok <= 0);
+  const habis = aktif.filter(p => p.stok === 0); // BUG FIX: hanya stok 0, bukan ≤ 0
 
   document.getElementById('stok-aman').textContent = aman.length;
   document.getElementById('stok-tipis').textContent = tipis.length;
@@ -1961,7 +2095,7 @@ function stokItem(p) {
 // ============================================================
 // RENDER PAYROLL TAB
 // ============================================================
-function renderPayroll(from, to) {
+function renderPayroll() { // BUG FIX: hapus parameter from/to yang tidak dipakai (filter sudah di loadPayroll)
   document.getElementById('pr-total-peg').textContent = allPegawai.length;
 
   let totalGaji = 0;
@@ -2043,22 +2177,27 @@ function hideLoadingScreen() {
 async function init() {
   initStaticGenericDropdowns();
   checkNotifStatus();
-  setPreset('month', document.querySelector('.preset-btn.active'), true); // noLoad=true, init yg handle load
+  setPreset('month', document.querySelector('.preset-btn.active'), true);
   setProgress(10, 'Menghubungkan ke server...');
   try {
     setProgress(30, 'Memuat data master...');
-    await Promise.all([loadCabang(), loadProduk(), loadPelanggan()]);
+    // FIX: loadCabang() harus selesai dulu sebelum ambil cabangId,
+    // agar dropdown sudah ter-populate dan cabangId tidak kosong
+    await loadCabang();
+    await Promise.all([loadProduk(), loadPelanggan()]);
+
     setProgress(65, 'Memuat transaksi...');
     const from = document.getElementById('date-from').value;
     const to = document.getElementById('date-to').value;
-    const cabangId = document.getElementById('filter-cabang').value;
+    const cabangId = document.getElementById('filter-cabang').value; // sekarang sudah ada nilainya
     await Promise.all([loadPayroll(from, to), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
+
     setProgress(90, 'Menyiapkan tampilan...');
     renderRingkasan();
     renderTrxList();
     renderProduk();
     renderStok();
-    renderPayroll(from, to);
+    renderPayroll();
     setProgress(100, 'Siap!');
     await new Promise(r => setTimeout(r, 350));
     hideLoadingScreen();
@@ -2066,13 +2205,20 @@ async function init() {
   } catch(e) {
     console.error(e);
     const stepEl = document.getElementById('ls-step');
-    if (stepEl) { stepEl.textContent = 'Gagal terhubung ke server'; stepEl.style.color = 'var(--danger)'; }
-    showToast('Gagal inisialisasi: ' + (e.message || e), 'error');
-    setTimeout(hideLoadingScreen, 3000);
+    if (stepEl) {
+      stepEl.textContent = 'Gagal terhubung ke server';
+      stepEl.style.color = 'var(--danger)';
+    }
+    // FIX: tampilkan pesan error yang jelas di loading card, lalu tutup dengan delay lebih pendek
+    const card = document.querySelector('.loading-card');
+    if (card) card.style.boxShadow = '0 24px 60px rgba(232,72,95,0.18), 0 8px 24px rgba(43,38,32,0.10)';
+    showToast('Gagal memuat data: ' + (e.message || e), 'error');
+    setTimeout(hideLoadingScreen, 2000);
   }
 }
 
-window.addEventListener('load', () => { init(); });
+// init() sekarang dipanggil dari unlockGate() setelah login berhasil
+// window.addEventListener('load', () => { init(); }); // ← dihapus
 
 // ============================================================
 // REALTIME SYNC DARI PAYROLL (pegawai, absensi, lembur, bagian)
@@ -2085,7 +2231,7 @@ function refreshPayrollFromRealtime(label) {
       const from = document.getElementById('date-from').value;
       const to = document.getElementById('date-to').value;
       await loadPayroll(from, to);
-      renderPayroll(from, to);
+      renderPayroll();
       showToast('Data payroll diperbarui (' + label + ')', 'success');
     } catch (e) {
       console.error('Gagal refresh realtime payroll:', e);
