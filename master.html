@@ -960,6 +960,77 @@ svg.icon { display:block; flex-shrink:0; }
     font-size:8px; color:#888 !important; text-align:center;
   }
 }
+@media print {
+  body.print-rekapjual * { visibility: hidden; }
+  body.print-rekapjual #sec-rekapjual,
+  body.print-rekapjual #sec-rekapjual * { visibility: visible; }
+  body.print-rekapjual #sec-rekapjual {
+    position: absolute; left:0; top:0; width:100%; margin:0; padding:20px 0 0;
+    background:white !important;
+  }
+  body.print-rekapjual { background: white !important; }
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  body.print-rekapjual #sec-rekapjual .sec-header,
+  body.print-rekapjual #sec-rekapjual .rkj-filter-card,
+  body.print-rekapjual #sec-rekapjual .rkj-warning { display: none !important; }
+  body.print-rekapjual .rkj-print-header {
+    display: flex !important; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2.5px solid #111 !important;
+    visibility: visible !important;
+  }
+  body.print-rekapjual .rkj-print-header .rph-left h2 {
+    font-size: 17px; font-weight: 800; color: #111 !important; margin:0 0 4px 0;
+    letter-spacing: 0.2px; font-family: 'Inter', sans-serif !important;
+  }
+  body.print-rekapjual .rkj-print-header .rph-sub {
+    font-size: 10px; color: #555 !important; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600;
+  }
+  body.print-rekapjual .rkj-print-header .rph-period {
+    font-size: 11px; color: #333 !important; font-weight: 600; margin-top: 3px;
+  }
+  body.print-rekapjual .rkj-print-header .rph-right { text-align: right; }
+  body.print-rekapjual .rkj-print-header .rph-brand {
+    font-size: 13px; font-weight: 800; color: #111 !important; letter-spacing: 0.2px;
+  }
+  body.print-rekapjual .rkj-print-header .rph-date {
+    font-size: 9px; color: #777 !important; margin-top: 3px; font-weight: 500;
+  }
+  body.print-rekapjual .rkj-print-summary {
+    display: flex !important; gap: 8px; margin-bottom: 14px;
+    visibility: visible !important;
+  }
+  body.print-rekapjual .rkj-print-summary .ps-card {
+    border: 1px solid #ccc !important; border-radius: 5px !important;
+    flex: 1; padding: 7px 11px !important; background: #fafafa !important;
+  }
+  body.print-rekapjual .rkj-print-summary .ps-card .sv {
+    font-size: 13px !important; font-weight: 800; color: #111 !important; line-height: 1.3;
+  }
+  body.print-rekapjual .rkj-print-summary .ps-card .sl {
+    font-size: 8px !important; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #777 !important; font-weight: 700; margin-top: 1px;
+  }
+  body.print-rekapjual .tbl-wrap { box-shadow:none !important; border:none !important; border-radius:0 !important; overflow:visible !important; }
+  body.print-rekapjual table { width:100%; border-collapse:collapse; }
+  body.print-rekapjual thead tr { background:#1a1a1a !important; }
+  body.print-rekapjual th {
+    color:#fff !important; font-size:8.5px !important; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.4px; padding:5px 8px !important; border:none !important;
+  }
+  body.print-rekapjual td {
+    border:none !important; border-bottom:1px solid #e3e3e3 !important;
+    padding:4px 8px !important; font-size:10px;
+  }
+  body.print-rekapjual td div[style*="border-radius:50%"] { display:none !important; }
+  body.print-rekapjual td > div[style*="display:flex"] { display:block !important; }
+  body.print-rekapjual tbody tr:nth-child(even) td { background:#f7f7f7 !important; }
+  body.print-rekapjual tbody tr:last-child td { border-bottom:1.5px solid #1a1a1a !important; }
+  body.print-rekapjual .rkj-print-footer {
+    display: block !important; margin-top:14px; padding-top:6px;
+    border-top:1px solid #ccc !important; font-size:8px; color:#888 !important; text-align:center;
+    visibility: visible !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1184,9 +1255,30 @@ svg.icon { display:block; flex-shrink:0; }
 
   <!-- TAB REKAP PENJUALAN -->
   <div class="tab-section" id="sec-rekapjual">
+    <!-- PRINT HEADER (hanya tampil saat print) -->
+    <div class="rkj-print-header" style="display:none">
+      <div class="rph-left">
+        <h2>Rekap Penjualan</h2>
+        <div class="rph-sub">Sri Rejeki</div>
+        <div class="rph-period" id="rkj-print-period"></div>
+      </div>
+      <div class="rph-right">
+        <div class="rph-brand">Sri Rejeki</div>
+        <div class="rph-date" id="rkj-print-date"></div>
+      </div>
+    </div>
+    <!-- PRINT SUMMARY (hanya tampil saat print) -->
+    <div class="rkj-print-summary" style="display:none" id="rkj-print-summary">
+      <div class="ps-card"><div class="sv" id="rkj-ps-total">Rp 0</div><div class="sl">Total Pendapatan</div></div>
+      <div class="ps-card"><div class="sv" id="rkj-ps-laba">Rp 0</div><div class="sl">💰 Laba Bersih</div></div>
+      <div class="ps-card"><div class="sv" id="rkj-ps-trx">0</div><div class="sl">Jumlah Transaksi</div></div>
+    </div>
     <div class="sec-header">
       <div class="sec-title">📊 REKAP PENJUALAN <small id="rekapjual-total-label"></small></div>
-      <button class="btn-secondary" onclick="loadRekapJual()" id="btn-rekapjual-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" onclick="printRekapJual()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
+        <button class="btn-secondary" onclick="loadRekapJual()" id="btn-rekapjual-refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>Muat Ulang</button>
+      </div>
     </div>
 
     <!-- CARD PENDAPATAN -->
@@ -1246,6 +1338,7 @@ svg.icon { display:block; flex-shrink:0; }
         <tbody id="tbl-rekapjual"><tr class="empty-row"><td colspan="6">Memuat data...</td></tr></tbody>
       </table>
     </div>
+    <div class="rkj-print-footer" style="display:none">Dokumen ini dibuat otomatis oleh sistem Master Data — Sri Rejeki</div>
   </div>
 
   <!-- TAB PELANGGAN -->
@@ -1429,8 +1522,8 @@ svg.icon { display:block; flex-shrink:0; }
     </div>
     <div class="sec-header">
       <div class="sec-title"><span id="sh-icon-restok"></span>Riwayat Restok <small id="restok-total-label"></small></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <div class="custom-select-wrap" id="restok-filter-cabang-wrap" style="width:170px;min-width:170px;flex:0 0 auto">
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;min-width:0">
+        <div class="custom-select-wrap" id="restok-filter-cabang-wrap" style="min-width:0">
           <button type="button" class="custom-select-btn has-placeholder" id="restok-filter-cabang-btn" onclick="toggleGenericDropdown('restok-filter-cabang')">
             <span id="restok-filter-cabang-label">Semua Cabang</span>
             <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1606,21 +1699,21 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-master-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-master-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-master-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-master-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-master-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
+              <input type="tel" id="setp-master-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
             </div>
           </div>
           <div id="setp-master-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1644,21 +1737,21 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-owner-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-owner-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-owner-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-owner-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
+              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
             </div>
           </div>
           <div id="setp-owner-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1682,21 +1775,21 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-payroll-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-payroll-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-payroll-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-payroll-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
+              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
             </div>
           </div>
           <div id="setp-payroll-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1886,7 +1979,7 @@ svg.icon { display:block; flex-shrink:0; }
     <h3>🔐 Akses Master Data</h3>
     <div class="form-group">
       <label>Password Master</label>
-      <input type="tel" id="master-password-input" placeholder="Masukkan password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;letter-spacing:4px;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
+      <input type="tel" id="master-password-input" placeholder="Masukkan password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
     </div>
     <div id="master-login-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Password salah. Silakan coba lagi.</div>
     <div class="modal-actions">
@@ -3148,6 +3241,40 @@ function filterRekapJual() {
       <td style="font-size:12.5px;color:var(--text-muted)">${tglStr}</td>
     </tr>`;
   }).join('');
+}
+
+function printRekapJual() {
+  // Ambil nilai filter aktif
+  const dari = document.getElementById('rekapjual-dari').value;
+  const sampai = document.getElementById('rekapjual-sampai').value;
+  const cabangLabel = document.getElementById('rekapjual-filter-cabang-label').textContent || 'Semua Cabang';
+  const search = (document.getElementById('rekapjual-search-nama').value || '').trim();
+
+  // Susun label periode
+  let periodStr = '';
+  if (dari && sampai) {
+    const fmtDate = s => { const d = new Date(s + 'T00:00:00'); return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'][d.getMonth()] + ' ' + d.getFullYear(); };
+    periodStr = fmtDate(dari) + ' – ' + fmtDate(sampai);
+  } else {
+    periodStr = 'Semua Periode';
+  }
+  let filterParts = ['Periode: ' + periodStr, 'Cabang: ' + cabangLabel];
+  if (search) filterParts.push('Cari: ' + search);
+
+  // Isi elemen print
+  document.getElementById('rkj-print-period').textContent = filterParts.join('   |   ');
+  const now = new Date();
+  document.getElementById('rkj-print-date').textContent = 'Dicetak: ' + now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) + ', ' + now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+
+  // Sync summary
+  document.getElementById('rkj-ps-total').textContent = document.getElementById('rekapjual-sum-filter').textContent;
+  document.getElementById('rkj-ps-laba').textContent = document.getElementById('rekapjual-laba-filter').textContent;
+  document.getElementById('rkj-ps-trx').textContent = document.getElementById('rekapjual-sum-trx').textContent + ' transaksi';
+
+  // Trigger print dengan body class
+  document.body.classList.add('print-rekapjual');
+  window.print();
+  document.body.classList.remove('print-rekapjual');
 }
 
 // ============ CABANG ============
