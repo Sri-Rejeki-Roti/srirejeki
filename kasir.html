@@ -1391,7 +1391,7 @@ function initRealtimeStok() {
 }
 
 async function loadPelanggan() {
-  const { data, error } = await sb.from('pelanggan').select('*').order('nama');
+  const { data, error } = await sb.from('pelanggan').select('*').eq('cabang_id', CABANG_ID).order('nama');
   if (error) throw new Error('Gagal memuat pelanggan: ' + error.message);
   pelangganList = data || [];
   renderPelOptions('');
