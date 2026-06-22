@@ -414,10 +414,12 @@ body { padding-bottom: 0; }
 .data-table tr:last-child td { border-bottom:none; }
 .data-table tr:hover td { background:#faf7f0; }
 
-/* TABEL REKAP PELANGGAN — semua kolom rata tengah */
+/* TABEL REKAP PELANGGAN — semua kolom rata tengah, font lebih kecil */
 #table-rekap-pelanggan th,
 #table-rekap-pelanggan td { text-align:center; }
 #table-rekap-pelanggan td.right { text-align:center; }
+#table-rekap-pelanggan th { font-size:9.5px; padding:9px 8px; }
+#table-rekap-pelanggan td { font-size:11px; padding:10px 8px; }
 
 /* RANK BADGE */
 .rank { width:24px; height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
@@ -2426,9 +2428,6 @@ function filterTrxList() {
         </div>
         <div>
           <span class="badge badge-cabang">${cabangNama}</span>
-        </div>
-        <div>
-          <span class="badge ${t.status === 'kredit' ? 'badge-kredit' : 'badge-lunas'}">${t.status||'lunas'}</span>
         </div>
         <div class="trx-total">
           ${rp(t.total)}
