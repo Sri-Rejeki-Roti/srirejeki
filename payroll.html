@@ -92,12 +92,13 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 .topbar-sub { font-size: 9px; opacity: 0.8; font-weight: 500; }
 .topbar .spacer { flex: 1; }
 .topbar-back {
-  display: flex; align-items: center; gap: 4px; padding: 6px 10px;
-  border-radius: 8px; background: rgba(255,255,255,0.15);
-  font-size: 11px; font-weight: 600; text-decoration: none; color: white;
-  min-height: 34px;
+  display: flex; align-items: center; gap: 6px; padding: 8px 14px;
+  border-radius: 10px; background: rgba(255,255,255,0.18);
+  font-size: 13px; font-weight: 600; text-decoration: none; color: white;
+  transition: background 0.15s;
 }
-.topbar-back:active { background: rgba(255,255,255,0.3); }
+.topbar-back:hover { background: rgba(255,255,255,0.28); }
+.topbar-back:active { background: rgba(255,255,255,0.30); }
 .network-indicator {
   width: 8px; height: 8px;
   border-radius: 50%;
@@ -154,10 +155,39 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 .date-bar label { font-size: 11px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+/* Shortcut 6 hari kerja */
+.abs-shortcuts {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 6px; margin-bottom: 12px;
+}
+.abs-shortcut-btn {
+  padding: 8px 6px; border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--card); color: var(--text);
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  text-align: center; transition: all 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.abs-shortcut-btn:active { transform: scale(0.96); }
+.abs-shortcut-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
+.abs-shortcut-btn .sc-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+.abs-shortcut-btn.active .sc-label { color: var(--primary); }
+.abs-shortcut-btn .sc-status { font-size: 9.5px; margin-top: 2px; font-weight: 600; }
+.abs-shortcut-btn .sc-status.filled { color: var(--success); }
+.abs-shortcut-btn .sc-status.empty  { color: #d97706; }
+/* Badge status absensi */
+.abs-status-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 12px; border-radius: 10px; margin-bottom: 10px;
+  font-size: 12px; font-weight: 600;
+}
+.abs-status-badge.filled { background: var(--success-bg); color: var(--success); }
+.abs-status-badge.empty  { background: #fff8e6; color: #b45309; }
+.abs-status-badge.hidden { display: none; }
 .date-bar input[type="date"] {
   flex: 1;
   min-width: 100px;
@@ -249,6 +279,29 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 .toggle-status.on { color: var(--success); }
 .toggle-status.off { color: var(--text-muted); }
 
+/* ── REKAP PILLS ── */
+.rekap-pill {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  text-align: center;
+}
+.rekap-pill.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
 /* ── SAVE BAR ── */
 .save-bar {
   position: fixed;
@@ -266,6 +319,7 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   padding-bottom: calc(8px + var(--safe-bottom));
 }
 .save-bar.hidden { display: none; }
+body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--safe-bottom)); }
 .btn-save {
   flex: 1;
   padding: 12px;
@@ -413,6 +467,17 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   border-left: 3px solid var(--primary-light);
 }
 .lembur-item .li-detail span { display: inline-block; margin-right: 10px; }
+.li-detail-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 5px; padding: 6px 8px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--primary-light); }
+.li-detail-info { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--text-muted); flex: 1; }
+.li-detail-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.btn-lembur-edit, .btn-lembur-del {
+  border: none; border-radius: 6px; font-size: 12px; cursor: pointer;
+  padding: 4px 8px; font-family: inherit; font-weight: 600; min-height: 28px;
+}
+.btn-lembur-edit { background: var(--primary-light); color: var(--primary-dark); }
+.btn-lembur-del  { background: var(--danger-bg); color: var(--danger); }
+.btn-lembur-edit:active { background: var(--primary); color: white; }
+.btn-lembur-del:active  { background: var(--danger); color: white; }
 
 /* ── REKAP ACCORDION ── */
 .rekap-accordion {
@@ -1247,7 +1312,8 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   <div class="spacer"></div>
   <div class="network-indicator online" id="net-indicator"></div>
   <a href="index.html" class="topbar-back">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Dashboard
   </a>
 </div>
 
@@ -1264,8 +1330,11 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 
     <div class="date-bar">
       <label>📅</label>
-      <input type="date" id="abs-date" onchange="this.blur(); loadAbsensi()">
+      <input type="date" id="abs-date" max="" onchange="this.blur(); loadAbsensi()">
     </div>
+
+    <div class="abs-shortcuts" id="abs-shortcuts"></div>
+    <div class="abs-status-badge hidden" id="abs-status-badge"></div>
 
     <div class="roti-card" id="abs-list">
       <div class="empty-state"><div class="empty-title">📋 Belum ada absensi</div><div class="empty-sub">Pilih tanggal untuk memuat absensi</div></div>
@@ -1298,7 +1367,9 @@ button, .clickable { min-height: 44px; min-width: 44px; }
         <div class="form-group"><label>Jam Lembur</label><input type="number" id="lembur-jam" min="0.5" step="0.5" placeholder="0.5"></div>
         <div class="form-group"><label>Tanggal</label><input type="date" id="lembur-tanggal"></div>
       </div>
-      <button class="btn-simpan-lembur" onclick="simpanLembur()">💾 Tambah Lembur</button>
+      <input type="hidden" id="lembur-edit-id" value="">
+      <button class="btn-simpan-lembur" id="btn-simpan-lembur" onclick="simpanLembur()">💾 Tambah Lembur</button>
+      <button class="btn-simpan-lembur" id="btn-batal-lembur" onclick="batalEditLembur()" style="display:none;background:var(--border);color:var(--text);margin-top:6px">✕ Batal Edit</button>
     </div>
 
     <div class="roti-card" id="lembur-list">
@@ -1321,11 +1392,11 @@ button, .clickable { min-height: 44px; min-width: 44px; }
       </div>
     </div>
 
-    <div class="date-bar" style="margin-bottom:12px">
-      <input type="date" id="rek-from" style="flex:1" onchange="loadRekap()">
-      <span style="font-size:11px;color:var(--text-muted);flex-shrink:0">s/d</span>
-      <input type="date" id="rek-to" style="flex:1" onchange="loadRekap()">
+    <div id="rekap-pills" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="rekap-pill active" data-pill="periode-ini" id="pill-periode-ini" onclick="setRekapPill(this)">Periode Ini</button>
+      <button class="rekap-pill" data-pill="periode-lalu" id="pill-periode-lalu" onclick="setRekapPill(this)">Periode Lalu</button>
     </div>
+    <div id="rek-periode-label" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-align:center"></div>
 
     <div class="roti-card" id="rekap-list">
       <div class="empty-state">
@@ -1557,6 +1628,82 @@ function getCache(key) {
 // ============================================================
 function toStr(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function todayStr() { return toStr(new Date()); }
+
+// ============================================================
+// ABSENSI MANUAL — Shortcut 6 Hari Kerja & Status Badge
+// ============================================================
+async function renderAbsShortcuts() {
+  const container = document.getElementById('abs-shortcuts');
+  if (!container) return;
+
+  const hariLibur = payrollSettings.hari_libur ?? 5; // default Jumat
+  const today = new Date();
+
+  // Kumpulkan 6 hari kerja terakhir (skip hari libur)
+  const workDays = [];
+  let cursor = new Date(today);
+  while (workDays.length < 6) {
+    if (cursor.getDay() !== hariLibur) {
+      workDays.push(new Date(cursor));
+    }
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  // Cek tanggal mana yang sudah ada data absensi
+  const oldest = toStr(workDays[workDays.length - 1]);
+  const newest = toStr(workDays[0]);
+  let filledDates = new Set();
+  try {
+    const { data } = await sb.from('absensi')
+      .select('tanggal')
+      .gte('tanggal', oldest)
+      .lte('tanggal', newest);
+    (data || []).forEach(r => filledDates.add(r.tanggal));
+  } catch(e) {}
+
+  const selectedDate = document.getElementById('abs-date').value;
+  const namaHari = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+
+  container.innerHTML = workDays.map((d, i) => {
+    const ds = toStr(d);
+    const isFilled = filledDates.has(ds);
+    const isActive = ds === selectedDate;
+    const isToday = i === 0;
+    const label = isToday ? 'Hari ini' : i === 1 ? 'Kemarin' : namaHari[d.getDay()];
+    const tgl = ds.slice(5).replace('-','/');
+    return `<button class="abs-shortcut-btn${isActive ? ' active' : ''}"
+      onclick="setAbsDate('${ds}')">
+      <span>${label}</span>
+      <span class="sc-label">${tgl}</span>
+      <span class="sc-status ${isFilled ? 'filled' : 'empty'}">${isFilled ? '✅ Ada data' : '⚠️ Belum'}</span>
+    </button>`;
+  }).join('');
+}
+
+function setAbsDate(dateStr) {
+  const input = document.getElementById('abs-date');
+  input.value = dateStr;
+  // Update active state shortcut
+  document.querySelectorAll('.abs-shortcut-btn').forEach(btn => {
+    const match = btn.getAttribute('onclick')?.includes(dateStr);
+    btn.classList.toggle('active', !!match);
+  });
+  loadAbsensi();
+}
+
+function updateAbsStatusBadge(hadir) {
+  const badge = document.getElementById('abs-status-badge');
+  if (!badge) return;
+  const date = document.getElementById('abs-date').value;
+  if (!date) { badge.className = 'abs-status-badge hidden'; return; }
+  if (hadir > 0) {
+    badge.className = 'abs-status-badge filled';
+    badge.innerHTML = `✅ Absensi ${date} sudah diisi — ${hadir} hadir`;
+  } else {
+    badge.className = 'abs-status-badge empty';
+    badge.innerHTML = `⚠️ Absensi ${date} belum ada data — silakan isi sekarang`;
+  }
+}
 function rp(n) { if (n == null || isNaN(n)) return 'Rp 0'; return 'Rp ' + Math.round(n).toLocaleString('id'); }
 
 function formatRupiahInput(el) {
@@ -1700,10 +1847,11 @@ function switchTab(name) {
     b.classList.toggle('active', b.dataset.tab === name);
   });
 
+  if (name === 'absensi') { renderAbsShortcuts(); }
   if (name !== 'absensi') {
-    document.getElementById('abs-save-bar').classList.add('hidden');
+    document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
   } else if (document.getElementById('abs-list').querySelector('.abs-item')) {
-    document.getElementById('abs-save-bar').classList.remove('hidden');
+    document.getElementById('abs-save-bar').classList.remove('hidden'); document.body.classList.add('save-bar-visible');
   }
 
   // SCROLL KE ATAS
@@ -1712,7 +1860,7 @@ function switchTab(name) {
   if (name === 'kegiatan') { loadLembur(); populateLemburSelect(); }
   if (name === 'pegawai') { renderPegawai(); populateBagianSelect(); }
   if (name === 'setting') { loadBagian(); }
-  if (name === 'rekap') { loadRekap(); }
+  if (name === 'rekap') { updateRekapPillLabels(); loadRekap(); }
 }
 
 // ============================================================
@@ -1755,6 +1903,7 @@ async function loadPayrollSettings() {
     o.classList.toggle('selected', o.dataset.val == hariL);
   });
   document.getElementById('setting-status').textContent = '✅ Dimuat';
+  updateRekapPillLabels();
 }
 
 async function simpanSettings() {
@@ -2088,10 +2237,12 @@ async function loadAbsensi() {
     if (!aktif.length) {
       document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-title">Belum ada pegawai aktif</div><div class="empty-sub">Tambahkan pegawai di tab Pegawai</div></div>';
       updateAbsSummary([]);
-      document.getElementById('abs-save-bar').classList.add('hidden');
+      document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
       setLoading(false, 'btn-load-absensi');
       return;
     }
+    const jmlHadir = (absCache[date] || []).filter(a => a.status === 'hadir').length;
+    updateAbsStatusBadge(jmlHadir);
     renderAbsensi(date);
   } catch (e) {
     console.error('Load absensi error:', e);
@@ -2110,7 +2261,7 @@ function renderAbsensi(date) {
   if (!aktif.length) {
     document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-title">Belum ada pegawai aktif</div><div class="empty-sub">Tambahkan pegawai di tab Pegawai</div></div>';
     updateAbsSummary([]);
-    document.getElementById('abs-save-bar').classList.add('hidden');
+    document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
     return;
   }
 
@@ -2131,7 +2282,7 @@ function renderAbsensi(date) {
   }).join('');
 
   updateAbsSummary(existing);
-  document.getElementById('abs-save-bar').classList.remove('hidden');
+  document.getElementById('abs-save-bar').classList.remove('hidden'); document.body.classList.add('save-bar-visible');
 }
 
 function toggleAbsen(pegawaiId) {
@@ -2164,6 +2315,7 @@ function updateAbsSummary(rows) {
   document.getElementById('abs-total').textContent = total;
   document.getElementById('abs-hadir').textContent = hadir;
   document.getElementById('abs-tidak').textContent = Math.max(0, total - hadir);
+  updateAbsStatusBadge(hadir);
 }
 
 async function simpanAbsensi() {
@@ -2202,7 +2354,7 @@ async function cancelAbsensi() {
   absDirty = false;
   delete absCache[editAbsDate];
   document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-sub">Pilih tanggal untuk memuat absensi</div></div>';
-  document.getElementById('abs-save-bar').classList.add('hidden');
+  document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
   updateAbsSummary([]);
   editAbsDate = '';
   const cacheKey = 'absensi_' + selectedCabangId + '_' + editAbsDate;
@@ -2238,12 +2390,10 @@ function populateLemburSelect() {
 
 async function loadLembur() {
   const today = new Date();
-  const start = new Date(today);
-  start.setDate(today.getDate() - today.getDay() + 1);
-  const end = new Date(today);
-  end.setDate(start.getDate() + 6);
+  today.setHours(0,0,0,0);
+  // Gunakan periode payroll (sama dengan rekap periode-ini)
+  const { startDate: start, endDate: end } = getPeriode(today, payrollSettings);
   
-  // TANPA FILTER CABANG — semua pegawai dari semua cabang
   let query = sb.from('lembur')
     .select('*, pegawai(nama, jabatan, gaji_harian, upah_lembur)')
     .gte('tanggal', toStr(start))
@@ -2282,7 +2432,7 @@ function renderLembur() {
   lemburCache.forEach(l => {
     const pid = l.pegawai_id;
     if (!groups[pid]) {
-      groups[pid] = { name: l.pegawai?.nama || 'Unknown', jabatan: l.pegawai?.jabatan || '', details: [], total: 0 };
+      groups[pid] = { pegawai_id: pid, name: l.pegawai?.nama || 'Unknown', jabatan: l.pegawai?.jabatan || '', details: [], total: 0 };
     }
     const upah = l.upah_per_jam || l.pegawai?.upah_lembur || 0;
     groups[pid].details.push({
@@ -2305,11 +2455,17 @@ function renderLembur() {
     const detailHtml = g.details.map(d => {
       const tgl = new Date(d.tanggal + 'T00:00:00');
       const tglStr = `${String(tgl.getDate()).padStart(2,'0')}/${String(tgl.getMonth()+1).padStart(2,'0')}`;
-      return `<div class="li-detail">
-        <span>📅 ${tglStr}</span>
-        <span>⏱ ${d.jam}j</span>
-        <span>💰 ${rp(d.upah_per_jam)}/jam</span>
-        <span>Total: ${rp(d.total)}</span>
+      return `<div class="li-detail-row">
+        <div class="li-detail-info">
+          <span>📅 ${tglStr}</span>
+          <span>⏱ ${d.jam}j</span>
+          <span>💰 ${rp(d.upah_per_jam)}/jam</span>
+          <span style="font-weight:700;color:var(--primary-dark)">${rp(d.total)}</span>
+        </div>
+        <div class="li-detail-actions">
+          <button class="btn-lembur-edit" onclick="editLembur(${d.id},'${d.tanggal}',${d.jam},${d.upah_per_jam},${g.pegawai_id},'${g.name}')">✏️</button>
+          <button class="btn-lembur-del" onclick="hapusLembur(${d.id},'${g.name}','${tglStr}')">🗑</button>
+        </div>
       </div>`;
     }).join('');
     return `<div class="lembur-item">
@@ -2326,6 +2482,7 @@ async function simpanLembur() {
   const pegawaiId = document.getElementById('lembur-pegawai-select').value;
   const jam = parseFloat(document.getElementById('lembur-jam').value);
   const tanggal = document.getElementById('lembur-tanggal').value;
+  const editId = document.getElementById('lembur-edit-id').value;
 
   if (!pegawaiId) { showToast('Pilih pegawai', 'warn'); return; }
   if (!jam || jam <= 0) { showToast('Masukkan jam lembur', 'warn'); return; }
@@ -2336,20 +2493,75 @@ async function simpanLembur() {
 
   setLoading(true);
   try {
-    const { error } = await sb.from('lembur').insert({
-      pegawai_id: parseInt(pegawaiId),
-      jam: jam,
-      tanggal: tanggal,
-      upah_per_jam: upah_per_jam
-    });
-    if (error) throw error;
-    document.getElementById('lembur-jam').value = '';
-    document.getElementById('lembur-tanggal').value = '';
-    showToast('Lembur ditambahkan ✓');
+    if (editId) {
+      // Mode edit — UPDATE
+      const { error } = await sb.from('lembur').update({
+        pegawai_id: parseInt(pegawaiId),
+        jam: jam,
+        tanggal: tanggal,
+        upah_per_jam: upah_per_jam
+      }).eq('id', editId);
+      if (error) throw error;
+      showToast('Lembur diperbarui ✓');
+      batalEditLembur();
+    } else {
+      // Mode tambah — INSERT
+      const { error } = await sb.from('lembur').insert({
+        pegawai_id: parseInt(pegawaiId),
+        jam: jam,
+        tanggal: tanggal,
+        upah_per_jam: upah_per_jam
+      });
+      if (error) throw error;
+      document.getElementById('lembur-jam').value = '';
+      showToast('Lembur ditambahkan ✓');
+    }
     await loadLembur();
   } catch (e) {
     showToast('Gagal: ' + (e.message || e), 'error');
   } finally { setLoading(false); }
+}
+
+async function hapusLembur(id, nama, tglStr) {
+  const ok = await showConfirm({
+    icon: '🗑️',
+    title: 'Hapus Lembur?',
+    msg: `Hapus data lembur ${nama} tanggal ${tglStr}?`,
+    okLabel: 'Hapus',
+    okColor: 'var(--danger)'
+  });
+  if (!ok) return;
+  setLoading(true);
+  try {
+    const { error } = await sb.from('lembur').delete().eq('id', id);
+    if (error) throw error;
+    showToast('Lembur dihapus ✓');
+    await loadLembur();
+  } catch (e) {
+    showToast('Gagal: ' + (e.message || e), 'error');
+  } finally { setLoading(false); }
+}
+
+function editLembur(id, tanggal, jam, upah_per_jam, pegawai_id, nama) {
+  // Isi form dengan data yang akan diedit
+  selectCustomOption('lembur-pegawai-select', pegawai_id, nama);
+  document.getElementById('lembur-jam').value = jam;
+  document.getElementById('lembur-tanggal').value = tanggal;
+  // Tandai mode edit
+  document.getElementById('lembur-edit-id').value = id;
+  document.getElementById('btn-simpan-lembur').textContent = '💾 Simpan Perubahan';
+  document.getElementById('btn-batal-lembur').style.display = 'block';
+  // Scroll ke form
+  document.querySelector('.lembur-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function batalEditLembur() {
+  document.getElementById('lembur-edit-id').value = '';
+  document.getElementById('lembur-jam').value = '';
+  document.getElementById('lembur-tanggal').value = todayStr();
+  selectCustomOption('lembur-pegawai-select', '', '— Pilih Pegawai —');
+  document.getElementById('btn-simpan-lembur').textContent = '💾 Tambah Lembur';
+  document.getElementById('btn-batal-lembur').style.display = 'none';
 }
 
 // ============================================================
@@ -2414,13 +2626,13 @@ function getPeriode(tanggal, settings) {
   const d = new Date(tanggal);
   if (settings.periode_gaji === 'mingguan') {
     const day = d.getDay();
-    let diff = day - settings.hari_gajian;
-    if (diff < 0) diff += 7;
-    const gajianDate = new Date(d);
-    gajianDate.setDate(d.getDate() - diff);
-    const startDate = new Date(gajianDate);
-    startDate.setDate(gajianDate.getDate() - 6);
-    const endDate = new Date(gajianDate);
+    const hariGajian = settings.hari_gajian ?? 4;
+    // Cari hari gajian terdekat ke depan (atau hari ini jika pas)
+    let diffToEnd = (hariGajian - day + 7) % 7;
+    const endDate = new Date(d);
+    endDate.setDate(d.getDate() + diffToEnd);
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - 6);
     return { startDate, endDate, hariKerja: hitungHariKerja(startDate, endDate, settings.hari_libur) };
   } else {
     const year = d.getFullYear();
@@ -2431,15 +2643,66 @@ function getPeriode(tanggal, settings) {
   }
 }
 
-async function loadRekap() {
-  const from = document.getElementById('rek-from').value;
-  const to = document.getElementById('rek-to').value;
-  if (!from || !to) {
-    document.getElementById('rekap-list').innerHTML = '<div class="empty-state"><div class="empty-title">📊 Belum ada data rekap</div><div class="empty-sub">Pilih periode untuk melihat rekap</div></div>';
-    document.getElementById('rek-total-gaji').textContent = 'Rp 0';
-    document.getElementById('rek-total-sub').textContent = '0 pegawai · 0 hari kerja';
-    return;
+let currentRekapPill = 'periode-ini';
+
+function updateRekapPillLabels() {
+  const isMingguan = (payrollSettings.periode_gaji || 'mingguan') === 'mingguan';
+  document.getElementById('pill-periode-ini').textContent = isMingguan ? 'Periode Ini' : 'Bulan Ini';
+  document.getElementById('pill-periode-lalu').textContent = isMingguan ? 'Periode Lalu' : 'Bulan Lalu';
+}
+
+function getRekapRange(pill) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const s = payrollSettings;
+  const isMingguan = (s.periode_gaji || 'mingguan') === 'mingguan';
+  let from, to, label;
+
+  if (pill === 'periode-ini') {
+    if (isMingguan) {
+      const p = getPeriode(today, s);
+      from = p.startDate; to = p.endDate;
+      label = 'Periode ini (' + fmtDate(from) + ' – ' + fmtDate(to) + ')';
+    } else {
+      from = new Date(today.getFullYear(), today.getMonth(), 1);
+      to = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      label = 'Bulan ini (' + fmtDate(from) + ' – ' + fmtDate(to) + ')';
+    }
+  } else if (pill === 'periode-lalu') {
+    if (isMingguan) {
+      const p = getPeriode(today, s);
+      const prevDay = new Date(p.startDate);
+      prevDay.setDate(prevDay.getDate() - 1);
+      const pp = getPeriode(prevDay, s);
+      from = pp.startDate; to = pp.endDate;
+      label = 'Periode lalu (' + fmtDate(from) + ' – ' + fmtDate(to) + ')';
+    } else {
+      from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      to = new Date(today.getFullYear(), today.getMonth(), 0);
+      label = 'Bulan lalu (' + fmtDate(from) + ' – ' + fmtDate(to) + ')';
+    }
   }
+  return { from: toISO(from), to: toISO(to), label };
+}
+
+function fmtDate(d) {
+  return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'][d.getMonth()];
+}
+
+function toISO(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function setRekapPill(el) {
+  document.querySelectorAll('.rekap-pill').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentRekapPill = el.dataset.pill;
+  loadRekap();
+}
+
+async function loadRekap() {
+  const { from, to, label } = getRekapRange(currentRekapPill);
+  document.getElementById('rek-periode-label').textContent = label;
   setLoading(true, 'btn-load-rekap');
   const cacheKey = 'rekap_' + selectedCabangId + '_' + from + '_' + to;
   const cached = getCache(cacheKey);
@@ -2599,18 +2862,12 @@ async function init() {
   updateNetworkStatus(navigator.onLine);
 
   const dateInput = document.getElementById('abs-date');
-  if (dateInput) dateInput.value = todayStr();
-
+  if (dateInput) {
+    dateInput.value = todayStr();
+    dateInput.max = todayStr();
+  }
   const lemburDate = document.getElementById('lembur-tanggal');
   if (lemburDate) lemburDate.value = todayStr();
-
-  const today = new Date();
-  const fromEl = document.getElementById('rek-from');
-  const toEl = document.getElementById('rek-to');
-  const fromDate = new Date(today);
-  fromDate.setDate(today.getDate() - 6);
-  fromEl.value = toStr(fromDate);
-  toEl.value = toStr(today);
 
   await loadCabangFromURL();
 
@@ -2619,6 +2876,7 @@ async function init() {
 
   setProgress(15, 'Memuat pengaturan...');
   await loadPayrollSettings();
+  renderAbsShortcuts();
   setProgress(30, 'Memuat bagian...');
   await loadBagian();
   setProgress(45, 'Memuat data pegawai...');
@@ -2629,6 +2887,7 @@ async function init() {
     setProgress(80, 'Memuat lembur...');
     try { await loadLembur(); } catch (e) { console.warn('Lembur:', e); }
     setProgress(90, 'Memuat rekap...');
+    updateRekapPillLabels();
     try { await loadRekap(); } catch (e) { console.warn('Rekap:', e); }
     setProgress(100, 'Siap!');
     await new Promise(r => setTimeout(r, 350));
