@@ -1235,8 +1235,8 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
 
     <div id="pkp-setup-mode">
       <span class="pkp-setup-label">Buat Password Baru (min. 4 angka)</span>
-      <input type="tel" id="lg-pass-new" class="pkp-setup-input" placeholder="PIN baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-      <input type="tel" id="lg-pass-confirm" class="pkp-setup-input" placeholder="Ulangi PIN baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <input type="tel" id="lg-pass-new" class="pkp-setup-input" placeholder="PIN baru..." maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <input type="tel" id="lg-pass-confirm" class="pkp-setup-input" placeholder="Ulangi PIN baru..." maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
       <button class="pkp-submit-btn" onclick="pkpHandleSetup()">Simpan Password</button>
     </div>
 
@@ -1289,7 +1289,7 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
 <script>
 (function(){
   var pkpBuffer = '';
-  var pkpMaxLen = 10;
+  var pkpMaxLen = 4;
   var pkpErrEl = document.getElementById('pkp-error');
   var pkpDotsWrap = document.getElementById('pkp-dots-wrap');
 
@@ -1349,6 +1349,14 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
     pkpUpdateDots();
     var hi = document.getElementById('lg-pass-input');
     if (hi) hi.value = pkpBuffer;
+  };
+
+  // Reset buffer secara penuh (dipanggil dari relockGate saat gate terkunci ulang)
+  window.pkpResetBuffer = function() {
+    pkpBuffer = '';
+    pkpUpdateDots();
+    var hi = document.getElementById('lg-pass-input');
+    if (hi) hi.value = '';
   };
 
   window.pkpTriggerSubmit = function() {
@@ -1439,6 +1447,8 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
       if (dotsEl) dotsEl.querySelectorAll('.pkp-dot').forEach(function(d){d.className='pkp-dot';});
       var pkpErrEl2 = document.getElementById('pkp-error');
       if (pkpErrEl2) { pkpErrEl2.style.display='none'; pkpErrEl2.textContent=''; }
+      // FIX: benar-benar reset buffer JS, bukan cuma tampilan dots
+      if (typeof window.pkpResetBuffer === 'function') window.pkpResetBuffer();
     }
   }
   document.addEventListener('visibilitychange', function(){
@@ -1468,7 +1478,7 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
       var p1 = document.getElementById('lg-pass-new').value.trim();
       var p2 = document.getElementById('lg-pass-confirm').value.trim();
       if (!p1) { showError('Password baru wajib diisi'); return; }
-      if (p1.length < 4) { showError('Password minimal 4 karakter'); return; }
+      if (p1.length !== 4) { showError('PIN harus tepat 4 digit'); return; }
       if (p1 !== p2) { showError('Konfirmasi password tidak cocok'); return; }
       try {
         var { error } = await sb.from('settings').insert({ key: LG_KEY, value: p1 });
@@ -3177,6 +3187,11 @@ window.addEventListener('beforeunload', (e) => {
 <script>
 // Fallback blokir pull-to-refresh untuk WebView/browser yang belum support overscroll-behavior CSS
 (function(){
+  // Browser/WebView modern sudah handle ini lewat CSS overscroll-behavior (lihat html/body di atas).
+  // Listener touchmove non-passive di bawah ini berat (jalan di main thread tiap gesture),
+  // jadi kalau CSS-nya udah didukung, skip aja biar scroll tetap smooth.
+  if ('overscrollBehaviorY' in document.documentElement.style) return;
+
   var startY = 0;
   document.addEventListener('touchstart', function(e){
     if (e.touches.length === 1) startY = e.touches[0].clientY;
