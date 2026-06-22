@@ -305,6 +305,7 @@ body { padding-bottom: 0; }
 .pr-period-bar .pr-period-label {
   font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px;
   display:flex; align-items:center; gap:6px; white-space:nowrap;
+  display:none;
 }
 .pr-period-bar input[type="date"] {
   flex:1; min-width:130px; padding:9px 12px; border:1.5px solid var(--border);
@@ -313,6 +314,17 @@ body { padding-bottom: 0; }
 }
 .pr-period-bar input[type="date"]:focus { outline:none; border-color:var(--primary); }
 .pr-period-bar .pr-period-sep { color:var(--text-muted); font-size:13px; font-weight:600; }
+#rp-period-readonly { text-transform:none; font-weight:700; color:var(--text); letter-spacing:0; }
+.rp-gabungan-btn {
+  display:flex; align-items:center; justify-content:center; gap:7px; margin-left:auto;
+  padding:9px 16px; border-radius:20px; border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text-muted); font-size:13px; font-weight:700;
+  font-family:inherit; cursor:pointer; white-space:nowrap; transition:all 0.15s;
+  flex:1; width:100%;
+}
+.rp-gabungan-btn:hover { border-color:var(--primary); color:var(--primary-dark); }
+.rp-gabungan-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+.rp-gabungan-btn.active:hover { color:#fff; }
 
 /* PAYROLL PILL TOGGLE */
 .pr-pill-bar { display:flex; gap:8px; margin-bottom:8px; }
@@ -418,6 +430,11 @@ body { padding-bottom: 0; }
 #table-rekap-pelanggan th,
 #table-rekap-pelanggan td { text-align:center; }
 #table-rekap-pelanggan td.right { text-align:center; }
+
+/* TABEL PRODUK TERLARIS — semua kolom rata tengah */
+#table-terlaris th,
+#table-terlaris td { text-align:center; }
+#table-terlaris td.right { text-align:center; }
 #table-rekap-pelanggan th { font-size:9.5px; padding:9px 8px; }
 #table-rekap-pelanggan td { font-size:11px; padding:10px 8px; }
 
@@ -505,9 +522,9 @@ body { padding-bottom: 0; }
   display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;
 }
 .stok-summary-card {
-  border-radius:var(--radius); padding:20px 18px;
+  border-radius:var(--radius); padding:14px 16px;
   position:relative; overflow:hidden;
-  display:flex; flex-direction:column; gap:4px;
+  display:flex; flex-direction:column; gap:3px;
   box-shadow:0 6px 20px rgba(0,0,0,0.10);
   transition:transform 0.15s, box-shadow 0.15s;
 }
@@ -521,21 +538,25 @@ body { padding-bottom: 0; }
 .stok-summary-card.amber  { background:linear-gradient(135deg,#b45309,#d97706,#fbbf24); }
 .stok-summary-card.red    { background:linear-gradient(135deg,#b91c1c,#e8485f,#f87171); }
 .stok-summary-card.teal   { background:linear-gradient(135deg,#0b756c,#0f9b8e,#2dd4bf); }
+.ssc-header {
+  display:flex; align-items:center; gap:8px; margin-bottom:2px;
+}
 .ssc-icon {
-  width:44px; height:44px; border-radius:13px;
+  width:26px; height:26px; border-radius:9px;
   background:rgba(255,255,255,0.22); color:white;
   display:flex; align-items:center; justify-content:center;
-  margin-bottom:10px;
+  flex-shrink:0;
 }
+.ssc-icon svg { width:15px; height:15px; }
 .ssc-value {
-  font-family:'Baloo 2',sans-serif; font-size:36px; font-weight:800;
+  font-family:'Baloo 2',sans-serif; font-size:26px; font-weight:800;
   color:white; line-height:1;
 }
 .ssc-label {
-  font-size:12px; font-weight:700; color:rgba(255,255,255,0.9);
-  text-transform:uppercase; letter-spacing:0.5px; margin-top:4px;
+  font-size:11px; font-weight:700; color:rgba(255,255,255,0.9);
+  text-transform:uppercase; letter-spacing:0.5px;
 }
-.ssc-sub { font-size:11px; color:rgba(255,255,255,0.65); font-weight:500; }
+.ssc-sub { font-size:10.5px; color:rgba(255,255,255,0.65); font-weight:500; }
 
 /* STOK ITEM */
 .stok-item {
@@ -1355,7 +1376,7 @@ body { padding-bottom: 0; }
       </div>
     </div>
 
-    <!-- ===== SUB-PANEL: REKAP PELANGGAN (Pusat + Cabang, periode independen) ===== -->
+    <!-- ===== SUB-PANEL: REKAP PELANGGAN (periode ikut filter global, tombol Gabungan Semua Cabang) ===== -->
     <div class="trx-subpanel" id="subpanel-rekap">
       <div class="section">
         <div class="section-header">
@@ -1368,11 +1389,12 @@ body { padding-bottom: 0; }
         <div class="pr-period-bar">
           <span class="pr-period-label">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Periode
+            <span id="rp-period-readonly">Periode</span>
           </span>
-          <input type="date" id="rp-date-from" onchange="reloadRekapPelanggan()">
-          <span class="pr-period-sep">s/d</span>
-          <input type="date" id="rp-date-to" onchange="reloadRekapPelanggan()">
+          <button type="button" class="rp-gabungan-btn" id="rp-gabungan-btn" onclick="toggleRpGabungan()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="15" cy="15" r="5" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span id="rp-gabungan-btn-label">Gabungan Semua Cabang</span>
+          </button>
         </div>
         <div class="roti-card">
           <table class="data-table" id="table-rekap-pelanggan">
@@ -1386,7 +1408,7 @@ body { padding-bottom: 0; }
               </tr>
             </thead>
             <tbody id="tbody-rekap-pelanggan">
-              <tr><td colspan="5"><div class="empty-state"><div class="es-sub">Pilih periode untuk menampilkan rekap pelanggan</div></div></td></tr>
+              <tr><td colspan="5"><div class="empty-state"><div class="es-sub">Memuat rekap pelanggan...</div></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -1405,8 +1427,8 @@ body { padding-bottom: 0; }
       </div>
       <div class="roti-card">
         <table class="data-table" id="table-terlaris">
-          <thead><tr><th>#</th><th>Produk</th><th class="right">Terjual</th><th class="right">Omset</th><th class="right">Laba Bersih</th></tr></thead>
-          <tbody id="tbody-terlaris"><tr><td colspan="5"><div class="empty-state"><div class="es-sub">Muat data dahulu</div></div></td></tr></tbody>
+          <thead><tr><th>#</th><th>Produk</th><th>Terjual</th><th>Omset</th></tr></thead>
+          <tbody id="tbody-terlaris"><tr><td colspan="4"><div class="empty-state"><div class="es-sub">Muat data dahulu</div></div></td></tr></tbody>
         </table>
       </div>
     </div>
@@ -1426,35 +1448,43 @@ body { padding-bottom: 0; }
   <div class="tab-panel" id="panel-stok">
     <div class="stok-summary-grid" style="margin-bottom:24px">
       <div class="stok-summary-card green">
-        <div class="ssc-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="ssc-header">
+          <div class="ssc-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="ssc-label">Stok Aman</div>
         </div>
         <div class="ssc-value" id="stok-aman">—</div>
-        <div class="ssc-label">Stok Aman</div>
         <div class="ssc-sub">Produk siap jual</div>
       </div>
       <div class="stok-summary-card amber">
-        <div class="ssc-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 4.3l-8 13.4A2 2 0 004 21h16a2 2 0 001.7-3.3l-8-13.4a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <div class="ssc-header">
+          <div class="ssc-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 4.3l-8 13.4A2 2 0 004 21h16a2 2 0 001.7-3.3l-8-13.4a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <div class="ssc-label">Stok Menipis</div>
         </div>
         <div class="ssc-value" id="stok-tipis">—</div>
-        <div class="ssc-label">Stok Menipis</div>
         <div class="ssc-sub">≤ 5 unit tersisa</div>
       </div>
       <div class="stok-summary-card red">
-        <div class="ssc-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M5 5l14 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <div class="ssc-header">
+          <div class="ssc-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M5 5l14 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="ssc-label">Stok Habis</div>
         </div>
         <div class="ssc-value" id="stok-habis">—</div>
-        <div class="ssc-label">Stok Habis</div>
         <div class="ssc-sub">Perlu restock segera</div>
       </div>
       <div class="stok-summary-card teal">
-        <div class="ssc-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 11c0-3.5 2.8-7 8-7s8 3.5 8 7v6.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <div class="ssc-header">
+          <div class="ssc-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 11c0-3.5 2.8-7 8-7s8 3.5 8 7v6.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="ssc-label">Total Produk</div>
         </div>
         <div class="ssc-value" id="stok-total">—</div>
-        <div class="ssc-label">Total Produk</div>
         <div class="ssc-sub">Aktif terdaftar</div>
       </div>
     </div>
@@ -1619,6 +1649,7 @@ if ('serviceWorker' in navigator) {
 
 let allTrx = [];
 let trxOnlyPelanggan = false;
+let rpGabunganMode = false; // mode "Gabungan Semua Cabang" di Rekap Pelanggan
 let allTrxItems = [];
 let allProduk = [];
 let allStokCabang = []; // data dari tabel stok_cabang (hasil migrasi dari kolom stok di produk)
@@ -1758,13 +1789,30 @@ function switchTrxSubpanel(name, btn) {
   document.getElementById('subpanel-' + name).classList.add('active');
 
   if (name === 'rekap') {
-    const rpFrom = document.getElementById('rp-date-from');
-    const rpTo = document.getElementById('rp-date-to');
-    let needLoad = false;
-    if (rpFrom && !rpFrom.value) { rpFrom.value = document.getElementById('date-from').value; needLoad = true; }
-    if (rpTo && !rpTo.value) { rpTo.value = document.getElementById('date-to').value; needLoad = true; }
-    if (needLoad && rpFrom.value && rpTo.value) reloadRekapPelanggan();
+    updateRpPeriodLabel();
+    if (!allTrxPelangganRekap.length) reloadRekapPelanggan();
   }
+}
+
+// Tampilkan periode aktif (ikut filter global atas) di bar Rekap Pelanggan
+function updateRpPeriodLabel() {
+  const el = document.getElementById('rp-period-readonly');
+  if (!el) return;
+  const from = document.getElementById('date-from').value;
+  const to = document.getElementById('date-to').value;
+  if (!from || !to) { el.textContent = 'Periode'; return; }
+  const fmt = s => { const [y,m,d] = s.split('-'); return `${d}/${m}/${y}`; };
+  el.textContent = (from === to) ? fmt(from) : `${fmt(from)} s/d ${fmt(to)}`;
+}
+
+// Toggle tombol "Gabungan Semua Cabang" di Rekap Pelanggan
+function toggleRpGabungan() {
+  rpGabunganMode = !rpGabunganMode;
+  const btn = document.getElementById('rp-gabungan-btn');
+  const label = document.getElementById('rp-gabungan-btn-label');
+  if (btn) btn.classList.toggle('active', rpGabunganMode);
+  if (label) label.textContent = rpGabunganMode ? 'Lihat Per Cabang' : 'Gabungan Semua Cabang';
+  reloadRekapPelanggan();
 }
 
 // ============================================================
@@ -2044,8 +2092,8 @@ async function loadAll() {
 
   showMiniLoading(true);
   try {
-    const rpFrom = document.getElementById('rp-date-from').value || from;
-    const rpTo = document.getElementById('rp-date-to').value || to;
+    const rpCabangId = rpGabunganMode ? '' : cabangId;
+    updateRpPeriodLabel();
     const tasks = [
       // BUG FIX: loadCabang() tidak dipanggil ulang di sini — sudah di-load saat init
       // agar pilihan cabang user tidak ter-reset ke default setiap klik "Muat Data"
@@ -2055,7 +2103,7 @@ async function loadAll() {
       loadTrx(from, to, cabangId),
       loadTrxRingkasan(from, to),
       loadOmsetSepanjangWaktu(),
-      loadRekapPelangganData(rpFrom, rpTo, cabangId),
+      loadRekapPelangganData(from, to, rpCabangId),
     ];
     let doneCount = 0;
     await Promise.all(tasks.map(p => p.then(res => {
@@ -2115,8 +2163,10 @@ async function loadTrxRingkasan(from, to) {
 }
 
 // ============================================================
-// REKAP PELANGGAN (gabungan Pusat + Cabang, periode independen
-// dari filter global — dipicu lewat input #rp-date-from / #rp-date-to)
+// REKAP PELANGGAN (periode ikut filter global atas #date-from/#date-to.
+// Tombol "Gabungan Semua Cabang" — toggleRpGabungan() — saat aktif
+// mengabaikan filter cabang sehingga tabel menampilkan data gabungan
+// semua cabang; saat dimatikan kembali mengikuti filter cabang global)
 // ============================================================
 async function loadRekapPelangganData(from, to, cabangId) {
   let query = sb
@@ -2133,10 +2183,10 @@ async function loadRekapPelangganData(from, to, cabangId) {
 }
 
 async function reloadRekapPelanggan() {
-  const from = document.getElementById('rp-date-from').value;
-  const to = document.getElementById('rp-date-to').value;
+  const from = document.getElementById('date-from').value;
+  const to = document.getElementById('date-to').value;
   if (!from || !to) return;
-  const cabangId = document.getElementById('filter-cabang').value;
+  const cabangId = rpGabunganMode ? '' : document.getElementById('filter-cabang').value;
   try {
     await loadRekapPelangganData(from, to, cabangId);
     renderRekapPelanggan();
@@ -2488,15 +2538,13 @@ function renderProduk() {
 
   const makeRow = (list) => list.map(([id, d], i) => {
     const rClass = i===0?'r1':i===1?'r2':i===2?'r3':'rn';
-    const hasHpp = hppMap[id];
     return `<tr>
       <td><span class="rank ${rClass}">${i+1}</span></td>
       <td style="font-weight:600">${d.nama || namaMap[id] || ('Produk #' + id)}</td>
-      <td class="right">${d.qty}</td>
-      <td class="right">${rp(d.omset)}</td>
-      <td class="right" style="color:${hasHpp ? (d.laba>=0?'var(--success)':'var(--danger)') : 'var(--text-muted)'};font-weight:700">${hasHpp ? rp(d.laba) : '⚠️ HPP kosong'}</td>
+      <td>${d.qty}</td>
+      <td>${rp(d.omset)}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="5"><div class="empty-state"><div class="es-sub">Tidak ada data</div></div></td></tr>';
+  }).join('') || '<tr><td colspan="4"><div class="empty-state"><div class="es-sub">Tidak ada data</div></div></td></tr>';
 
   document.getElementById('tbody-terlaris').innerHTML = makeRow(terlaris);
 
