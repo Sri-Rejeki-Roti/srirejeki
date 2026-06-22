@@ -3177,10 +3177,13 @@ async function loadRekapJual() {
     document.getElementById('rekapjual-sejak-awal').textContent = `Rp ${totalSejakAwal.toLocaleString('id')}`;
     document.getElementById('rekapjual-laba-awal').textContent = `Rp ${labaSejakAwal.toLocaleString('id')}`;
 
-    // Data sesuai filter periode (kalau kosong = semua)
+    // Data sesuai filter periode + cabang (kalau kosong = semua)
+    const cabangFilterEl = document.getElementById('rekapjual-filter-cabang');
+    const cabangIdFilter = cabangFilterEl ? cabangFilterEl.value : '';
     let query = sb.from('transaksi').select('id, nomor, tipe, pelanggan_id, cabang_id, total, created_at, transaksi_item(produk_id, qty)').order('created_at', { ascending: false });
     if (dari) query = query.gte('created_at', new Date(dari + 'T00:00:00').toISOString());
     if (sampai) query = query.lte('created_at', new Date(sampai + 'T23:59:59.999').toISOString());
+    if (cabangIdFilter) query = query.eq('cabang_id', cabangIdFilter);
     const { data, error } = await query;
     if (error) throw error;
 
@@ -3301,7 +3304,7 @@ async function loadCabang() {
   if (document.getElementById('rekapjual-filter-cabang')) {
     setGenericDropdownOptions('rekapjual-filter-cabang', [
       { value: '', label: 'Semua Cabang' }, ...cabangList.map(c => ({ value: c.id, label: c.nama }))
-    ], 'Semua Cabang', filterRekapJual);
+    ], 'Semua Cabang', loadRekapJual);
   }
 }
 function renderCabang() {
