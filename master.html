@@ -1680,7 +1680,7 @@ svg.icon { display:block; flex-shrink:0; }
       <div class="setp-hero-icon">🔑</div>
       <div>
         <div class="setp-hero-title">Ganti Password</div>
-        <div class="setp-hero-sub">Password hanya boleh berisi angka</div>
+        <div class="setp-hero-sub">Password baru harus tepat 4 digit angka</div>
       </div>
     </div>
     <div class="setp-grid">
@@ -1706,14 +1706,14 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-master-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-master-baru" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-master-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
+              <input type="tel" id="setp-master-konfirmasi" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
             </div>
           </div>
           <div id="setp-master-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1744,14 +1744,14 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-owner-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-owner-baru" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
+              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
             </div>
           </div>
           <div id="setp-owner-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1782,14 +1782,14 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-payroll-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="setp-payroll-baru" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
+              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
             </div>
           </div>
           <div id="setp-payroll-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1975,225 +1975,25 @@ svg.icon { display:block; flex-shrink:0; }
 <div class="toast" id="toast"></div>
 
 <div class="modal-overlay" id="modal-master-login">
-  <div class="modal" style="max-width:320px;padding:0;background:transparent;box-shadow:none;border:none;">
-    <style>
-    #modal-master-login .modal { background:transparent !important; }
-    .mpkp-wrap {
-      background:linear-gradient(160deg,#e3f9f5 0%,#fef9ef 60%,#d0f5f0 100%);
-      border-radius:24px;padding:24px 20px 22px;
-      box-shadow:0 20px 60px rgba(43,38,32,0.2);
-      text-align:center;font-family:'Inter',sans-serif;
-    }
-    .mpkp-header {
-      background:linear-gradient(135deg,#0f9b8e,#0b756c);
-      border-radius:16px;padding:14px 20px 12px;
-      margin-bottom:20px;box-shadow:0 6px 18px rgba(15,155,142,0.35);
-    }
-    .mpkp-appname {
-      font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:900;
-      color:#fff;letter-spacing:0.5px;text-transform:uppercase;
-    }
-    .mpkp-sub { font-size:11px;color:rgba(255,255,255,0.8);margin-top:3px; }
-    .mpkp-dots { display:flex;justify-content:center;gap:14px;margin-bottom:20px; }
-    .mpkp-dot {
-      width:14px;height:14px;border-radius:50%;
-      border:2.5px solid #0f9b8e;background:transparent;transition:all 0.15s;
-    }
-    .mpkp-dot.filled { background:#0f9b8e;box-shadow:0 0 7px rgba(15,155,142,0.5); }
-    .mpkp-dot.error { border-color:#e8485f;background:#e8485f; }
-    .mpkp-dots-wrap.shake { animation:mpkp-shake 0.38s ease; }
-    @keyframes mpkp-shake {
-      0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 60%{transform:translateX(7px)}
-    }
-    .mpkp-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px; }
-    .mpkp-btn {
-      height:58px;border:2px solid #ece4d3;border-radius:14px;
-      background:#fff;color:#2b2620;font-size:20px;font-weight:700;
-      font-family:'Baloo 2',sans-serif;cursor:pointer;
-      box-shadow:0 2px 8px rgba(43,38,32,0.08);
-      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
-    }
-    .mpkp-btn:active { transform:scale(0.91);background:#e3f9f5;border-color:#0f9b8e;color:#0f9b8e; }
-    .mpkp-bottom { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px; }
-    .mpkp-del {
-      height:58px;border:2px solid #ece4d3;border-radius:14px;
-      background:#fff;color:#8a8071;cursor:pointer;
-      box-shadow:0 2px 8px rgba(43,38,32,0.08);
-      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .mpkp-del:active { transform:scale(0.91);background:#fdeaec;border-color:#e8485f;color:#e8485f; }
-    .mpkp-empty { height:58px;background:transparent;border:none;pointer-events:none; }
-    .mpkp-ok {
-      height:58px;border:2px solid #0f9b8e;border-radius:14px;
-      background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;
-      font-size:20px;font-weight:800;cursor:pointer;
-      box-shadow:0 4px 12px rgba(15,155,142,0.35);
-      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
-    }
-    .mpkp-ok:active { transform:scale(0.91);opacity:0.85; }
-    #mpkp-error {
-      display:none;color:#e8485f;font-size:12px;font-weight:600;
-      margin:8px 0 0;padding:8px;background:#fdeaec;border-radius:8px;
-    }
-    .mpkp-actions { display:flex;gap:8px;margin-top:14px; }
-    .mpkp-cancel {
-      flex:1;padding:11px;border:2px solid #ece4d3;border-radius:12px;
-      background:#fff;color:#8a8071;font-size:13px;font-weight:700;
-      cursor:pointer;transition:all 0.1s;
-    }
-    .mpkp-cancel:hover { border-color:#0f9b8e;color:#0f9b8e; }
-    </style>
-    <div class="mpkp-wrap">
-      <div class="mpkp-header">
-        <div class="mpkp-appname">Akses Master Data</div>
-        <div class="mpkp-sub">Masukkan PIN untuk lanjut</div>
-      </div>
-
-      <div class="mpkp-dots-wrap" id="mpkp-dots-wrap">
-        <div class="mpkp-dots" id="mpkp-dots">
-          <div class="mpkp-dot" id="mpkp-d0"></div>
-          <div class="mpkp-dot" id="mpkp-d1"></div>
-          <div class="mpkp-dot" id="mpkp-d2"></div>
-          <div class="mpkp-dot" id="mpkp-d3"></div>
-        </div>
-      </div>
-
-      <div class="mpkp-grid">
-        <button class="mpkp-btn" onclick="mpkpPress('1')">1</button>
-        <button class="mpkp-btn" onclick="mpkpPress('2')">2</button>
-        <button class="mpkp-btn" onclick="mpkpPress('3')">3</button>
-        <button class="mpkp-btn" onclick="mpkpPress('4')">4</button>
-        <button class="mpkp-btn" onclick="mpkpPress('5')">5</button>
-        <button class="mpkp-btn" onclick="mpkpPress('6')">6</button>
-        <button class="mpkp-btn" onclick="mpkpPress('7')">7</button>
-        <button class="mpkp-btn" onclick="mpkpPress('8')">8</button>
-        <button class="mpkp-btn" onclick="mpkpPress('9')">9</button>
-      </div>
-      <div class="mpkp-bottom">
-        <button class="mpkp-ok" onclick="verifyMasterPassword()">✓</button>
-        <button class="mpkp-btn" onclick="mpkpPress('0')">0</button>
-        <button class="mpkp-del" onclick="mpkpDel()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"/><line x1="18" y1="9" x2="13" y2="14"/><line x1="13" y1="9" x2="18" y2="14"/></svg>
-        </button>
-      </div>
-
-      <div id="mpkp-error"></div>
-
-      <div class="mpkp-actions">
-        <button class="mpkp-cancel" onclick="closeMasterLogin()">Batal</button>
-      </div>
-
-      <!-- Hidden input untuk kompatibilitas verifyMasterPassword() -->
-      <input type="hidden" id="master-password-input">
-      <!-- Hidden error el untuk kompatibilitas verifyMasterPassword() -->
-      <div id="master-login-error" style="display:none"></div>
+  <div class="modal" style="max-width:400px;padding:28px 28px 24px;">
+    <h3>🔒 Akses Master Data</h3>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;display:block;">PASSWORD MASTER</label>
+      <input type="password" id="master-password-input" placeholder="Masukkan password..."
+        style="width:100%;height:46px;padding:10px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:border-color 0.15s;"
+        onkeydown="if(event.key==='Enter') verifyMasterPassword();"
+        onfocus="this.style.borderColor='var(--primary)'"
+        onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div id="master-login-error" style="display:none;color:#e8485f;font-size:12px;font-weight:600;margin-bottom:10px;padding:8px 10px;background:#fdeaec;border-radius:8px;"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeMasterLogin()">Batal</button>
+      <button class="btn-save" onclick="verifyMasterPassword()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><polyline points="20 6 9 17 4 12"/></svg>Masuk
+      </button>
     </div>
   </div>
 </div>
-
-<script>
-(function(){
-  var mpkpBuffer = '';
-  var mpkpMax = 10;
-  var mpkpErrEl = document.getElementById('mpkp-error');
-  var mpkpDotsWrap = document.getElementById('mpkp-dots-wrap');
-
-  function mpkpUpdateDots() {
-    var len = mpkpBuffer.length;
-    var total = Math.max(4, len);
-    var dotsEl = document.getElementById('mpkp-dots');
-    if (dotsEl.children.length !== total) {
-      dotsEl.innerHTML = '';
-      for (var i = 0; i < total; i++) {
-        var d = document.createElement('div');
-        d.className = 'mpkp-dot'; d.id = 'mpkp-d'+i;
-        dotsEl.appendChild(d);
-      }
-    }
-    for (var i = 0; i < total; i++) {
-      var d = document.getElementById('mpkp-d'+i);
-      if (d) d.className = 'mpkp-dot' + (i < len ? ' filled' : '');
-    }
-  }
-
-  function mpkpShowError(msg) {
-    mpkpErrEl.textContent = '⚠️ ' + msg;
-    mpkpErrEl.style.display = 'block';
-    var dots = document.querySelectorAll('.mpkp-dot');
-    dots.forEach(function(d){ d.classList.add('error'); });
-    mpkpDotsWrap.classList.add('shake');
-    setTimeout(function(){
-      mpkpBuffer = '';
-      var hi = document.getElementById('master-password-input');
-      if (hi) hi.value = '';
-      mpkpUpdateDots();
-      dots.forEach(function(d){ d.classList.remove('error'); });
-      mpkpDotsWrap.classList.remove('shake');
-    }, 650);
-  }
-
-  window.mpkpPress = function(d) {
-    if (mpkpBuffer.length >= mpkpMax) return;
-    if (mpkpErrEl) { mpkpErrEl.style.display='none'; mpkpErrEl.textContent=''; }
-    mpkpBuffer += d;
-    mpkpUpdateDots();
-    var hi = document.getElementById('master-password-input');
-    if (hi) hi.value = mpkpBuffer;
-    // Auto-submit setelah 4 digit
-    if (mpkpBuffer.length === 4) {
-      setTimeout(function(){ verifyMasterPassword(); }, 150);
-    }
-  };
-
-  window.mpkpDel = function() {
-    if (!mpkpBuffer.length) return;
-    mpkpBuffer = mpkpBuffer.slice(0,-1);
-    mpkpUpdateDots();
-    var hi = document.getElementById('master-password-input');
-    if (hi) hi.value = mpkpBuffer;
-  };
-
-  // Intercept master-login-error changes
-  var errOrig = document.getElementById('master-login-error');
-  // Patch verifyMasterPassword to show error in keypad style
-  var _origVerify = window.verifyMasterPassword;
-  document.addEventListener('DOMContentLoaded', function(){
-    var errEl2 = document.getElementById('master-login-error');
-    if (errEl2) {
-      new MutationObserver(function(){
-        if (errEl2.style.display !== 'none') {
-          mpkpShowError(errEl2.textContent.replace('⚠️ ',''));
-          errEl2.style.display = 'none';
-        }
-      }).observe(errEl2, { attributes:true });
-    }
-  });
-
-  // Reset buffer when modal opens
-  var origOpenMaster = window.openMasterLogin;
-  window.openMasterLogin = function() {
-    mpkpBuffer = '';
-    mpkpUpdateDots();
-    if (mpkpErrEl) { mpkpErrEl.style.display='none'; mpkpErrEl.textContent=''; }
-    var hi = document.getElementById('master-password-input');
-    if (hi) hi.value = '';
-    document.getElementById('modal-master-login').classList.add('open');
-  };
-
-  // Keyboard support
-  document.addEventListener('keydown', function(e){
-    var modal = document.getElementById('modal-master-login');
-    if (!modal || !modal.classList.contains('open')) return;
-    if (e.key >= '0' && e.key <= '9') { e.preventDefault(); mpkpPress(e.key); }
-    else if (e.key === 'Backspace') { e.preventDefault(); mpkpDel(); }
-    else if (e.key === 'Enter') { e.preventDefault(); verifyMasterPassword(); }
-    else if (e.key === 'Escape') { e.preventDefault(); closeMasterLogin(); }
-  });
-
-  mpkpUpdateDots();
-})();
-</script>
 
 
 <div class="prompt-overlay" id="prompt-overlay">
@@ -2314,9 +2114,9 @@ async function verifyMasterPassword() {
   const input = document.getElementById('master-password-input');
   const password = input.value.trim();
   const errorEl = document.getElementById('master-login-error');
-  function showMpkpErr(msg) {
-    if (typeof mpkpShowError === 'function') mpkpShowError(msg);
-    else { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ ' + msg; }
+  function showMpkpErr(msg) { const inp = document.getElementById("master-password-input"); if(inp){inp.style.borderColor="#e8485f"; setTimeout(()=>{inp.style.borderColor="";},1200);}
+
+    errorEl.style.display = "block"; errorEl.textContent = "⚠️ " + msg;
   }
   if (!password) { showMpkpErr('Password wajib diisi'); return; }
   try {
@@ -2338,7 +2138,7 @@ async function verifyMasterPassword() {
     }
   } catch(e) { showMpkpErr('Error: ' + (e.message || 'Unknown error')); console.error(e); }
 }
-function openMasterLogin() { document.getElementById('modal-master-login').classList.add('open'); document.getElementById('master-password-input').value = ''; document.getElementById('master-login-error').style.display = 'none'; setTimeout(() => document.getElementById('master-password-input').focus(), 100); }
+function openMasterLogin() { var modal=document.getElementById('modal-master-login'); var inp=document.getElementById('master-password-input'); var err=document.getElementById('master-login-error'); if(inp) inp.value=''; if(err){err.style.display='none';err.textContent='';} modal.classList.add('open'); setTimeout(function(){if(inp) inp.focus();},120); }
 function closeMasterLogin() { document.getElementById('modal-master-login').classList.remove('open'); }
 
 // ============ SETTING: PASSWORD MASTER/OWNER/PAYROLL ============
@@ -2361,7 +2161,7 @@ async function saveSettingPassword(type) {
   if (!/^\d+$/.test(passwordLama)) { showErr('Password hanya boleh berisi angka'); elLama.focus(); return; }
   if (!passwordBaru) { showErr('Password baru wajib diisi'); elBaru.focus(); return; }
   if (!/^\d+$/.test(passwordBaru)) { showErr('Password baru hanya boleh berisi angka'); elBaru.focus(); return; }
-  if (passwordBaru.length < 4) { showErr('Password baru minimal 4 angka'); elBaru.focus(); return; }
+  if (passwordBaru.length !== 4) { showErr("Password baru harus tepat 4 digit angka"); elBaru.focus(); return; }
   if (passwordBaru !== passwordKonfirmasi) { showErr('Konfirmasi password tidak cocok'); elKonfirmasi.value = ''; elKonfirmasi.focus(); return; }
   const btn = document.getElementById(`btn-setp-${type}`);
   const oldHTML = btn.innerHTML; btn.disabled = true; btn.innerHTML = '⏳ Menyimpan...';
