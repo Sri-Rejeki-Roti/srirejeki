@@ -1975,22 +1975,225 @@ svg.icon { display:block; flex-shrink:0; }
 <div class="toast" id="toast"></div>
 
 <div class="modal-overlay" id="modal-master-login">
-  <div class="modal" style="max-width:380px">
-    <h3>🔐 Akses Master Data</h3>
-    <div class="form-group">
-      <label>Password Master</label>
-      <input type="tel" id="master-password-input" placeholder="Masukkan password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
-    </div>
-    <div id="master-login-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Password salah. Silakan coba lagi.</div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeMasterLogin()">Batal</button>
-      <button class="btn-confirm-modal" onclick="verifyMasterPassword()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 13l4.5 4.5L19 7"/></svg>
-        Masuk
-      </button>
+  <div class="modal" style="max-width:320px;padding:0;background:transparent;box-shadow:none;border:none;">
+    <style>
+    #modal-master-login .modal { background:transparent !important; }
+    .mpkp-wrap {
+      background:linear-gradient(160deg,#e3f9f5 0%,#fef9ef 60%,#d0f5f0 100%);
+      border-radius:24px;padding:24px 20px 22px;
+      box-shadow:0 20px 60px rgba(43,38,32,0.2);
+      text-align:center;font-family:'Inter',sans-serif;
+    }
+    .mpkp-header {
+      background:linear-gradient(135deg,#0f9b8e,#0b756c);
+      border-radius:16px;padding:14px 20px 12px;
+      margin-bottom:20px;box-shadow:0 6px 18px rgba(15,155,142,0.35);
+    }
+    .mpkp-appname {
+      font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:900;
+      color:#fff;letter-spacing:0.5px;text-transform:uppercase;
+    }
+    .mpkp-sub { font-size:11px;color:rgba(255,255,255,0.8);margin-top:3px; }
+    .mpkp-dots { display:flex;justify-content:center;gap:14px;margin-bottom:20px; }
+    .mpkp-dot {
+      width:14px;height:14px;border-radius:50%;
+      border:2.5px solid #0f9b8e;background:transparent;transition:all 0.15s;
+    }
+    .mpkp-dot.filled { background:#0f9b8e;box-shadow:0 0 7px rgba(15,155,142,0.5); }
+    .mpkp-dot.error { border-color:#e8485f;background:#e8485f; }
+    .mpkp-dots-wrap.shake { animation:mpkp-shake 0.38s ease; }
+    @keyframes mpkp-shake {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 60%{transform:translateX(7px)}
+    }
+    .mpkp-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px; }
+    .mpkp-btn {
+      height:58px;border:2px solid #ece4d3;border-radius:14px;
+      background:#fff;color:#2b2620;font-size:20px;font-weight:700;
+      font-family:'Baloo 2',sans-serif;cursor:pointer;
+      box-shadow:0 2px 8px rgba(43,38,32,0.08);
+      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
+    }
+    .mpkp-btn:active { transform:scale(0.91);background:#e3f9f5;border-color:#0f9b8e;color:#0f9b8e; }
+    .mpkp-bottom { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px; }
+    .mpkp-del {
+      height:58px;border:2px solid #ece4d3;border-radius:14px;
+      background:#fff;color:#8a8071;cursor:pointer;
+      box-shadow:0 2px 8px rgba(43,38,32,0.08);
+      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .mpkp-del:active { transform:scale(0.91);background:#fdeaec;border-color:#e8485f;color:#e8485f; }
+    .mpkp-empty { height:58px;background:transparent;border:none;pointer-events:none; }
+    .mpkp-ok {
+      height:58px;border:2px solid #0f9b8e;border-radius:14px;
+      background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;
+      font-size:20px;font-weight:800;cursor:pointer;
+      box-shadow:0 4px 12px rgba(15,155,142,0.35);
+      transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
+    }
+    .mpkp-ok:active { transform:scale(0.91);opacity:0.85; }
+    #mpkp-error {
+      display:none;color:#e8485f;font-size:12px;font-weight:600;
+      margin:8px 0 0;padding:8px;background:#fdeaec;border-radius:8px;
+    }
+    .mpkp-actions { display:flex;gap:8px;margin-top:14px; }
+    .mpkp-cancel {
+      flex:1;padding:11px;border:2px solid #ece4d3;border-radius:12px;
+      background:#fff;color:#8a8071;font-size:13px;font-weight:700;
+      cursor:pointer;transition:all 0.1s;
+    }
+    .mpkp-cancel:hover { border-color:#0f9b8e;color:#0f9b8e; }
+    </style>
+    <div class="mpkp-wrap">
+      <div class="mpkp-header">
+        <div class="mpkp-appname">Akses Master Data</div>
+        <div class="mpkp-sub">Masukkan PIN untuk lanjut</div>
+      </div>
+
+      <div class="mpkp-dots-wrap" id="mpkp-dots-wrap">
+        <div class="mpkp-dots" id="mpkp-dots">
+          <div class="mpkp-dot" id="mpkp-d0"></div>
+          <div class="mpkp-dot" id="mpkp-d1"></div>
+          <div class="mpkp-dot" id="mpkp-d2"></div>
+          <div class="mpkp-dot" id="mpkp-d3"></div>
+        </div>
+      </div>
+
+      <div class="mpkp-grid">
+        <button class="mpkp-btn" onclick="mpkpPress('1')">1</button>
+        <button class="mpkp-btn" onclick="mpkpPress('2')">2</button>
+        <button class="mpkp-btn" onclick="mpkpPress('3')">3</button>
+        <button class="mpkp-btn" onclick="mpkpPress('4')">4</button>
+        <button class="mpkp-btn" onclick="mpkpPress('5')">5</button>
+        <button class="mpkp-btn" onclick="mpkpPress('6')">6</button>
+        <button class="mpkp-btn" onclick="mpkpPress('7')">7</button>
+        <button class="mpkp-btn" onclick="mpkpPress('8')">8</button>
+        <button class="mpkp-btn" onclick="mpkpPress('9')">9</button>
+      </div>
+      <div class="mpkp-bottom">
+        <button class="mpkp-ok" onclick="verifyMasterPassword()">✓</button>
+        <button class="mpkp-btn" onclick="mpkpPress('0')">0</button>
+        <button class="mpkp-del" onclick="mpkpDel()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"/><line x1="18" y1="9" x2="13" y2="14"/><line x1="13" y1="9" x2="18" y2="14"/></svg>
+        </button>
+      </div>
+
+      <div id="mpkp-error"></div>
+
+      <div class="mpkp-actions">
+        <button class="mpkp-cancel" onclick="closeMasterLogin()">Batal</button>
+      </div>
+
+      <!-- Hidden input untuk kompatibilitas verifyMasterPassword() -->
+      <input type="hidden" id="master-password-input">
+      <!-- Hidden error el untuk kompatibilitas verifyMasterPassword() -->
+      <div id="master-login-error" style="display:none"></div>
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  var mpkpBuffer = '';
+  var mpkpMax = 10;
+  var mpkpErrEl = document.getElementById('mpkp-error');
+  var mpkpDotsWrap = document.getElementById('mpkp-dots-wrap');
+
+  function mpkpUpdateDots() {
+    var len = mpkpBuffer.length;
+    var total = Math.max(4, len);
+    var dotsEl = document.getElementById('mpkp-dots');
+    if (dotsEl.children.length !== total) {
+      dotsEl.innerHTML = '';
+      for (var i = 0; i < total; i++) {
+        var d = document.createElement('div');
+        d.className = 'mpkp-dot'; d.id = 'mpkp-d'+i;
+        dotsEl.appendChild(d);
+      }
+    }
+    for (var i = 0; i < total; i++) {
+      var d = document.getElementById('mpkp-d'+i);
+      if (d) d.className = 'mpkp-dot' + (i < len ? ' filled' : '');
+    }
+  }
+
+  function mpkpShowError(msg) {
+    mpkpErrEl.textContent = '⚠️ ' + msg;
+    mpkpErrEl.style.display = 'block';
+    var dots = document.querySelectorAll('.mpkp-dot');
+    dots.forEach(function(d){ d.classList.add('error'); });
+    mpkpDotsWrap.classList.add('shake');
+    setTimeout(function(){
+      mpkpBuffer = '';
+      var hi = document.getElementById('master-password-input');
+      if (hi) hi.value = '';
+      mpkpUpdateDots();
+      dots.forEach(function(d){ d.classList.remove('error'); });
+      mpkpDotsWrap.classList.remove('shake');
+    }, 650);
+  }
+
+  window.mpkpPress = function(d) {
+    if (mpkpBuffer.length >= mpkpMax) return;
+    if (mpkpErrEl) { mpkpErrEl.style.display='none'; mpkpErrEl.textContent=''; }
+    mpkpBuffer += d;
+    mpkpUpdateDots();
+    var hi = document.getElementById('master-password-input');
+    if (hi) hi.value = mpkpBuffer;
+    // Auto-submit setelah 4 digit
+    if (mpkpBuffer.length === 4) {
+      setTimeout(function(){ verifyMasterPassword(); }, 150);
+    }
+  };
+
+  window.mpkpDel = function() {
+    if (!mpkpBuffer.length) return;
+    mpkpBuffer = mpkpBuffer.slice(0,-1);
+    mpkpUpdateDots();
+    var hi = document.getElementById('master-password-input');
+    if (hi) hi.value = mpkpBuffer;
+  };
+
+  // Intercept master-login-error changes
+  var errOrig = document.getElementById('master-login-error');
+  // Patch verifyMasterPassword to show error in keypad style
+  var _origVerify = window.verifyMasterPassword;
+  document.addEventListener('DOMContentLoaded', function(){
+    var errEl2 = document.getElementById('master-login-error');
+    if (errEl2) {
+      new MutationObserver(function(){
+        if (errEl2.style.display !== 'none') {
+          mpkpShowError(errEl2.textContent.replace('⚠️ ',''));
+          errEl2.style.display = 'none';
+        }
+      }).observe(errEl2, { attributes:true });
+    }
+  });
+
+  // Reset buffer when modal opens
+  var origOpenMaster = window.openMasterLogin;
+  window.openMasterLogin = function() {
+    mpkpBuffer = '';
+    mpkpUpdateDots();
+    if (mpkpErrEl) { mpkpErrEl.style.display='none'; mpkpErrEl.textContent=''; }
+    var hi = document.getElementById('master-password-input');
+    if (hi) hi.value = '';
+    document.getElementById('modal-master-login').classList.add('open');
+  };
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e){
+    var modal = document.getElementById('modal-master-login');
+    if (!modal || !modal.classList.contains('open')) return;
+    if (e.key >= '0' && e.key <= '9') { e.preventDefault(); mpkpPress(e.key); }
+    else if (e.key === 'Backspace') { e.preventDefault(); mpkpDel(); }
+    else if (e.key === 'Enter') { e.preventDefault(); verifyMasterPassword(); }
+    else if (e.key === 'Escape') { e.preventDefault(); closeMasterLogin(); }
+  });
+
+  mpkpUpdateDots();
+})();
+</script>
 
 
 <div class="prompt-overlay" id="prompt-overlay">
@@ -2111,10 +2314,14 @@ async function verifyMasterPassword() {
   const input = document.getElementById('master-password-input');
   const password = input.value.trim();
   const errorEl = document.getElementById('master-login-error');
-  if (!password) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Password wajib diisi'; return; }
+  function showMpkpErr(msg) {
+    if (typeof mpkpShowError === 'function') mpkpShowError(msg);
+    else { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ ' + msg; }
+  }
+  if (!password) { showMpkpErr('Password wajib diisi'); return; }
   try {
     const { data, error } = await sb.from('settings').select('value').eq('key', 'master_password').single();
-    if (error || !data) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Gagal memverifikasi. Coba lagi.'; console.error(error); return; }
+    if (error || !data) { showMpkpErr('Gagal memverifikasi. Coba lagi.'); console.error(error); return; }
     if (password === data.value) {
       masterAuthorized = true;
       errorEl.style.display = 'none';
@@ -2127,12 +2334,9 @@ async function verifyMasterPassword() {
       document.getElementById('btn-restok-submit').style.display = '';
       document.getElementById('btn-ambil-submit').style.display = '';
     } else {
-      errorEl.style.display = 'block';
-      errorEl.textContent = '⚠️ Password salah. Silakan coba lagi.';
-      input.value = '';
-      input.focus();
+      showMpkpErr('Password salah. Silakan coba lagi.');
     }
-  } catch(e) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Error: ' + (e.message || 'Unknown error'); console.error(e); }
+  } catch(e) { showMpkpErr('Error: ' + (e.message || 'Unknown error')); console.error(e); }
 }
 function openMasterLogin() { document.getElementById('modal-master-login').classList.add('open'); document.getElementById('master-password-input').value = ''; document.getElementById('master-login-error').style.display = 'none'; setTimeout(() => document.getElementById('master-password-input').focus(), 100); }
 function closeMasterLogin() { document.getElementById('modal-master-login').classList.remove('open'); }
