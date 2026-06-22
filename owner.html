@@ -2044,6 +2044,8 @@ async function loadAll() {
 
   showMiniLoading(true);
   try {
+    const rpFrom = document.getElementById('rp-date-from').value || from;
+    const rpTo = document.getElementById('rp-date-to').value || to;
     const tasks = [
       // BUG FIX: loadCabang() tidak dipanggil ulang di sini — sudah di-load saat init
       // agar pilihan cabang user tidak ter-reset ke default setiap klik "Muat Data"
@@ -2053,6 +2055,7 @@ async function loadAll() {
       loadTrx(from, to, cabangId),
       loadTrxRingkasan(from, to),
       loadOmsetSepanjangWaktu(),
+      loadRekapPelangganData(rpFrom, rpTo, cabangId),
     ];
     let doneCount = 0;
     await Promise.all(tasks.map(p => p.then(res => {
@@ -2063,6 +2066,7 @@ async function loadAll() {
 
     renderRingkasan();
     renderTrxList();
+    renderRekapPelanggan();
     renderProduk();
     renderStok();
     renderPayroll();
@@ -2114,14 +2118,16 @@ async function loadTrxRingkasan(from, to) {
 // REKAP PELANGGAN (gabungan Pusat + Cabang, periode independen
 // dari filter global — dipicu lewat input #rp-date-from / #rp-date-to)
 // ============================================================
-async function loadRekapPelangganData(from, to) {
-  const { data, error } = await sb
+async function loadRekapPelangganData(from, to, cabangId) {
+  let query = sb
     .from('transaksi')
     .select('pelanggan_id, total, cabang_id, created_at')
     .eq('tipe', 'pelanggan')
     .not('pelanggan_id', 'is', null)
     .gte('created_at', new Date(from + 'T00:00:00').toISOString())
     .lte('created_at', new Date(to + 'T23:59:59.999').toISOString());
+  if (cabangId) query = query.eq('cabang_id', parseInt(cabangId));
+  const { data, error } = await query;
   if (error) throw error;
   allTrxPelangganRekap = data || [];
 }
@@ -2130,8 +2136,9 @@ async function reloadRekapPelanggan() {
   const from = document.getElementById('rp-date-from').value;
   const to = document.getElementById('rp-date-to').value;
   if (!from || !to) return;
+  const cabangId = document.getElementById('filter-cabang').value;
   try {
-    await loadRekapPelangganData(from, to);
+    await loadRekapPelangganData(from, to, cabangId);
     renderRekapPelanggan();
   } catch (e) {
     console.error(e);
@@ -2145,24 +2152,23 @@ function renderRekapPelanggan() {
   const grandTotalEl = document.getElementById('rp-grand-total');
   if (!tbody) return;
 
-  // Group transaksi per pelanggan: total transaksi (count) + total pembelian (sum)
-  const map = {};
-  allTrxPelangganRekap.forEach(t => {
-    const pid = t.pelanggan_id;
-    if (!map[pid]) map[pid] = { count: 0, total: 0 };
-    map[pid].count += 1;
-    map[pid].total += (t.total || 0);
-  });
-
   const cabangMap = {};
   allCabang.forEach(c => cabangMap[c.id] = c.nama);
 
-  // Gabungkan dengan master pelanggan (Pusat + Cabang) untuk ambil nama & cabang asal
-  const rows = Object.keys(map).map(pid => {
-    const p = allPelanggan.find(x => String(x.id) === String(pid));
-    const nama = p ? p.nama : ('Pelanggan #' + pid);
-    const cabangNama = (p && p.cabang_id && cabangMap[p.cabang_id]) ? cabangMap[p.cabang_id] : '—';
-    return { nama, cabangNama, count: map[pid].count, total: map[pid].total };
+  // Group per (pelanggan_id + cabang_id) — cabang diambil dari transaksi, bukan master pelanggan
+  const map = {};
+  allTrxPelangganRekap.forEach(t => {
+    const key = t.pelanggan_id + '__' + (t.cabang_id || '');
+    if (!map[key]) map[key] = { pelanggan_id: t.pelanggan_id, cabang_id: t.cabang_id, count: 0, total: 0 };
+    map[key].count += 1;
+    map[key].total += (t.total || 0);
+  });
+
+  const rows = Object.values(map).map(m => {
+    const p = allPelanggan.find(x => String(x.id) === String(m.pelanggan_id));
+    const nama = p ? p.nama : ('Pelanggan #' + m.pelanggan_id);
+    const cabangNama = (m.cabang_id && cabangMap[m.cabang_id]) ? cabangMap[m.cabang_id] : '—';
+    return { nama, cabangNama, count: m.count, total: m.total };
   });
 
   rows.sort((a, b) => b.total - a.total);
