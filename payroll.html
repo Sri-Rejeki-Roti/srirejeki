@@ -1434,7 +1434,11 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
     if (lgOverlay) lgOverlay.style.display = 'none';
   }
 
-  // Kunci lagi setiap kali aplikasi disembunyikan/ditinggal (pindah app, minimize, tutup tab)
+  // Kunci lagi HANYA jika aplikasi ditinggal cukup lama (bukan setiap kali fokus berpindah sekejap)
+  // Ubah angka di bawah ini kalau mau durasi toleransi yang berbeda.
+  var LG_RELOCK_AFTER_MS = 5 * 60 * 1000; // 5 menit
+  var lgHiddenAt = null;
+
   function relockGate() {
     if (!isAuthorized) return;
     isAuthorized = false;
@@ -1451,11 +1455,22 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
       if (typeof window.pkpResetBuffer === 'function') window.pkpResetBuffer();
     }
   }
+  // Catat waktu saat aplikasi disembunyikan (pindah tab/app, minimize),
+  // tapi JANGAN langsung kunci — baru kunci kalau sudah ditinggal > LG_RELOCK_AFTER_MS
   document.addEventListener('visibilitychange', function(){
-    if (document.hidden) relockGate();
+    if (document.hidden) {
+      lgHiddenAt = Date.now();
+    } else if (isAuthorized && lgHiddenAt) {
+      var elapsed = Date.now() - lgHiddenAt;
+      lgHiddenAt = null;
+      if (elapsed > LG_RELOCK_AFTER_MS) relockGate();
+    }
   });
+  // pagehide tetap langsung kunci (halaman benar-benar ditutup/dibongkar)
   window.addEventListener('pagehide', relockGate);
-  window.addEventListener('blur', relockGate);
+  // NOTE: listener 'blur' DIHAPUS — sebelumnya ini membuat gate terkunci ulang
+  // hanya karena fokus jendela berpindah sebentar (buka keyboard, klik dropdown, dll),
+  // yang membuat password diminta terlalu sering.
 
   async function initGate() {
     try {
@@ -2894,7 +2909,7 @@ function getPeriode(tanggal, settings) {
     const endDate = new Date(d);
     endDate.setDate(d.getDate() + diffToEnd);
     const startDate = new Date(endDate);
-    startDate.setDate(endDate.getDate() - 6);
+    startDate.setDate(endDate.getDate() - 5);
     return { startDate, endDate, hariKerja: hitungHariKerja(startDate, endDate, settings.hari_libur) };
   } else {
     const year = d.getFullYear();
@@ -2933,10 +2948,10 @@ function getRekapRange(pill) {
   } else if (pill === 'periode-lalu') {
     if (isMingguan) {
       const p = getPeriode(today, s);
-      const prevDay = new Date(p.startDate);
-      prevDay.setDate(prevDay.getDate() - 1);
-      const pp = getPeriode(prevDay, s);
-      from = pp.startDate; to = pp.endDate;
+      from = new Date(p.startDate);
+      from.setDate(from.getDate() - 7);
+      to = new Date(p.endDate);
+      to.setDate(to.getDate() - 7);
       label = 'Periode lalu (' + fmtDate(from) + ' – ' + fmtDate(to) + ')';
     } else {
       from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
