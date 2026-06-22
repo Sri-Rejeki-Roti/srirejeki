@@ -292,6 +292,14 @@ body { padding-bottom: 78px; }
 .section-title .badge-count {
   background:var(--border); color:var(--text-muted); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700;
 }
+.trx-grand-total { display:flex; align-items:baseline; gap:6px; white-space:nowrap; }
+.trx-grand-total .tg-sub { font-size:12px; font-weight:600; color:var(--text-muted); }
+.trx-grand-total .tg-amount { font-size:19px; font-weight:800; color:var(--primary-dark); }
+@media(max-width:480px) {
+  .section-header { gap:4px; }
+  .trx-grand-total .tg-sub { font-size:10.5px; }
+  .trx-grand-total .tg-amount { font-size:16px; }
+}
 
 /* TRX TOOLBAR (search + filter status) */
 .trx-toolbar {
@@ -303,11 +311,38 @@ body { padding-bottom: 78px; }
 }
 .trx-search-input:focus { outline:none; border-color:var(--accent); }
 .trx-status-wrap { flex:0 0 180px; width:180px; }
+.trx-toggle-chip {
+  flex:0 0 auto; height:38px; padding:0 16px; border:2px solid var(--border); border-radius:8px;
+  background:var(--card); font-size:13px; font-weight:600; color:var(--text); cursor:pointer;
+  display:flex; align-items:center; gap:7px; white-space:nowrap; transition:all 0.15s; font-family:inherit;
+}
+.trx-toggle-chip:hover { border-color:var(--accent); color:var(--accent-dark); }
+.trx-toggle-chip.active { background:var(--primary); color:white; border-color:var(--primary); box-shadow:var(--shadow-sm); }
 @media(max-width:520px) {
   .trx-toolbar { flex-direction:column; align-items:stretch; }
   .trx-search-input { flex:1 1 auto; width:100%; }
   .trx-status-wrap { flex:1 1 auto; width:100%; }
+  .trx-toggle-chip { width:100%; justify-content:center; }
 }
+
+/* TRX SUB-TABS (switch: Riwayat Transaksi <-> Rekap Pelanggan) */
+.trx-subtabs {
+  display:flex; gap:6px; background:var(--card); border:1.5px solid var(--border);
+  border-radius:14px; padding:5px; margin-bottom:18px; box-shadow:var(--shadow-sm);
+}
+.trx-subtab-btn {
+  flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+  padding:10px 12px; border-radius:10px; border:none; background:none; cursor:pointer;
+  font-size:13px; font-weight:700; color:var(--text-muted); font-family:inherit;
+  transition:all 0.15s; white-space:nowrap;
+}
+.trx-subtab-btn:hover { color:var(--primary-dark); }
+.trx-subtab-btn.active { background:var(--primary); color:white; box-shadow:0 3px 10px rgba(15,155,142,0.3); }
+@media(max-width:480px) {
+  .trx-subtab-btn { font-size:12px; padding:9px 6px; }
+}
+.trx-subpanel { display:none; }
+.trx-subpanel.active { display:block; }
 
 /* CARD */
 .roti-card {
@@ -328,6 +363,11 @@ body { padding-bottom: 78px; }
 .data-table td.right { text-align:right; font-weight:600; }
 .data-table tr:last-child td { border-bottom:none; }
 .data-table tr:hover td { background:#faf7f0; }
+
+/* TABEL REKAP PELANGGAN — semua kolom rata tengah */
+#table-rekap-pelanggan th,
+#table-rekap-pelanggan td { text-align:center; }
+#table-rekap-pelanggan td.right { text-align:center; }
 
 /* RANK BADGE */
 .rank { width:24px; height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
@@ -360,24 +400,6 @@ body { padding-bottom: 78px; }
 .progress-label { display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:5px; }
 .progress-track { height:8px; background:var(--bg); border-radius:10px; overflow:hidden; border:1px solid var(--border); }
 .progress-fill { height:100%; border-radius:10px; transition:width 0.6s ease; }
-
-/* PELANGGAN ITEM */
-.pel-item {
-  display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border);
-  transition:background 0.12s;
-}
-.pel-item:last-child { border-bottom:none; }
-.pel-item:hover { background:#faf7f0; }
-.pel-avatar {
-  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:15px; flex-shrink:0;
-}
-.pel-name { font-size:14px; font-weight:700; }
-.pel-detail { font-size:11px; color:var(--text-muted); font-weight:500; margin-top:1px; }
-.pel-total { margin-left:auto; text-align:right; }
-.pel-total-val { font-size:14px; font-weight:800; color:var(--primary-dark); }
-.pel-total-trx { font-size:11px; color:var(--text-muted); font-weight:500; }
-.pel-kredit { font-size:11px; font-weight:700; color:var(--danger); margin-top:2px; }
 
 /* PAYROLL ITEM */
 .payroll-item {
@@ -640,12 +662,12 @@ body { padding-bottom: 78px; }
     <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Owner Dashboard</div>
 
     <div id="lg-setup-fields" style="display:none;">
-      <input type="tel" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:10px;box-sizing:border-box;letter-spacing:4px;">
-      <input type="tel" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;letter-spacing:4px;">
+      <input type="tel" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
+      <input type="tel" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
     </div>
 
     <div id="lg-login-fields">
-      <input type="tel" id="lg-pass-input" placeholder="Password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;letter-spacing:4px;">
+      <input type="tel" id="lg-pass-input" placeholder="Password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
     </div>
 
     <div id="lg-error" style="display:none;color:#e8485f;font-size:12.5px;font-weight:600;text-align:center;margin-bottom:14px;padding:9px;background:#fdeaec;border-radius:8px;"></div>
@@ -861,31 +883,86 @@ body { padding-bottom: 78px; }
 
   <!-- ===== TAB: TRANSAKSI ===== -->
   <div class="tab-panel" id="panel-transaksi">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">
-          Riwayat Transaksi
-          <span class="badge-count" id="trx-count-badge">0</span>
+
+    <!-- SWITCH SUB-PANEL: Riwayat Transaksi <-> Rekap Pelanggan -->
+    <div class="trx-subtabs">
+      <button type="button" class="trx-subtab-btn active" id="subtab-btn-riwayat" onclick="switchTrxSubpanel('riwayat', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/><path d="M7 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Riwayat Transaksi
+      </button>
+      <button type="button" class="trx-subtab-btn" id="subtab-btn-rekap" onclick="switchTrxSubpanel('rekap', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c0-3.3 3.1-6 7-6h0c3.9 0 7 2.7 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Rekap Pelanggan
+      </button>
+    </div>
+
+    <!-- ===== SUB-PANEL: RIWAYAT TRANSAKSI ===== -->
+    <div class="trx-subpanel active" id="subpanel-riwayat">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            Riwayat Transaksi
+            <span class="badge-count" id="trx-count-badge">0</span>
+          </div>
+          <div class="trx-grand-total" id="trx-grand-total"></div>
         </div>
-      </div>
-      <div class="trx-toolbar">
-        <input type="text" id="trx-search" placeholder="Cari nomor / kasir..." class="trx-search-input" oninput="filterTrxList()">
-        <div class="custom-select-wrap trx-status-wrap" id="trx-filter-status-wrap">
-          <button type="button" class="custom-select-btn has-placeholder" id="trx-filter-status-btn" onclick="toggleGenericDropdown('trx-filter-status')" aria-haspopup="listbox" aria-expanded="false">
-            <span id="trx-filter-status-label">Semua Status</span>
-            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="trx-toolbar">
+          <input type="text" id="trx-search" placeholder="Cari nomor / kasir..." class="trx-search-input" oninput="filterTrxList()">
+          <button type="button" class="trx-toggle-chip" id="trx-only-pelanggan-btn" onclick="toggleOnlyPelanggan()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c0-3.3 3.1-6 7-6h0c3.9 0 7 2.7 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Hanya Pelanggan
           </button>
-          <div class="custom-select-dropdown" id="trx-filter-status-dropdown" role="listbox"></div>
+          <div class="custom-select-wrap trx-status-wrap" id="trx-filter-status-wrap">
+            <button type="button" class="custom-select-btn has-placeholder" id="trx-filter-status-btn" onclick="toggleGenericDropdown('trx-filter-status')" aria-haspopup="listbox" aria-expanded="false">
+              <span id="trx-filter-status-label">Semua Status</span>
+              <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="custom-select-dropdown" id="trx-filter-status-dropdown" role="listbox"></div>
+          </div>
+          <input type="hidden" id="trx-filter-status" value="">
         </div>
-        <input type="hidden" id="trx-filter-status" value="">
+        <div class="roti-card">
+          <div id="trx-list">
+            <div class="empty-state"><div class="es-sub">Pilih rentang tanggal lalu klik Muat Data</div></div>
+          </div>
+        </div>
       </div>
-      <div class="roti-card">
-        <div id="trx-list">
-          <div class="empty-state"><div class="es-sub">Pilih rentang tanggal lalu klik Muat Data</div></div>
+    </div>
+
+    <!-- ===== SUB-PANEL: REKAP PELANGGAN (Pusat + Cabang, periode independen) ===== -->
+    <div class="trx-subpanel" id="subpanel-rekap">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            Rekap Pelanggan
+            <span class="badge-count" id="rp-count-badge">0</span>
+          </div>
+          <div class="trx-grand-total" id="rp-grand-total"></div>
         </div>
-        <div id="trx-footer" style="padding:14px 18px;border-top:1px solid var(--border);display:none;justify-content:space-between;align-items:center;font-size:13px;font-weight:700">
-          <span id="trx-footer-count"></span>
-          <span id="trx-footer-total" style="color:var(--primary-dark)"></span>
+        <div class="pr-period-bar">
+          <span class="pr-period-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Periode
+          </span>
+          <input type="date" id="rp-date-from" onchange="reloadRekapPelanggan()">
+          <span class="pr-period-sep">s/d</span>
+          <input type="date" id="rp-date-to" onchange="reloadRekapPelanggan()">
+        </div>
+        <div class="roti-card">
+          <table class="data-table" id="table-rekap-pelanggan">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Pelanggan</th>
+                <th>Cabang</th>
+                <th class="right">Total Transaksi</th>
+                <th class="right">Total Pembelian</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-rekap-pelanggan">
+              <tr><td colspan="5"><div class="empty-state"><div class="es-sub">Pilih periode untuk menampilkan rekap pelanggan</div></div></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -915,23 +992,6 @@ body { padding-bottom: 78px; }
         <div class="chart-canvas-wrap" style="height:320px">
           <canvas id="chart-produk"></canvas>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== TAB: PELANGGAN ===== -->
-  <div class="tab-panel" id="panel-pelanggan">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          Rekap Pelanggan
-          <span class="badge-count" id="pel-count-badge">0</span>
-        </div>
-      </div>
-      <input type="text" id="pel-search" placeholder="Cari nama pelanggan..." class="trx-search-input" style="margin-bottom:14px;width:100%" oninput="filterPelangganList()">
-      <div class="roti-card" id="pel-terbaik-list">
-        <div class="empty-state"><div class="es-sub">Muat data dahulu</div></div>
       </div>
     </div>
   </div>
@@ -1125,6 +1185,7 @@ if ('serviceWorker' in navigator) {
 
 
 let allTrx = [];
+let trxOnlyPelanggan = false;
 let allTrxItems = [];
 let allProduk = [];
 let allStokCabang = []; // data dari tabel stok_cabang (hasil migrasi dari kolom stok di produk)
@@ -1134,8 +1195,8 @@ let allAbsensi = [];
 let allLembur = []; // tabel lembur terpisah dari absensi
 let allCabang = [];
 let allTrxRingkasan = []; // transaksi semua cabang (tanpa filter cabang) untuk tab Ringkasan
+let allTrxPelangganRekap = []; // transaksi pelanggan gabungan semua cabang (Pusat+Cabang), periode independen untuk Rekap Pelanggan
 let omsetSepanjangWaktu = 0; // total omset all-time, tidak terpengaruh filter periode
-let allPelangganRekap = null; // [id, {trx, total, kredit}] hasil agregasi untuk tab Pelanggan
 let chartProduk = null;
 
 // ============================================================
@@ -1225,6 +1286,23 @@ function switchTab(name, btn) {
     if (prTo && !prTo.value) prTo.value = document.getElementById('date-to').value;
   } else {
     globalBar.style.display = '';
+  }
+}
+
+// Switch sub-panel di dalam tab Transaksi: Riwayat Transaksi <-> Rekap Pelanggan
+function switchTrxSubpanel(name, btn) {
+  document.querySelectorAll('.trx-subtab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.trx-subpanel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('subpanel-' + name).classList.add('active');
+
+  if (name === 'rekap') {
+    const rpFrom = document.getElementById('rp-date-from');
+    const rpTo = document.getElementById('rp-date-to');
+    let needLoad = false;
+    if (rpFrom && !rpFrom.value) { rpFrom.value = document.getElementById('date-from').value; needLoad = true; }
+    if (rpTo && !rpTo.value) { rpTo.value = document.getElementById('date-to').value; needLoad = true; }
+    if (needLoad && rpFrom.value && rpTo.value) reloadRekapPelanggan();
   }
 }
 
@@ -1407,7 +1485,6 @@ async function loadAll() {
     renderRingkasan();
     renderTrxList();
     renderProduk();
-    renderPelanggan();
     renderStok();
     renderPayroll(from, to);
     showToast('Data berhasil dimuat', 'success');
@@ -1452,6 +1529,87 @@ async function loadTrxRingkasan(from, to) {
     .lte('created_at', new Date(to + 'T23:59:59.999').toISOString());
   if (error) throw error;
   allTrxRingkasan = trx || [];
+}
+
+// ============================================================
+// REKAP PELANGGAN (gabungan Pusat + Cabang, periode independen
+// dari filter global — dipicu lewat input #rp-date-from / #rp-date-to)
+// ============================================================
+async function loadRekapPelangganData(from, to) {
+  const { data, error } = await sb
+    .from('transaksi')
+    .select('pelanggan_id, total, cabang_id, created_at')
+    .eq('tipe', 'pelanggan')
+    .not('pelanggan_id', 'is', null)
+    .gte('created_at', new Date(from + 'T00:00:00').toISOString())
+    .lte('created_at', new Date(to + 'T23:59:59.999').toISOString());
+  if (error) throw error;
+  allTrxPelangganRekap = data || [];
+}
+
+async function reloadRekapPelanggan() {
+  const from = document.getElementById('rp-date-from').value;
+  const to = document.getElementById('rp-date-to').value;
+  if (!from || !to) return;
+  try {
+    await loadRekapPelangganData(from, to);
+    renderRekapPelanggan();
+  } catch (e) {
+    console.error(e);
+    showToast('Gagal memuat rekap pelanggan: ' + (e.message || e), 'error');
+  }
+}
+
+function renderRekapPelanggan() {
+  const tbody = document.getElementById('tbody-rekap-pelanggan');
+  const badge = document.getElementById('rp-count-badge');
+  const grandTotalEl = document.getElementById('rp-grand-total');
+  if (!tbody) return;
+
+  // Group transaksi per pelanggan: total transaksi (count) + total pembelian (sum)
+  const map = {};
+  allTrxPelangganRekap.forEach(t => {
+    const pid = t.pelanggan_id;
+    if (!map[pid]) map[pid] = { count: 0, total: 0 };
+    map[pid].count += 1;
+    map[pid].total += (t.total || 0);
+  });
+
+  const cabangMap = {};
+  allCabang.forEach(c => cabangMap[c.id] = c.nama);
+
+  // Gabungkan dengan master pelanggan (Pusat + Cabang) untuk ambil nama & cabang asal
+  const rows = Object.keys(map).map(pid => {
+    const p = allPelanggan.find(x => String(x.id) === String(pid));
+    const nama = p ? p.nama : ('Pelanggan #' + pid);
+    const cabangNama = (p && p.cabang_id && cabangMap[p.cabang_id]) ? cabangMap[p.cabang_id] : '—';
+    return { nama, cabangNama, count: map[pid].count, total: map[pid].total };
+  });
+
+  rows.sort((a, b) => b.total - a.total);
+
+  if (badge) badge.textContent = rows.length;
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="es-sub">Tidak ada transaksi pelanggan pada periode ini</div></div></td></tr>';
+    if (grandTotalEl) grandTotalEl.textContent = '';
+    return;
+  }
+
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td style="font-weight:700">${r.nama}</td>
+      <td><span class="badge badge-cabang">${r.cabangNama}</span></td>
+      <td class="right">${r.count}</td>
+      <td class="right">${rp(r.total)}</td>
+    </tr>`).join('');
+
+  if (grandTotalEl) {
+    const grandCount = rows.reduce((s, r) => s + r.count, 0);
+    const grandTotal = rows.reduce((s, r) => s + r.total, 0);
+    grandTotalEl.innerHTML = `<span class="tg-sub">${grandCount} transaksi ·</span><span class="tg-amount">${rp(grandTotal)}</span>`;
+  }
 }
 
 // ============================================================
@@ -1644,10 +1802,17 @@ function renderTrxList() {
   filterTrxList();
 }
 
+function toggleOnlyPelanggan() {
+  trxOnlyPelanggan = !trxOnlyPelanggan;
+  document.getElementById('trx-only-pelanggan-btn').classList.toggle('active', trxOnlyPelanggan);
+  filterTrxList();
+}
+
 function filterTrxList() {
   const q = (document.getElementById('trx-search')?.value || '').toLowerCase();
   const st = document.getElementById('trx-filter-status')?.value || '';
   let list = allTrx;
+  if (trxOnlyPelanggan) list = list.filter(t => t.tipe === 'pelanggan');
   if (q) list = list.filter(t => (t.nomor||'').toLowerCase().includes(q) || (t.kasir||'').toLowerCase().includes(q));
   if (st) list = list.filter(t => t.status === st);
 
@@ -1655,7 +1820,7 @@ function filterTrxList() {
 
   if (!list.length) {
     document.getElementById('trx-list').innerHTML = '<div class="empty-state"><div class="es-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#ccc" stroke-width="1.8"/><path d="M3 10h18" stroke="#ccc" stroke-width="1.8"/></svg></div><div class="es-title">Tidak ada transaksi</div><div class="es-sub">Coba ubah filter atau rentang tanggal</div></div>';
-    document.getElementById('trx-footer').style.display = 'none';
+    document.getElementById('trx-grand-total').textContent = '';
     return;
   }
 
@@ -1691,10 +1856,7 @@ function filterTrxList() {
       </div>`;
   }).join('');
 
-  const footer = document.getElementById('trx-footer');
-  footer.style.display = 'flex';
-  document.getElementById('trx-footer-count').textContent = list.length + ' transaksi';
-  document.getElementById('trx-footer-total').textContent = rp(grandTotal);
+  document.getElementById('trx-grand-total').innerHTML = `<span class="tg-amount">${rp(grandTotal)}</span>`;
 }
 
 function getPelangganNama(id) {
@@ -1754,62 +1916,6 @@ function renderProduk() {
       }
     }
   });
-}
-
-// ============================================================
-// RENDER PELANGGAN TAB
-// ============================================================
-function renderPelanggan() {
-  const pelMap = {};
-  allTrx.forEach(t => {
-    if (t.tipe !== 'pelanggan' || !t.pelanggan_id) return;
-    const id = t.pelanggan_id;
-    if (!pelMap[id]) pelMap[id] = { trx: 0, total: 0, kredit: 0 };
-    pelMap[id].trx++;
-    pelMap[id].total += t.total || 0;
-    if (t.status === 'kredit') pelMap[id].kredit += t.total || 0;
-  });
-
-  allPelangganRekap = Object.entries(pelMap).sort((a,b) => b[1].total - a[1].total);
-  document.getElementById('pel-count-badge').textContent = allPelangganRekap.length;
-  filterPelangganList();
-}
-
-function filterPelangganList() {
-  const q = (document.getElementById('pel-search')?.value || '').toLowerCase().trim();
-  const listEl = document.getElementById('pel-terbaik-list');
-  if (!allPelangganRekap) { listEl.innerHTML = '<div class="empty-state"><div class="es-sub">Muat data dahulu</div></div>'; return; }
-
-  let sorted = allPelangganRekap;
-  if (q) {
-    sorted = sorted.filter(([id]) => {
-      const p = allPelanggan.find(x => x.id == id);
-      return (p?.nama || '').toLowerCase().includes(q);
-    });
-  }
-
-  if (!sorted.length) {
-    listEl.innerHTML = `<div class="empty-state"><div class="es-sub">${q ? 'Pelanggan tidak ditemukan' : 'Tidak ada transaksi pelanggan'}</div></div>`;
-    return;
-  }
-
-  listEl.innerHTML = sorted.map(([id, d], i) => {
-    const p = allPelanggan.find(x => x.id == id);
-    const nama = p ? p.nama : 'Pelanggan';
-    const clr = avatarColors(i);
-    return `<div class="pel-item">
-      <div class="pel-avatar" style="background:${clr.bg};color:${clr.fg}">${nama.charAt(0).toUpperCase()}</div>
-      <div>
-        <div class="pel-name">${nama}</div>
-        <div class="pel-detail">${p?.telepon || '-'}</div>
-        ${d.kredit > 0 ? `<div class="pel-kredit">Kredit: ${rp(d.kredit)}</div>` : ''}
-      </div>
-      <div class="pel-total">
-        <div class="pel-total-val">${rp(d.total)}</div>
-        <div class="pel-total-trx">${d.trx} transaksi</div>
-      </div>
-    </div>`;
-  }).join('');
 }
 
 // ============================================================
@@ -1951,7 +2057,6 @@ async function init() {
     renderRingkasan();
     renderTrxList();
     renderProduk();
-    renderPelanggan();
     renderStok();
     renderPayroll(from, to);
     setProgress(100, 'Siap!');
@@ -2013,10 +2118,6 @@ setupPayrollRealtimeSync();
   <button class="tab-btn" onclick="switchTab('produk', this)">
     <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 11c0-3.5 2.8-7 8-7s8 3.5 8 7v6.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5V11z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
     Produk
-  </button>
-  <button class="tab-btn" onclick="switchTab('pelanggan', this)">
-    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6h0c3.3 0 6 2.7 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M19 8v6M22 11h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-    Pelanggan
   </button>
   <button class="tab-btn" onclick="switchTab('stok', this)">
     <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="11" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="17" width="10" height="3.5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
