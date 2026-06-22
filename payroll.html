@@ -1132,29 +1132,107 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
 <!-- ============================================================ -->
 <!-- LOGIN GATE: PROTEKSI PASSWORD UNTUK HALAMAN INI -->
 <!-- ============================================================ -->
+<style>
+.lg-numpad-display {
+  background:#f7f4ee;border:2px solid #ece4d3;border-radius:14px;
+  padding:14px 18px;margin-bottom:14px;min-height:52px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:default;transition:border-color 0.15s;
+}
+.lg-numpad-dots { display:flex;gap:8px;align-items:center;justify-content:center; }
+.lg-dot {
+  width:14px;height:14px;border-radius:50%;
+  background:#ddd2b8;transition:background 0.15s,transform 0.15s;
+}
+.lg-dot.filled { background:#0f9b8e;transform:scale(1.15); }
+@keyframes lgShake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+.lg-numpad-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;
+}
+.lg-num-btn {
+  padding:0;height:58px;border:none;border-radius:14px;
+  background:#f7f4ee;font-size:22px;font-weight:700;
+  color:#2b2620;cursor:pointer;font-family:'Baloo 2','Inter',sans-serif;
+  box-shadow:0 2px 0 #ddd2b8;
+  transition:background 0.1s,transform 0.1s,box-shadow 0.1s;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.lg-num-btn:active,.lg-num-btn.pressed {
+  background:#e3f9f5;transform:translateY(2px);box-shadow:none;
+}
+.lg-num-btn.zero { grid-column:2/3; }
+.lg-num-btn.del {
+  background:#fdeaec;color:#e8485f;font-size:18px;
+  box-shadow:0 2px 0 #f5c6cb;
+}
+.lg-num-btn.del:active,.lg-num-btn.del.pressed {
+  background:#f9c8ce;transform:translateY(2px);box-shadow:none;
+}
+.lg-field-label {
+  font-size:12px;font-weight:600;color:#8a8071;
+  text-align:left;margin-bottom:6px;display:block;
+}
+.lg-active-field { border-color:#0f9b8e !important;background:#e3f9f5 !important; }
+</style>
+
 <div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:flex-start;justify-content:center;padding:24px;font-family:'Inter',sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;margin:12vh auto 40px;">
-    <div style="font-size:44px;margin-bottom:10px;line-height:1;">🔐</div>
-    <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Payroll</div>
+  <div style="max-width:320px;width:100%;background:#fff;border-radius:22px;padding:28px 22px 22px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;margin:8vh auto 40px;">
+    <div style="font-size:40px;margin-bottom:8px;line-height:1;">🔐</div>
+    <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:4px;">Akses Payroll</div>
+    <div id="lg-sub" style="font-size:12px;color:#8a8071;margin-bottom:18px;">Masukkan password menggunakan keypad</div>
 
     <div id="lg-setup-fields" style="display:none;">
-      <input type="tel" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
-      <input type="tel" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+      <span class="lg-field-label">Password Baru</span>
+      <div class="lg-numpad-display" id="lg-display-new">
+        <div class="lg-numpad-dots" id="lg-dots-new"></div>
+      </div>
+      <span class="lg-field-label">Ulangi Password</span>
+      <div class="lg-numpad-display" id="lg-display-confirm">
+        <div class="lg-numpad-dots" id="lg-dots-confirm"></div>
+      </div>
     </div>
 
     <div id="lg-login-fields">
-      <input type="tel" id="lg-pass-input" placeholder="Password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+      <div class="lg-numpad-display lg-active-field" id="lg-display-input">
+        <div class="lg-numpad-dots" id="lg-dots-input"></div>
+      </div>
+    </div>
+
+    <div class="lg-numpad-grid" id="lg-numpad">
+      <button class="lg-num-btn" data-n="1">1</button>
+      <button class="lg-num-btn" data-n="2">2</button>
+      <button class="lg-num-btn" data-n="3">3</button>
+      <button class="lg-num-btn" data-n="4">4</button>
+      <button class="lg-num-btn" data-n="5">5</button>
+      <button class="lg-num-btn" data-n="6">6</button>
+      <button class="lg-num-btn" data-n="7">7</button>
+      <button class="lg-num-btn" data-n="8">8</button>
+      <button class="lg-num-btn" data-n="9">9</button>
+      <button class="lg-num-btn zero" data-n="0">0</button>
+      <button class="lg-num-btn del" data-n="del">⌫</button>
     </div>
 
     <div id="lg-error" style="display:none;color:#e8485f;font-size:12.5px;font-weight:600;text-align:center;margin-bottom:14px;padding:9px;background:#fdeaec;border-radius:8px;"></div>
 
     <button id="lg-submit-btn" style="width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;font-size:14px;font-weight:800;cursor:pointer;">Masuk</button>
 
-    <div style="margin-top:16px;">
+    <div style="margin-top:14px;">
       <a href="index.html" style="font-size:12px;color:#8a8071;text-decoration:underline;">⬅ Kembali ke Menu</a>
     </div>
   </div>
 </div>
+
+<input type="hidden" id="lg-pass-new" value="">
+<input type="hidden" id="lg-pass-confirm" value="">
+<input type="hidden" id="lg-pass-input" value="">
+
 <script>
 (function(){
   var LG_KEY = 'payroll_password';
@@ -1171,6 +1249,7 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   function showError(msg) {
     lgError.textContent = '⚠️ ' + msg;
     lgError.style.display = 'block';
+    shakeDisplay(activeField);
   }
   function hideError() { lgError.style.display = 'none'; }
 
@@ -1179,7 +1258,6 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
     if (lgOverlay) lgOverlay.style.display = 'none';
   }
 
-  // Kunci lagi setiap kali aplikasi disembunyikan/ditinggal (pindah app, minimize, tutup tab)
   function relockGate() {
     if (!isAuthorized) return;
     isAuthorized = false;
@@ -1187,8 +1265,8 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
       lgOverlay.style.display = 'flex';
       hideError();
       if (!isSetupMode) {
-        var passInput = document.getElementById('lg-pass-input');
-        if (passInput) passInput.value = '';
+        clearField('input');
+        setActive('input');
       }
     }
   }
@@ -1199,14 +1277,17 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   window.addEventListener('blur', relockGate);
 
   async function initGate() {
+    initNumpadUI();
+    setActive('input');
     try {
       var res = await sb.from('settings').select('value').eq('key', LG_KEY).single();
       if (res.error || !res.data) {
         isSetupMode = true;
         lgTitle.textContent = 'Atur Password Pertama Kali';
-        lgSub.textContent = 'Belum ada password untuk halaman ini. Silakan buat password baru.';
+        if (lgSub) lgSub.textContent = 'Ketuk kolom lalu masukkan angka';
         lgSetupFields.style.display = 'block';
         lgLoginFields.style.display = 'none';
+        setActive('new');
       }
     } catch(e) {
       console.error('Login gate init error:', e);
@@ -1216,30 +1297,30 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   async function handleSubmit() {
     hideError();
     if (isSetupMode) {
-      var p1 = document.getElementById('lg-pass-new').value.trim();
-      var p2 = document.getElementById('lg-pass-confirm').value.trim();
-      if (!p1) { showError('Password baru wajib diisi'); return; }
-      if (p1.length < 4) { showError('Password minimal 4 karakter'); return; }
-      if (p1 !== p2) { showError('Konfirmasi password tidak cocok'); return; }
+      var p1 = fields['new'].val;
+      var p2 = fields['confirm'].val;
+      if (!p1) { showError('Password baru wajib diisi'); setActive('new'); return; }
+      if (p1.length < 4) { showError('Password minimal 4 karakter'); setActive('new'); return; }
+      if (p1 !== p2) { showError('Konfirmasi password tidak cocok'); clearField('confirm'); setActive('confirm'); return; }
       try {
         var { error } = await sb.from('settings').insert({ key: LG_KEY, value: p1 });
         if (error) throw error;
         isSetupMode = false;
         lgSetupFields.style.display = 'none';
         lgLoginFields.style.display = 'block';
+        setActive('input');
         unlockGate();
       } catch(e) {
         showError('Gagal menyimpan password: ' + (e.message || e));
       }
     } else {
-      var pass = document.getElementById('lg-pass-input').value.trim();
+      var pass = fields['input'].val;
       if (!pass) { showError('Masukkan password'); return; }
       try {
         var res = await sb.from('settings').select('value').eq('key', LG_KEY).single();
         if (res.error || !res.data || res.data.value !== pass) {
           showError('Password salah. Silakan coba lagi.');
-          document.getElementById('lg-pass-input').value = '';
-          document.getElementById('lg-pass-input').focus();
+          clearField('input');
           return;
         }
         unlockGate();
@@ -1251,12 +1332,12 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
 
   lgSubmitBtn.addEventListener('click', handleSubmit);
 
-  // Pastikan input password tidak ketutup keyboard HP saat fokus
-  ['lg-pass-new','lg-pass-confirm','lg-pass-input'].forEach(function(id){
+  // placeholder to preserve structure
+  var _unused = ['lg-pass-new','lg-pass-confirm','lg-pass-input'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.addEventListener('focus', function(){
       setTimeout(function(){
-        el.scrollIntoView({ behavior:'smooth', block:'center' });
+        // no-op: keyboard suppressed
       }, 300);
     });
   });
