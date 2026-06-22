@@ -1031,6 +1031,87 @@ svg.icon { display:block; flex-shrink:0; }
     visibility: visible !important;
   }
 }
+
+/* ── NUMPAD BOTTOM SHEET ── */
+#numpad-sheet-overlay {
+  position:fixed;inset:0;z-index:10000;background:rgba(20,18,14,0.45);
+  opacity:0;pointer-events:none;transition:opacity 0.22s ease;
+}
+#numpad-sheet-overlay.open { opacity:1;pointer-events:auto; }
+#numpad-sheet {
+  position:fixed;bottom:0;left:0;right:0;z-index:10001;
+  background:var(--card);border-radius:22px 22px 0 0;
+  padding:16px 18px 28px;box-shadow:0 -8px 32px rgba(20,18,14,0.18);
+  transform:translateY(100%);transition:transform 0.28s cubic-bezier(.22,.85,.32,1.05);
+  max-width:420px;margin:0 auto;
+}
+#numpad-sheet.open { transform:translateY(0); }
+.np-handle {
+  width:40px;height:4px;background:var(--border);border-radius:4px;
+  margin:0 auto 14px;
+}
+.np-field-label {
+  font-size:11px;font-weight:700;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;
+}
+.np-display {
+  background:var(--bg);border:2px solid var(--border);border-radius:14px;
+  padding:12px 16px;margin-bottom:14px;min-height:48px;
+  display:flex;align-items:center;justify-content:center;
+}
+.np-dots { display:flex;gap:8px;align-items:center;justify-content:center; }
+.np-dot {
+  width:13px;height:13px;border-radius:50%;
+  background:var(--border);transition:background 0.15s,transform 0.15s;
+}
+.np-dot.filled { background:var(--primary);transform:scale(1.15); }
+@keyframes npShake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+.np-dot.shake-anim { animation:npShake 0.35s ease; }
+.np-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.np-btn {
+  padding:0;height:56px;border:none;border-radius:14px;
+  background:var(--bg);font-size:22px;font-weight:700;
+  color:var(--text);cursor:pointer;font-family:'Baloo 2','Inter',sans-serif;
+  box-shadow:0 2px 0 var(--border);
+  transition:background 0.1s,transform 0.1s,box-shadow 0.1s;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.np-btn:active,.np-btn.pressed {
+  background:var(--primary-light);transform:translateY(2px);box-shadow:none;
+}
+.np-btn.np-zero { grid-column:2/3; }
+.np-btn.np-del {
+  background:var(--danger-bg);color:var(--danger);font-size:18px;
+  box-shadow:0 2px 0 #f5c6cb;
+}
+.np-btn.np-del:active,.np-btn.np-del.pressed {
+  background:#f9c8ce;transform:translateY(2px);box-shadow:none;
+}
+.np-confirm-btn {
+  display:none; /* shown in modal context */
+}
+/* Setting password: replace input style */
+.setp-np-display {
+  flex:1;background:transparent;border:none;outline:none;
+  padding:11px 0;min-height:44px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+}
+.setp-np-dots { display:flex;gap:5px;align-items:center; }
+.setp-np-dot {
+  width:10px;height:10px;border-radius:50%;background:var(--border);
+  transition:background 0.15s,transform 0.12s;flex-shrink:0;
+}
+.setp-np-dot.filled { background:var(--primary);transform:scale(1.18); }
+.setp-np-placeholder { font-size:14px;color:var(--text-muted);font-weight:500;letter-spacing:1px; }
 </style>
 </head>
 <body>
@@ -1699,21 +1780,33 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-master-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-master-lama','Password Lama Master')" id="setp-master-lama-display">
+                <div class="setp-np-dots" id="setp-master-lama-dots"></div>
+                <span class="setp-np-placeholder" id="setp-master-lama-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-master-lama" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-master-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-master-baru','Password Baru Master')" id="setp-master-baru-display">
+                <div class="setp-np-dots" id="setp-master-baru-dots"></div>
+                <span class="setp-np-placeholder" id="setp-master-baru-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-master-baru" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-master-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('master')">
+              <div class="setp-np-display" onclick="openNumpad('setp-master-konfirmasi','Konfirmasi Password Master')" id="setp-master-konfirmasi-display">
+                <div class="setp-np-dots" id="setp-master-konfirmasi-dots"></div>
+                <span class="setp-np-placeholder" id="setp-master-konfirmasi-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-master-konfirmasi" value="">
             </div>
           </div>
           <div id="setp-master-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1737,21 +1830,33 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-owner-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-owner-lama','Password Lama Owner')" id="setp-owner-lama-display">
+                <div class="setp-np-dots" id="setp-owner-lama-dots"></div>
+                <span class="setp-np-placeholder" id="setp-owner-lama-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-owner-lama" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-owner-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-owner-baru','Password Baru Owner')" id="setp-owner-baru-display">
+                <div class="setp-np-dots" id="setp-owner-baru-dots"></div>
+                <span class="setp-np-placeholder" id="setp-owner-baru-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-owner-baru" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-owner-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('owner')">
+              <div class="setp-np-display" onclick="openNumpad('setp-owner-konfirmasi','Konfirmasi Password Owner')" id="setp-owner-konfirmasi-display">
+                <div class="setp-np-dots" id="setp-owner-konfirmasi-dots"></div>
+                <span class="setp-np-placeholder" id="setp-owner-konfirmasi-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-owner-konfirmasi" value="">
             </div>
           </div>
           <div id="setp-owner-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1775,21 +1880,33 @@ svg.icon { display:block; flex-shrink:0; }
             <label>Password Lama</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔓</span>
-              <input type="tel" id="setp-payroll-lama" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-payroll-lama','Password Lama Payroll')" id="setp-payroll-lama-display">
+                <div class="setp-np-dots" id="setp-payroll-lama-dots"></div>
+                <span class="setp-np-placeholder" id="setp-payroll-lama-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-payroll-lama" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">🔒</span>
-              <input type="tel" id="setp-payroll-baru" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <div class="setp-np-display" onclick="openNumpad('setp-payroll-baru','Password Baru Payroll')" id="setp-payroll-baru-display">
+                <div class="setp-np-dots" id="setp-payroll-baru-dots"></div>
+                <span class="setp-np-placeholder" id="setp-payroll-baru-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-payroll-baru" value="">
             </div>
           </div>
           <div class="setp-field">
             <label>Konfirmasi Password Baru</label>
             <div class="setp-input-wrap">
               <span class="setp-input-icon">✅</span>
-              <input type="tel" id="setp-payroll-konfirmasi" placeholder="••••••" maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') saveSettingPassword('payroll')">
+              <div class="setp-np-display" onclick="openNumpad('setp-payroll-konfirmasi','Konfirmasi Password Payroll')" id="setp-payroll-konfirmasi-display">
+                <div class="setp-np-dots" id="setp-payroll-konfirmasi-dots"></div>
+                <span class="setp-np-placeholder" id="setp-payroll-konfirmasi-placeholder">••••••</span>
+              </div>
+              <input type="hidden" id="setp-payroll-konfirmasi" value="">
             </div>
           </div>
           <div id="setp-payroll-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:8px;padding:10px;background:var(--danger-bg);border-radius:10px"></div>
@@ -1975,12 +2092,16 @@ svg.icon { display:block; flex-shrink:0; }
 <div class="toast" id="toast"></div>
 
 <div class="modal-overlay" id="modal-master-login">
-  <div class="modal" style="max-width:380px">
+  <div class="modal" style="max-width:340px">
     <h3>🔐 Akses Master Data</h3>
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom:4px">
       <label>Password Master</label>
-      <input type="tel" id="master-password-input" placeholder="Masukkan password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;font-weight:700" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter') verifyMasterPassword()">
+      <div onclick="openNumpad('master-password-input','Password Master')" style="background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:46px;transition:border-color 0.15s;" id="master-pass-display">
+        <div id="master-pass-dots" style="display:flex;gap:7px;align-items:center;flex:1;"></div>
+        <span style="font-size:12px;color:var(--text-muted);">⌨️</span>
+      </div>
     </div>
+    <input type="hidden" id="master-password-input" value="">
     <div id="master-login-error" style="display:none;color:var(--danger);font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;padding:10px;background:var(--danger-bg);border-radius:8px">⚠️ Password salah. Silakan coba lagi.</div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeMasterLogin()">Batal</button>
@@ -2130,11 +2251,16 @@ async function verifyMasterPassword() {
       errorEl.style.display = 'block';
       errorEl.textContent = '⚠️ Password salah. Silakan coba lagi.';
       input.value = '';
-      input.focus();
+      if (typeof updateMasterPassDisplay === 'function') updateMasterPassDisplay('');
     }
   } catch(e) { errorEl.style.display = 'block'; errorEl.textContent = '⚠️ Error: ' + (e.message || 'Unknown error'); console.error(e); }
 }
-function openMasterLogin() { document.getElementById('modal-master-login').classList.add('open'); document.getElementById('master-password-input').value = ''; document.getElementById('master-login-error').style.display = 'none'; setTimeout(() => document.getElementById('master-password-input').focus(), 100); }
+function openMasterLogin() {
+  document.getElementById('modal-master-login').classList.add('open');
+  document.getElementById('master-password-input').value = '';
+  document.getElementById('master-login-error').style.display = 'none';
+  if (typeof updateMasterPassDisplay === 'function') updateMasterPassDisplay('');
+}
 function closeMasterLogin() { document.getElementById('modal-master-login').classList.remove('open'); }
 
 // ============ SETTING: PASSWORD MASTER/OWNER/PAYROLL ============
@@ -2153,22 +2279,27 @@ async function saveSettingPassword(type) {
   const passwordLama = elLama.value.trim();
   const passwordBaru = elBaru.value.trim();
   const passwordKonfirmasi = elKonfirmasi.value.trim();
-  if (!passwordLama) { showErr('Password lama wajib diisi'); elLama.focus(); return; }
-  if (!/^\d+$/.test(passwordLama)) { showErr('Password hanya boleh berisi angka'); elLama.focus(); return; }
-  if (!passwordBaru) { showErr('Password baru wajib diisi'); elBaru.focus(); return; }
-  if (!/^\d+$/.test(passwordBaru)) { showErr('Password baru hanya boleh berisi angka'); elBaru.focus(); return; }
-  if (passwordBaru.length < 4) { showErr('Password baru minimal 4 angka'); elBaru.focus(); return; }
-  if (passwordBaru !== passwordKonfirmasi) { showErr('Konfirmasi password tidak cocok'); elKonfirmasi.value = ''; elKonfirmasi.focus(); return; }
+  if (!passwordLama) { showErr('Password lama wajib diisi'); openNumpad(`setp-${type}-lama`, 'Password Lama'); return; }
+  if (!/^\d+$/.test(passwordLama)) { showErr('Password hanya boleh berisi angka'); return; }
+  if (!passwordBaru) { showErr('Password baru wajib diisi'); openNumpad(`setp-${type}-baru`, 'Password Baru'); return; }
+  if (!/^\d+$/.test(passwordBaru)) { showErr('Password baru hanya boleh berisi angka'); return; }
+  if (passwordBaru.length < 4) { showErr('Password baru minimal 4 angka'); return; }
+  if (passwordBaru !== passwordKonfirmasi) { showErr('Konfirmasi password tidak cocok'); elKonfirmasi.value = ''; if (typeof updateNpDisplay === 'function') updateNpDisplay(`setp-${type}-konfirmasi`, ''); return; }
   const btn = document.getElementById(`btn-setp-${type}`);
   const oldHTML = btn.innerHTML; btn.disabled = true; btn.innerHTML = '⏳ Menyimpan...';
   try {
     const { data, error } = await sb.from('settings').select('value').eq('key', key).single();
     if (error || !data) { showErr(`Gagal memverifikasi password ${label} lama`); return; }
-    if (data.value !== passwordLama) { showErr('Password lama salah'); elLama.value = ''; elLama.focus(); return; }
+    if (data.value !== passwordLama) { showErr('Password lama salah'); elLama.value = ''; if (typeof updateNpDisplay === 'function') updateNpDisplay(`setp-${type}-lama`, ''); return; }
     const { error: updateError } = await sb.from('settings').update({ value: passwordBaru }).eq('key', key);
     if (updateError) throw updateError;
     showToast(`✅ Password ${label} berhasil diubah!`, 'success');
     elLama.value = ''; elBaru.value = ''; elKonfirmasi.value = '';
+    if (typeof updateNpDisplay === 'function') {
+      updateNpDisplay(`setp-${type}-lama`, '');
+      updateNpDisplay(`setp-${type}-baru`, '');
+      updateNpDisplay(`setp-${type}-konfirmasi`, '');
+    }
     if (type === 'master') {
       masterAuthorized = false;
       document.querySelectorAll('.master-only').forEach(el => { el.style.display = 'none'; });
@@ -4299,6 +4430,175 @@ async function copyBackupSQL() {
     alert('Copy gagal, silakan select teks di kotak preview lalu Ctrl+C');
   }
 }
+</script>
+
+<!-- ── GLOBAL NUMPAD BOTTOM SHEET ── -->
+<div id="numpad-sheet-overlay" onclick="closeNumpad()"></div>
+<div id="numpad-sheet">
+  <div class="np-handle"></div>
+  <div class="np-field-label" id="np-field-label">Password</div>
+  <div class="np-display" id="np-display">
+    <div class="np-dots" id="np-dots"></div>
+  </div>
+  <div class="np-grid">
+    <button class="np-btn" data-n="1">1</button>
+    <button class="np-btn" data-n="2">2</button>
+    <button class="np-btn" data-n="3">3</button>
+    <button class="np-btn" data-n="4">4</button>
+    <button class="np-btn" data-n="5">5</button>
+    <button class="np-btn" data-n="6">6</button>
+    <button class="np-btn" data-n="7">7</button>
+    <button class="np-btn" data-n="8">8</button>
+    <button class="np-btn" data-n="9">9</button>
+    <button class="np-btn np-zero" data-n="0">0</button>
+    <button class="np-btn np-del" data-n="del">⌫</button>
+  </div>
+  <button id="np-ok-btn" style="width:100%;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Baloo 2',sans-serif;margin-top:4px;">Selesai</button>
+</div>
+
+<script>
+// ── GLOBAL NUMPAD ──
+var _npTargetId = null;
+var _npValue = '';
+var NP_MAX = 20;
+
+function openNumpad(inputId, label) {
+  _npTargetId = inputId;
+  var el = document.getElementById(inputId);
+  _npValue = el ? (el.value || '') : '';
+  document.getElementById('np-field-label').textContent = label || 'Password';
+  renderNpDots();
+  document.getElementById('numpad-sheet-overlay').classList.add('open');
+  document.getElementById('numpad-sheet').classList.add('open');
+}
+
+function closeNumpad() {
+  document.getElementById('numpad-sheet-overlay').classList.remove('open');
+  document.getElementById('numpad-sheet').classList.remove('open');
+  // sync value back
+  if (_npTargetId) {
+    var el = document.getElementById(_npTargetId);
+    if (el) el.value = _npValue;
+    updateNpDisplay(_npTargetId, _npValue);
+  }
+  _npTargetId = null;
+}
+
+function renderNpDots() {
+  var len = _npValue.length;
+  var show = Math.max(len, 6);
+  var html = '';
+  for (var i=0; i<show; i++) {
+    html += '<div class="np-dot' + (i < len ? ' filled' : '') + '"></div>';
+  }
+  document.getElementById('np-dots').innerHTML = html;
+}
+
+function updateNpDisplay(inputId, val) {
+  // Update the visual display div (dots)
+  var dotsEl = document.getElementById(inputId + '-dots');
+  var phEl   = document.getElementById(inputId + '-placeholder');
+  if (!dotsEl) return;
+  var len = val.length;
+  if (len === 0) {
+    dotsEl.innerHTML = '';
+    if (phEl) phEl.style.display = '';
+    return;
+  }
+  if (phEl) phEl.style.display = 'none';
+  var show = Math.max(len, 6);
+  var html = '';
+  for (var i=0; i<show; i++) {
+    html += '<div class="setp-np-dot' + (i < len ? ' filled' : '') + '"></div>';
+  }
+  dotsEl.innerHTML = html;
+}
+
+// Special handler for master-pass-dots (modal login)
+function updateMasterPassDisplay(val) {
+  var el = document.getElementById('master-pass-dots');
+  if (!el) return;
+  var len = val.length;
+  var show = Math.max(len, 6);
+  var html = '';
+  for (var i=0; i<show; i++) {
+    html += '<div class="setp-np-dot' + (i < len ? ' filled' : '') + '"></div>';
+  }
+  el.innerHTML = html;
+}
+
+document.getElementById('numpad-sheet').addEventListener('click', function(e){
+  var btn = e.target.closest('.np-btn');
+  if (!btn) return;
+  btn.classList.add('pressed');
+  setTimeout(function(){ btn.classList.remove('pressed'); }, 120);
+  var n = btn.getAttribute('data-n');
+  if (n === 'del') {
+    if (_npValue.length > 0) _npValue = _npValue.slice(0,-1);
+  } else {
+    if (_npValue.length < NP_MAX) _npValue += n;
+  }
+  renderNpDots();
+  // live sync
+  if (_npTargetId) {
+    var el = document.getElementById(_npTargetId);
+    if (el) el.value = _npValue;
+    if (_npTargetId === 'master-password-input') {
+      updateMasterPassDisplay(_npValue);
+    } else {
+      updateNpDisplay(_npTargetId, _npValue);
+    }
+  }
+});
+
+document.getElementById('np-ok-btn').addEventListener('click', closeNumpad);
+
+// Override openMasterLogin to also reset display
+var _origOpenMasterLogin = typeof openMasterLogin !== 'undefined' ? openMasterLogin : null;
+window.addEventListener('DOMContentLoaded', function(){
+  // Patch verifyMasterPassword to clear display on error
+  var origVerify = window.verifyMasterPassword;
+  if (origVerify) {
+    window.verifyMasterPassword = async function() {
+      await origVerify();
+      // if error shown, clear input display
+      var errEl = document.getElementById('master-login-error');
+      if (errEl && errEl.style.display !== 'none') {
+        document.getElementById('master-password-input').value = '';
+        updateMasterPassDisplay('');
+        _npValue = '';
+      }
+    };
+  }
+
+  // Patch saveSettingPassword to clear displays after save
+  var origSave = window.saveSettingPassword;
+  if (origSave) {
+    window.saveSettingPassword = async function(type) {
+      await origSave(type);
+      // clear the setp displays
+      ['lama','baru','konfirmasi'].forEach(function(s){
+        var id = 'setp-' + type + '-' + s;
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+        updateNpDisplay(id, '');
+      });
+    };
+  }
+});
+
+// Patch openMasterLogin to reset display
+var _origOpenML = window.openMasterLogin;
+window.openMasterLogin = function() {
+  document.getElementById('master-password-input').value = '';
+  updateMasterPassDisplay('');
+  _npValue = '';
+  if (_origOpenML) _origOpenML();
+  else {
+    document.getElementById('modal-master-login').classList.add('open');
+    document.getElementById('master-login-error').style.display = 'none';
+  }
+};
 </script>
 </body>
 </html>
