@@ -1132,29 +1132,276 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
 <!-- ============================================================ -->
 <!-- LOGIN GATE: PROTEKSI PASSWORD UNTUK HALAMAN INI -->
 <!-- ============================================================ -->
-<div id="login-gate-overlay" style="position:fixed;inset:0;z-index:999998;background:#fef9ef;display:flex;align-items:flex-start;justify-content:center;padding:24px;font-family:'Inter',sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-  <div style="max-width:340px;width:100%;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 16px 48px rgba(43,38,32,0.15);text-align:center;margin:12vh auto 40px;">
-    <div style="font-size:44px;margin-bottom:10px;line-height:1;">🔐</div>
-    <div id="lg-title" style="font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:800;color:#2b2620;margin-bottom:6px;">Akses Payroll</div>
+<!-- ============================================================ -->
+<!-- LOGIN GATE: PIN KEYPAD STYLE - Payroll -->
+<!-- ============================================================ -->
+<style>
+#login-gate-overlay {
+  position:fixed;inset:0;z-index:999998;
+  background:linear-gradient(160deg,#e3f9f5 0%,#fef9ef 55%,#d0f5f0 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',sans-serif;
+}
+.pkp-card { width:100%;max-width:320px;padding:0 20px;text-align:center; }
+.pkp-header {
+  background:linear-gradient(135deg,#0f9b8e,#0b756c);
+  border-radius:20px;padding:18px 24px 16px;
+  margin-bottom:26px;box-shadow:0 8px 24px rgba(15,155,142,0.35);
+}
+.pkp-appname {
+  font-family:'Baloo 2',sans-serif;font-size:17px;font-weight:900;
+  color:#fff;letter-spacing:0.5px;text-transform:uppercase;
+}
+.pkp-subtitle { font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px; }
+.pkp-dots { display:flex;justify-content:center;gap:16px;margin-bottom:26px; }
+.pkp-dot {
+  width:15px;height:15px;border-radius:50%;
+  border:2.5px solid #0f9b8e;background:transparent;
+  transition:all 0.15s ease;
+}
+.pkp-dot.filled { background:#0f9b8e;box-shadow:0 0 8px rgba(15,155,142,0.5); }
+.pkp-dot.error { border-color:#e8485f;background:#e8485f; }
+.pkp-dots-wrap.shake { animation:pkp-shake 0.38s ease; }
+@keyframes pkp-shake {
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 60%{transform:translateX(7px)}
+}
+.pkp-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px; }
+.pkp-btn {
+  height:64px;border:2px solid #ece4d3;border-radius:16px;
+  background:#fff;color:#2b2620;
+  font-size:22px;font-weight:700;font-family:'Baloo 2',sans-serif;
+  cursor:pointer;box-shadow:0 3px 10px rgba(43,38,32,0.08);
+  transition:all 0.1s ease;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pkp-btn:active { transform:scale(0.91);background:#e3f9f5;border-color:#0f9b8e;color:#0f9b8e;box-shadow:0 0 0 3px rgba(15,155,142,0.15); }
+.pkp-bottom-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px; }
+.pkp-btn-del {
+  height:64px;border:2px solid #ece4d3;border-radius:16px;
+  background:#fff;color:#8a8071;cursor:pointer;
+  box-shadow:0 3px 10px rgba(43,38,32,0.08);
+  transition:all 0.1s ease;user-select:none;-webkit-tap-highlight-color:transparent;
+  display:flex;align-items:center;justify-content:center;
+}
+.pkp-btn-del:active { transform:scale(0.91);background:#fdeaec;border-color:#e8485f;color:#e8485f; }
+.pkp-btn-empty { height:64px;background:transparent;border:none;pointer-events:none; }
+.pkp-btn-ok {
+  height:64px;border:2px solid #0f9b8e;border-radius:16px;
+  background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;
+  font-size:22px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,155,142,0.35);
+  transition:all 0.1s ease;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pkp-btn-ok:active { transform:scale(0.91);opacity:0.85; }
+#pkp-error {
+  display:none;color:#e8485f;font-size:12px;font-weight:600;
+  text-align:center;margin:8px 0 0;padding:8px 12px;
+  background:#fdeaec;border-radius:10px;
+}
+.pkp-back-link { margin-top:18px; }
+.pkp-back-link a { font-size:12px;color:#8a8071;text-decoration:underline; }
+#lg-setup-fields, #lg-login-fields { display:none !important; }
+#lg-error { display:none !important; }
+#lg-submit-btn { display:none !important; }
+#pkp-setup-mode {
+  display:none;
+  background:#fff;border-radius:16px;padding:20px;
+  border:2px solid #ece4d3;margin-bottom:16px;text-align:left;
+}
+#pkp-setup-mode.active { display:block; }
+.pkp-setup-label { font-size:13px;font-weight:700;color:#2b2620;margin-bottom:8px;display:block; }
+.pkp-setup-input {
+  -webkit-text-security:disc;width:100%;padding:12px 14px;
+  border:2px solid #ece4d3;border-radius:12px;
+  font-size:16px;font-weight:700;font-family:inherit;
+  box-sizing:border-box;outline:none;color:#2b2620;margin-bottom:10px;display:block;
+}
+.pkp-setup-input:focus { border-color:#0f9b8e; }
+.pkp-submit-btn {
+  width:100%;padding:14px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,#0f9b8e,#0b756c);
+  color:#fff;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(15,155,142,0.35);
+  transition:opacity 0.15s;
+}
+.pkp-submit-btn:active { opacity:0.85; }
+</style>
 
-    <div id="lg-setup-fields" style="display:none;">
-      <input type="tel" id="lg-pass-new" placeholder="Buat password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:10px;box-sizing:border-box;">
-      <input type="tel" id="lg-pass-confirm" placeholder="Ulangi password baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+<div id="login-gate-overlay">
+  <div class="pkp-card">
+    <div class="pkp-header">
+      <div class="pkp-appname">Payroll</div>
+      <div class="pkp-subtitle">Masukkan PIN untuk masuk</div>
     </div>
 
-    <div id="lg-login-fields">
-      <input type="tel" id="lg-pass-input" placeholder="Password..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="-webkit-text-security:disc;width:100%;padding:12px 14px;border:2px solid #ece4d3;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;margin-bottom:14px;box-sizing:border-box;">
+    <div id="pkp-setup-mode">
+      <span class="pkp-setup-label">Buat Password Baru (min. 4 angka)</span>
+      <input type="tel" id="lg-pass-new" class="pkp-setup-input" placeholder="PIN baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <input type="tel" id="lg-pass-confirm" class="pkp-setup-input" placeholder="Ulangi PIN baru..." maxlength="20" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-lpignore="true" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <button class="pkp-submit-btn" onclick="pkpHandleSetup()">Simpan Password</button>
     </div>
 
-    <div id="lg-error" style="display:none;color:#e8485f;font-size:12.5px;font-weight:600;text-align:center;margin-bottom:14px;padding:9px;background:#fdeaec;border-radius:8px;"></div>
+    <div id="pkp-login-mode">
+      <div class="pkp-dots-wrap" id="pkp-dots-wrap">
+        <div class="pkp-dots" id="pkp-dots">
+          <div class="pkp-dot" id="pkp-d0"></div>
+          <div class="pkp-dot" id="pkp-d1"></div>
+          <div class="pkp-dot" id="pkp-d2"></div>
+          <div class="pkp-dot" id="pkp-d3"></div>
+        </div>
+      </div>
 
-    <button id="lg-submit-btn" style="width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#0f9b8e,#0b756c);color:#fff;font-size:14px;font-weight:800;cursor:pointer;">Masuk</button>
-
-    <div style="margin-top:16px;">
-      <a href="index.html" style="font-size:12px;color:#8a8071;text-decoration:underline;">⬅ Kembali ke Menu</a>
+      <div class="pkp-grid">
+        <button class="pkp-btn" onclick="pkpPress('1')">1</button>
+        <button class="pkp-btn" onclick="pkpPress('2')">2</button>
+        <button class="pkp-btn" onclick="pkpPress('3')">3</button>
+        <button class="pkp-btn" onclick="pkpPress('4')">4</button>
+        <button class="pkp-btn" onclick="pkpPress('5')">5</button>
+        <button class="pkp-btn" onclick="pkpPress('6')">6</button>
+        <button class="pkp-btn" onclick="pkpPress('7')">7</button>
+        <button class="pkp-btn" onclick="pkpPress('8')">8</button>
+        <button class="pkp-btn" onclick="pkpPress('9')">9</button>
+      </div>
+      <div class="pkp-bottom-row">
+        <button class="pkp-btn-ok" onclick="pkpTriggerSubmit()">✓</button>
+        <button class="pkp-btn" onclick="pkpPress('0')">0</button>
+        <button class="pkp-btn-del" onclick="pkpDel()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"/><line x1="18" y1="9" x2="13" y2="14"/><line x1="13" y1="9" x2="18" y2="14"/></svg>
+        </button>
+      </div>
     </div>
+
+    <div id="pkp-error"></div>
+
+    <div class="pkp-back-link">
+      <a href="index.html">⬅ Kembali ke Menu</a>
+    </div>
+
+    <div id="lg-title" style="display:none">Akses Payroll</div>
+    <div id="lg-setup-fields" style="display:none"></div>
+    <div id="lg-login-fields" style="display:none">
+      <input type="hidden" id="lg-pass-input">
+    </div>
+    <div id="lg-error" style="display:none"></div>
+    <button id="lg-submit-btn" style="display:none"></button>
   </div>
 </div>
+
+<script>
+(function(){
+  var pkpBuffer = '';
+  var pkpMaxLen = 10;
+  var pkpErrEl = document.getElementById('pkp-error');
+  var pkpDotsWrap = document.getElementById('pkp-dots-wrap');
+
+  function pkpUpdateDots() {
+    var len = pkpBuffer.length;
+    var totalDots = Math.max(4, len);
+    var dotsEl = document.getElementById('pkp-dots');
+    if (dotsEl.children.length !== totalDots) {
+      dotsEl.innerHTML = '';
+      for (var i = 0; i < totalDots; i++) {
+        var d = document.createElement('div');
+        d.className = 'pkp-dot';
+        d.id = 'pkp-d' + i;
+        dotsEl.appendChild(d);
+      }
+    }
+    for (var i = 0; i < totalDots; i++) {
+      var d = document.getElementById('pkp-d' + i);
+      if (d) d.className = 'pkp-dot' + (i < len ? ' filled' : '');
+    }
+  }
+
+  function pkpShowError(msg) {
+    pkpErrEl.textContent = '⚠️ ' + msg;
+    pkpErrEl.style.display = 'block';
+    var dots = document.querySelectorAll('.pkp-dot');
+    dots.forEach(function(d){ d.classList.add('error'); });
+    pkpDotsWrap.classList.add('shake');
+    setTimeout(function(){
+      pkpBuffer = '';
+      var hi = document.getElementById('lg-pass-input');
+      if (hi) hi.value = '';
+      pkpUpdateDots();
+      dots.forEach(function(d){ d.classList.remove('error'); });
+      pkpDotsWrap.classList.remove('shake');
+    }, 600);
+  }
+
+  function pkpHideError() { pkpErrEl.style.display = 'none'; pkpErrEl.textContent = ''; }
+
+  window.pkpPress = function(digit) {
+    if (pkpBuffer.length >= pkpMaxLen) return;
+    pkpHideError();
+    pkpBuffer += digit;
+    pkpUpdateDots();
+    var hi = document.getElementById('lg-pass-input');
+    if (hi) hi.value = pkpBuffer;
+    // Auto-submit setelah 4 digit
+    if (pkpBuffer.length === 4) {
+      setTimeout(function(){ pkpTriggerSubmit(); }, 150);
+    }
+  };
+
+  window.pkpDel = function() {
+    if (!pkpBuffer.length) return;
+    pkpBuffer = pkpBuffer.slice(0, -1);
+    pkpUpdateDots();
+    var hi = document.getElementById('lg-pass-input');
+    if (hi) hi.value = pkpBuffer;
+  };
+
+  window.pkpTriggerSubmit = function() {
+    var hi = document.getElementById('lg-pass-input');
+    if (hi) hi.value = pkpBuffer;
+    if (typeof handleSubmit === 'function') handleSubmit();
+    else document.getElementById('lg-submit-btn').click();
+  };
+
+  window.pkpHandleSetup = function() {
+    pkpHideError();
+    if (typeof handleSubmit === 'function') handleSubmit();
+    else document.getElementById('lg-submit-btn').click();
+  };
+
+  var lgErrorEl = document.getElementById('lg-error');
+  if (lgErrorEl) {
+    var observer = new MutationObserver(function(){
+      if (lgErrorEl.style.display !== 'none' && lgErrorEl.textContent) {
+        pkpShowError(lgErrorEl.textContent.replace('⚠️ ',''));
+        lgErrorEl.style.display = 'none';
+      }
+    });
+    observer.observe(lgErrorEl, { attributes:true, childList:true });
+  }
+
+  document.addEventListener('keydown', function(e){
+    var overlay = document.getElementById('login-gate-overlay');
+    if (!overlay || overlay.style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') pkpPress(e.key);
+    else if (e.key === 'Backspace') pkpDel();
+    else if (e.key === 'Enter') pkpTriggerSubmit();
+  });
+
+  pkpUpdateDots();
+
+  var setupEl = document.getElementById('pkp-setup-mode');
+  var loginModeEl = document.getElementById('pkp-login-mode');
+  var lgSetupFields = document.getElementById('lg-setup-fields');
+  if (lgSetupFields) {
+    var setupObserver = new MutationObserver(function(){
+      if (lgSetupFields.style.display !== 'none') {
+        setupEl.classList.add('active');
+        loginModeEl.style.display = 'none';
+      } else {
+        setupEl.classList.remove('active');
+        loginModeEl.style.display = 'block';
+      }
+    });
+    setupObserver.observe(lgSetupFields, { attributes:true });
+  }
+})();
+</script>
 <script>
 (function(){
   var LG_KEY = 'payroll_password';
@@ -1186,10 +1433,12 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
     if (lgOverlay) {
       lgOverlay.style.display = 'flex';
       hideError();
-      if (!isSetupMode) {
-        var passInput = document.getElementById('lg-pass-input');
-        if (passInput) passInput.value = '';
-      }
+      var passInput = document.getElementById('lg-pass-input');
+      if (passInput) passInput.value = '';
+      var dotsEl = document.getElementById('pkp-dots');
+      if (dotsEl) dotsEl.querySelectorAll('.pkp-dot').forEach(function(d){d.className='pkp-dot';});
+      var pkpErrEl2 = document.getElementById('pkp-error');
+      if (pkpErrEl2) { pkpErrEl2.style.display='none'; pkpErrEl2.textContent=''; }
     }
   }
   document.addEventListener('visibilitychange', function(){
