@@ -1126,11 +1126,21 @@ async function pushTrxToSupabase(entry) {
       p_qty: item.qty
     });
     if (e3) {
-      // Fallback update langsung
-      await sb.from('stok_cabang')
-        .update({ stok: sb.rpc ? undefined : 0 }) // minimal fallback
-        .eq('produk_id', item.produk_id)
-        .eq('cabang_id', trx.cabang_id);
+      // Fallback: baca stok lama dulu, lalu kurangi qty (bukan set ke 0)
+      try {
+        const { data: stokRow } = await sb.from('stok_cabang')
+          .select('stok')
+          .eq('produk_id', item.produk_id)
+          .eq('cabang_id', trx.cabang_id)
+          .single();
+        const stokLama = stokRow?.stok ?? 0;
+        await sb.from('stok_cabang')
+          .update({ stok: Math.max(0, stokLama - item.qty) })
+          .eq('produk_id', item.produk_id)
+          .eq('cabang_id', trx.cabang_id);
+      } catch (fallbackErr) {
+        console.error('Fallback stok gagal:', fallbackErr);
+      }
     }
   }
 
