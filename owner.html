@@ -133,16 +133,21 @@ body { padding-bottom: 0; }
   overflow: hidden;
 }
 
-/* Panel ringkasan: no-scroll, flex column mengisi sisa tinggi */
+/* Panel ringkasan: flex column mengisi sisa tinggi, scroll hanya di grid */
 #panel-ringkasan {
   display: none;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  padding: 10px 14px 6px;
-  gap: 8px;
+  padding: 0;
 }
-#panel-ringkasan.active { display: flex; }
+#panel-ringkasan.active { display: flex; flex: 1; min-height: 0; }
+#panel-ringkasan .ringkasan-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px 80px;
+  -webkit-overflow-scrolling: touch;
+}
 
 /* FILTER BAR — ultra compact 2-baris, no-scroll */
 .filter-bar {
@@ -150,6 +155,7 @@ body { padding-bottom: 0; }
   padding:8px 12px; box-shadow:var(--shadow-sm);
   display:flex; flex-direction:column; gap:6px;
   flex-shrink: 0;
+  margin: 8px 14px 4px;
 }
 /* Baris 1: Cabang + Muat Data sejajar */
 .filter-row-top { display:flex; align-items:center; gap:8px; }
@@ -307,6 +313,22 @@ body { padding-bottom: 0; }
 }
 .pr-period-bar input[type="date"]:focus { outline:none; border-color:var(--primary); }
 .pr-period-bar .pr-period-sep { color:var(--text-muted); font-size:13px; font-weight:600; }
+
+/* PAYROLL PILL TOGGLE */
+.pr-pill-bar { display:flex; gap:8px; margin-bottom:8px; }
+.pr-pill {
+  flex:1; padding:10px 12px; border-radius:20px;
+  border:1.5px solid var(--border); background:var(--card);
+  color:var(--text-muted); font-size:13px; font-weight:600;
+  font-family:inherit; cursor:pointer; white-space:nowrap;
+  transition:all 0.15s; text-align:center;
+}
+.pr-pill.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+.pr-pill-periode-label {
+  font-size:11px; color:var(--text-muted); text-align:center;
+  margin-bottom:16px; font-weight:500;
+}
+
 .stat-trend { font-size:11px; font-weight:700; margin-top:4px; }
 .stat-trend.up { color:var(--success); }
 .stat-trend.down { color:var(--danger); }
@@ -693,14 +715,15 @@ body { padding-bottom: 0; }
 .rk-stat-laba .rk-stat-value.laba-neg { text-shadow: 0 0 10px rgba(252,165,165,0.5); }
 
 /* Tab lain (transaksi, produk, stok, payroll) tetap bisa scroll */
-#panel-transaksi, #panel-produk, #panel-stok, #panel-payroll {
+#panel-transaksi.active, #panel-produk.active, #panel-stok.active, #panel-payroll.active {
   padding: 14px 14px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
-.tab-panel { display:none; }
-.tab-panel.active { display:block; }
-#panel-ringkasan.active { display:flex; }
+.tab-panel { display:none !important; }
+.tab-panel.active { display:block !important; }
+#panel-ringkasan.active { display:flex !important; }
 
 
 @media(max-width:900px) {
@@ -1095,7 +1118,11 @@ body { padding-bottom: 0; }
     if (typeof init === 'function') init();
   }
 
-  // Kunci lagi setiap kali aplikasi disembunyikan/ditinggal (pindah app, minimize, tutup tab)
+  // Kunci lagi HANYA jika aplikasi ditinggal cukup lama (bukan setiap kali fokus berpindah sekejap)
+  // Ubah angka di bawah ini kalau mau durasi toleransi yang berbeda.
+  var LG_RELOCK_AFTER_MS = 5 * 60 * 1000; // 5 menit
+  var lgHiddenAt = null;
+
   function relockGate() {
     if (!isAuthorized) return;
     isAuthorized = false;
@@ -1113,11 +1140,22 @@ body { padding-bottom: 0; }
       if (typeof window.pkpResetBuffer === 'function') window.pkpResetBuffer();
     }
   }
+  // Catat waktu saat aplikasi disembunyikan (pindah tab/app, minimize),
+  // tapi JANGAN langsung kunci — baru kunci kalau sudah ditinggal > LG_RELOCK_AFTER_MS
   document.addEventListener('visibilitychange', function(){
-    if (document.hidden) relockGate();
+    if (document.hidden) {
+      lgHiddenAt = Date.now();
+    } else if (isAuthorized && lgHiddenAt) {
+      var elapsed = Date.now() - lgHiddenAt;
+      lgHiddenAt = null;
+      if (elapsed > LG_RELOCK_AFTER_MS) relockGate();
+    }
   });
+  // pagehide tetap langsung kunci (halaman benar-benar ditutup/dibongkar)
   window.addEventListener('pagehide', relockGate);
-  window.addEventListener('blur', relockGate);
+  // NOTE: listener 'blur' DIHAPUS — sebelumnya ini membuat gate terkunci ulang
+  // hanya karena fokus jendela berpindah sebentar (buka keyboard, klik dropdown, dll),
+  // yang membuat password diminta terlalu sering.
 
   async function initGate() {
     try {
@@ -1250,22 +1288,19 @@ body { padding-bottom: 0; }
     <!-- Baris 2: Tanggal inline + Preset chips -->
     <div class="filter-row-bottom">
       <div class="filter-date-inline">
-        <input type="date" id="date-from">
+        <input type="date" id="date-from" onchange="onDateRangeChanged()">
         <span>—</span>
-        <input type="date" id="date-to">
+        <input type="date" id="date-to" onchange="onDateRangeChanged()">
       </div>
       <div class="filter-preset-inline">
-        <button class="preset-btn" onclick="setPreset('today', this)">Hari ini</button>
-        <button class="preset-btn" onclick="setPreset('week', this)">7 Hari</button>
-        <button class="preset-btn active" onclick="setPreset('month', this)">Bulan ini</button>
-        <button class="preset-btn" onclick="setPreset('year', this)">Tahun ini</button>
+        <button class="preset-btn active" onclick="setPreset('today', this)">Hari ini</button>
       </div>
     </div>
   </div>
 
   <!-- ===== TAB: RINGKASAN ===== -->
-  <div class="tab-panel active" id="panel-ringkasan">
-    <div class="ringkasan-grid" id="ringkasan-grid">
+  <div class="tab-panel active" id="panel-ringkasan" style="display:flex;flex-direction:column;flex:1;overflow:hidden;padding:0;">
+    <div class="ringkasan-grid" id="ringkasan-grid" style="flex:1;overflow-y:auto;padding:10px 14px 80px;-webkit-overflow-scrolling:touch;">
       <!-- diisi oleh renderRingkasan() -->
     </div>
   </div>
@@ -1431,15 +1466,14 @@ body { padding-bottom: 0; }
 
   <!-- ===== TAB: PAYROLL ===== -->
   <div class="tab-panel" id="panel-payroll">
-    <div class="pr-period-bar">
-      <span class="pr-period-label">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        Periode
-      </span>
-      <input type="date" id="pr-date-from" onchange="reloadPayrollPeriod()">
-      <span class="pr-period-sep">s/d</span>
-      <input type="date" id="pr-date-to" onchange="reloadPayrollPeriod()">
+    <!-- Hidden inputs tetap ada untuk kompatibilitas fungsi loadPayroll -->
+    <input type="hidden" id="pr-date-from">
+    <input type="hidden" id="pr-date-to">
+    <div class="pr-pill-bar">
+      <button class="pr-pill active" id="pr-pill-ini" onclick="setOwnerPayrollPill('periode-ini', this)">Periode Ini</button>
+      <button class="pr-pill" id="pr-pill-lalu" onclick="setOwnerPayrollPill('periode-lalu', this)">Periode Lalu</button>
     </div>
+    <div class="pr-pill-periode-label" id="pr-periode-label"></div>
     <div class="stats-grid" style="margin-bottom:24px">
       <div class="stat-card teal">
         <div class="stat-icon teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="10" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="14" y="14" width="8" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></div>
@@ -1665,6 +1699,14 @@ function setPreset(type, btn, noLoad) {
   if (!noLoad) loadAll();
 }
 
+// Dipanggil saat user mengubah tanggal secara manual (bukan lewat preset chip)
+// Tanggal manual berarti tidak ada preset yang cocok -> matikan highlight chip,
+// lalu langsung muat ulang data otomatis (tanpa perlu klik tombol Muat).
+function onDateRangeChanged() {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  loadAll();
+}
+
 // ============================================================
 // TAB SWITCH
 // ============================================================
@@ -1681,9 +1723,10 @@ function switchTab(name, btn) {
   if (name === 'payroll') {
     globalBar.style.display = 'none';
     const prFrom = document.getElementById('pr-date-from');
-    const prTo = document.getElementById('pr-date-to');
-    if (prFrom && !prFrom.value) prFrom.value = document.getElementById('date-from').value;
-    if (prTo && !prTo.value) prTo.value = document.getElementById('date-to').value;
+    if (prFrom && !prFrom.value) {
+      // Belum pernah di-set, inisialisasi dengan periode yang benar
+      setOwnerPayrollPill(currentOwnerPayrollPill, document.getElementById('pr-pill-ini'));
+    }
   } else if (name === 'stok') {
     globalBar.style.display = '';
     if (filterDate) filterDate.style.display = 'none';
@@ -1719,6 +1762,123 @@ function switchTrxSubpanel(name, btn) {
     if (rpFrom && !rpFrom.value) { rpFrom.value = document.getElementById('date-from').value; needLoad = true; }
     if (rpTo && !rpTo.value) { rpTo.value = document.getElementById('date-to').value; needLoad = true; }
     if (needLoad && rpFrom.value && rpTo.value) reloadRekapPelanggan();
+  }
+}
+
+// ============================================================
+// PAYROLL PERIOD HELPERS (sama logika dengan payroll.html)
+// ============================================================
+async function getPayrollSettings() {
+  try {
+    const cabangId = document.getElementById('filter-cabang')?.value;
+    if (!cabangId) return { periode_gaji: 'mingguan', hari_gajian: 4, hari_libur: 5 };
+    const { data, error } = await sb.from('payroll_settings').select('*').eq('cabang_id', cabangId).maybeSingle();
+    if (error || !data) return { periode_gaji: 'mingguan', hari_gajian: 4, hari_libur: 5 };
+    return {
+      periode_gaji: data.periode_gaji || 'mingguan',
+      hari_gajian: data.hari_gajian ?? 4,
+      hari_libur: data.hari_libur ?? 5
+    };
+  } catch (e) {
+    return { periode_gaji: 'mingguan', hari_gajian: 4, hari_libur: 5 };
+  }
+}
+
+function getPeriodePayroll(tanggal, settings) {
+  const d = new Date(tanggal);
+  if (settings.periode_gaji === 'mingguan') {
+    const day = d.getDay();
+    const hariGajian = settings.hari_gajian ?? 4;
+    let diffToEnd = (hariGajian - day + 7) % 7;
+    const endDate = new Date(d);
+    endDate.setDate(d.getDate() + diffToEnd);
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - 5);
+    return { startDate, endDate };
+  } else {
+    const year = d.getFullYear();
+    const month = d.getMonth();
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0);
+    return { startDate, endDate };
+  }
+}
+
+function toISODate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function fmtDateOwner(d) {
+  return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'][d.getMonth()];
+}
+
+let currentOwnerPayrollPill = 'periode-ini';
+let _ownerPayrollSettings = null;
+
+async function getOwnerPayrollSettingsCached() {
+  if (_ownerPayrollSettings) return _ownerPayrollSettings;
+  _ownerPayrollSettings = await getPayrollSettings();
+  return _ownerPayrollSettings;
+}
+
+function getOwnerPayrollRange(pill, settings) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const isMingguan = (settings.periode_gaji || 'mingguan') === 'mingguan';
+  let from, to, label;
+  if (pill === 'periode-ini') {
+    const p = getPeriodePayroll(today, settings);
+    from = p.startDate; to = p.endDate;
+    label = (isMingguan ? 'Periode ini' : 'Bulan ini') + ' (' + fmtDateOwner(from) + ' – ' + fmtDateOwner(to) + ')';
+  } else {
+    const p = getPeriodePayroll(today, settings);
+    if (isMingguan) {
+      from = new Date(p.startDate); from.setDate(from.getDate() - 7);
+      to   = new Date(p.endDate);   to.setDate(to.getDate() - 7);
+    } else {
+      from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      to   = new Date(today.getFullYear(), today.getMonth(), 0);
+    }
+    label = (isMingguan ? 'Periode lalu' : 'Bulan lalu') + ' (' + fmtDateOwner(from) + ' – ' + fmtDateOwner(to) + ')';
+  }
+  return { from: toISODate(from), to: toISODate(to), label };
+}
+
+async function setOwnerPayrollPill(pill, el) {
+  currentOwnerPayrollPill = pill;
+  document.querySelectorAll('.pr-pill').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const settings = await getOwnerPayrollSettingsCached();
+  const { from, to, label } = getOwnerPayrollRange(pill, settings);
+  document.getElementById('pr-date-from').value = from;
+  document.getElementById('pr-date-to').value = to;
+  const labelEl = document.getElementById('pr-periode-label');
+  if (labelEl) labelEl.textContent = label;
+  try {
+    await loadPayroll(from, to);
+    renderPayroll();
+  } catch(e) {
+    showToast('Gagal memuat payroll: ' + (e.message || e), 'error');
+  }
+}
+
+async function setPayrollPeriodDefault() {
+  try {
+    _ownerPayrollSettings = await getPayrollSettings();
+    const { from, to, label } = getOwnerPayrollRange(currentOwnerPayrollPill, _ownerPayrollSettings);
+    document.getElementById('pr-date-from').value = from;
+    document.getElementById('pr-date-to').value = to;
+    const labelEl = document.getElementById('pr-periode-label');
+    if (labelEl) labelEl.textContent = label;
+    // Update pill labels (Mingguan vs Bulanan)
+    const isMingguan = (_ownerPayrollSettings.periode_gaji || 'mingguan') === 'mingguan';
+    const iniEl = document.getElementById('pr-pill-ini');
+    const laluEl = document.getElementById('pr-pill-lalu');
+    if (iniEl) iniEl.textContent = isMingguan ? 'Periode Ini' : 'Bulan Ini';
+    if (laluEl) laluEl.textContent = isMingguan ? 'Periode Lalu' : 'Bulan Lalu';
+  } catch (e) {
+    const today = toISODate(new Date());
+    document.getElementById('pr-date-from').value = today;
+    document.getElementById('pr-date-to').value = today;
   }
 }
 
@@ -2484,7 +2644,7 @@ function hideLoadingScreen() {
 async function init() {
   initStaticGenericDropdowns();
   checkNotifStatus();
-  setPreset('month', document.querySelector('.preset-btn.active'), true);
+  setPreset('today', document.querySelector('.preset-btn'), true);
   setProgress(10, 'Menghubungkan ke server...');
   try {
     setProgress(30, 'Memuat data master...');
@@ -2497,7 +2657,30 @@ async function init() {
     const from = document.getElementById('date-from').value;
     const to = document.getElementById('date-to').value;
     const cabangId = document.getElementById('filter-cabang').value; // sekarang sudah ada nilainya
-    await Promise.all([loadPayroll(from, to), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
+
+    // Hitung periode payroll yang benar untuk load awal
+    const prSettings = await getPayrollSettings();
+    _ownerPayrollSettings = prSettings;
+    const prToday = new Date(); prToday.setHours(0,0,0,0);
+    const prPeriod = getPeriodePayroll(prToday, prSettings);
+    const prFrom = toISODate(prPeriod.startDate);
+    const prTo = toISODate(prPeriod.endDate);
+    // Set nilai input periode payroll
+    const prFromEl = document.getElementById('pr-date-from');
+    const prToEl = document.getElementById('pr-date-to');
+    if (prFromEl) prFromEl.value = prFrom;
+    if (prToEl) prToEl.value = prTo;
+    // Set label dan teks pill
+    const { label } = getOwnerPayrollRange('periode-ini', prSettings);
+    const labelEl = document.getElementById('pr-periode-label');
+    if (labelEl) labelEl.textContent = label;
+    const isMingguan = (prSettings.periode_gaji || 'mingguan') === 'mingguan';
+    const iniEl = document.getElementById('pr-pill-ini');
+    const laluEl = document.getElementById('pr-pill-lalu');
+    if (iniEl) iniEl.textContent = isMingguan ? 'Periode Ini' : 'Bulan Ini';
+    if (laluEl) laluEl.textContent = isMingguan ? 'Periode Lalu' : 'Bulan Lalu';
+
+    await Promise.all([loadPayroll(prFrom, prTo), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
 
     setProgress(90, 'Menyiapkan tampilan...');
     renderRingkasan();
@@ -2535,8 +2718,11 @@ function refreshPayrollFromRealtime(label) {
   clearTimeout(_payrollRealtimeDebounce);
   _payrollRealtimeDebounce = setTimeout(async () => {
     try {
-      const from = document.getElementById('date-from').value;
-      const to = document.getElementById('date-to').value;
+      const prFrom = document.getElementById('pr-date-from');
+      const prTo = document.getElementById('pr-date-to');
+      // Gunakan tanggal periode payroll, fallback ke filter global jika belum di-set
+      const from = (prFrom && prFrom.value) ? prFrom.value : document.getElementById('date-from').value;
+      const to = (prTo && prTo.value) ? prTo.value : document.getElementById('date-to').value;
       await loadPayroll(from, to);
       renderPayroll();
       showToast('Data payroll diperbarui (' + label + ')', 'success');
