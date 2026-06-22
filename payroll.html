@@ -2228,7 +2228,10 @@ async function loadAbsensi() {
     return;
   }
   try {
-    const { data, error } = await sb.from('absensi').select('*').eq('tanggal', date);
+    const pegawaiIds = (allPegawai || []).map(p => p.id);
+    let absQ = sb.from('absensi').select('*').eq('tanggal', date);
+    if (pegawaiIds.length > 0) absQ = absQ.in('pegawai_id', pegawaiIds);
+    const { data, error } = await absQ;
     if (error) throw error;
     absCache[date] = data || [];
     absDirty = false;
@@ -2712,11 +2715,16 @@ async function loadRekap() {
     return;
   }
   try {
-    // TANPA FILTER CABANG — ambil semua data
-    const [absRes, lemburRes] = await Promise.all([
-      sb.from('absensi').select('*').gte('tanggal', from).lte('tanggal', to),
-      sb.from('lembur').select('*, pegawai(nama, jabatan, gaji_harian, upah_lembur)').gte('tanggal', from).lte('tanggal', to)
-    ]);
+    // Filter berdasarkan pegawai_id yang ada di cabang terpilih
+    // (tabel absensi tidak punya cabang_id langsung, relasinya via pegawai)
+    const pegawaiIds = (allPegawai || []).map(p => p.id);
+    let absQuery = sb.from('absensi').select('*').gte('tanggal', from).lte('tanggal', to);
+    let lemburQuery = sb.from('lembur').select('*, pegawai(nama, jabatan, gaji_harian, upah_lembur)').gte('tanggal', from).lte('tanggal', to);
+    if (pegawaiIds.length > 0) {
+      absQuery = absQuery.in('pegawai_id', pegawaiIds);
+      lemburQuery = lemburQuery.in('pegawai_id', pegawaiIds);
+    }
+    const [absRes, lemburRes] = await Promise.all([absQuery, lemburQuery]);
     if (absRes.error) throw absRes.error;
     if (lemburRes.error) throw lemburRes.error;
     const absData = absRes.data || [];
