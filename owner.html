@@ -108,7 +108,7 @@ svg.icon { display:block; flex-shrink:0; }
 .tabs-nav {
   background: var(--card); border-top:2px solid var(--border);
   display:flex; gap:2px; padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));
-  position:fixed; bottom:0; left:0; right:0; z-index:50;
+  position:fixed; bottom:0; left:0; right:0; z-index:50; height:56px;
   box-shadow: 0 -4px 18px rgba(43,38,32,0.10); overflow-x:auto;
 }
 .tab-btn {
@@ -120,32 +120,59 @@ svg.icon { display:block; flex-shrink:0; }
 }
 .tab-btn:hover { color:var(--primary); background:var(--primary-light); }
 .tab-btn.active { color:var(--primary); background:var(--primary-light); }
-body { padding-bottom: 78px; }
+body { padding-bottom: 0; }
 
 /* MAIN CONTENT */
-.main-content { padding:24px 22px; max-width:1400px; margin:0 auto; }
+.main-content {
+  padding: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100dvh - 62px - env(safe-area-inset-top,0px) - 56px - env(safe-area-inset-bottom,0px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-/* FILTER BAR — compact mobile-first */
+/* Panel ringkasan: no-scroll, flex column mengisi sisa tinggi */
+#panel-ringkasan {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: 10px 14px 6px;
+  gap: 8px;
+}
+#panel-ringkasan.active { display: flex; }
+
+/* FILTER BAR — ultra compact 2-baris, no-scroll */
 .filter-bar {
   background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius-sm);
-  padding:12px 14px; margin-bottom:16px; box-shadow:var(--shadow-sm);
-  display:flex; flex-direction:column; gap:8px;
+  padding:8px 12px; box-shadow:var(--shadow-sm);
+  display:flex; flex-direction:column; gap:6px;
+  flex-shrink: 0;
 }
-.filter-row-cabang { display:flex; flex-direction:column; gap:4px; }
-.filter-row-date { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.filter-date-group { display:flex; flex-direction:column; gap:4px; }
-.filter-row-preset { display:flex; }
+/* Baris 1: Cabang + Muat Data sejajar */
+.filter-row-top { display:flex; align-items:center; gap:8px; }
+.filter-row-top .custom-select-wrap { flex:1; min-width:0; }
+.filter-row-cabang { display:none; }
+/* Baris 2: tanggal inline + preset chips */
+.filter-row-bottom { display:flex; align-items:center; gap:6px; }
+.filter-date-inline { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.filter-date-inline span { font-size:10.5px; font-weight:700; color:var(--text-muted); }
+.filter-date-inline input[type="date"] {
+  padding:5px 6px; border:1.5px solid var(--border); border-radius:7px;
+  font-size:11.5px; font-weight:500; font-family:inherit; background:var(--bg);
+  width:108px; transition:border-color 0.15s;
+}
+.filter-date-inline input[type="date"]:focus { outline:none; border-color:var(--accent); }
+.filter-row-date { display:none; }
+.filter-date-group { display:none; }
+.filter-row-preset { display:none; }
+.filter-preset-inline { display:flex; gap:4px; flex:1; }
 .filter-bar label { font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
-.filter-bar input[type="date"] {
-  padding:7px 10px; border:1.5px solid var(--border); border-radius:8px;
-  font-size:13px; font-weight:500; font-family:inherit; background:var(--bg);
-  width:100%; transition:border-color 0.15s;
-}
-.filter-bar input[type="date"]:focus { outline:none; border-color:var(--accent); }
 .filter-bar .custom-select-wrap { width:100%; min-width:0; }
-.filter-preset { display:flex; gap:6px; width:100%; }
 .preset-btn {
-  flex:1; padding:6px 4px; border-radius:20px; font-size:11px; font-weight:600;
+  flex:1; padding:5px 2px; border-radius:16px; font-size:10.5px; font-weight:600;
   border:1.5px solid var(--border); cursor:pointer; background:var(--card);
   color:var(--text-muted); transition:all 0.15s; font-family:inherit; text-align:center;
 }
@@ -153,11 +180,12 @@ body { padding-bottom: 78px; }
 .preset-btn.active { background:var(--accent); color:white; border-color:var(--accent); box-shadow:var(--shadow-sm); }
 .btn-refresh {
   position:relative; overflow:hidden;
-  display:flex; align-items:center; justify-content:center; gap:7px;
-  padding:11px 16px; border-radius:10px; width:100%;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:7px 12px; border-radius:8px; flex-shrink:0;
   background:linear-gradient(135deg, var(--accent), var(--accent-dark)); color:white;
-  border:none; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;
-  transition:opacity 0.15s; box-shadow:0 4px 12px rgba(45,212,191,0.3);
+  border:none; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;
+  transition:opacity 0.15s; box-shadow:0 3px 10px rgba(45,212,191,0.3);
+  white-space:nowrap;
 }
 .btn-refresh:hover { opacity:0.88; }
 .btn-refresh:disabled { cursor:not-allowed; }
@@ -579,29 +607,28 @@ body { padding-bottom: 78px; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 /* TAB PANELS */
-.tab-panel { display:none; }
-.tab-panel.active { display:block; }
+/* tab-panel managed below */
 
 /* RINGKASAN TAB (Card per Cabang) */
 .ringkasan-grid {
-  display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:24px;
+  display:flex; flex-direction:column; gap:8px;
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding-bottom: 4px;
 }
-/* ── RINGKASAN CARD REDESIGN ── */
+/* ── RINGKASAN CARD COMPACT ── */
 .ringkasan-card {
-  border-radius:var(--radius);
-  padding:22px 20px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  border-radius:14px;
+  padding:12px 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   position:relative; overflow:hidden;
-  transition:transform 0.18s, box-shadow 0.18s;
-  border:none;
+  border:none; flex-shrink:0;
 }
-.ringkasan-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,0.15); }
 
 /* Decorative blob di kanan atas */
 .ringkasan-card::after {
-  content:''; position:absolute; top:-30px; right:-30px;
-  width:110px; height:110px; border-radius:50%;
-  opacity:0.18; pointer-events:none;
+  content:''; position:absolute; top:-20px; right:-20px;
+  width:80px; height:80px; border-radius:50%;
+  opacity:0.15; pointer-events:none;
 }
 
 .ringkasan-card.total {
@@ -623,16 +650,16 @@ body { padding-bottom: 78px; }
 .ringkasan-card.cabang::after { background:white; }
 
 /* Header */
-.rk-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.rk-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
 .rk-icon {
-  width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; background:rgba(255,255,255,0.22); color:white; backdrop-filter:blur(4px);
+  width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; background:rgba(255,255,255,0.22); color:white;
 }
-.rk-title { font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:800; line-height:1.2; color:white; }
-.rk-sub { font-size:11.5px; font-weight:600; margin-top:1px; color:rgba(255,255,255,0.75); }
+.rk-title { font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:800; line-height:1.2; color:white; }
+.rk-sub { font-size:10.5px; font-weight:600; margin-top:1px; color:rgba(255,255,255,0.75); }
 
 /* Stat mini-cards inside ringkasan card */
-.rk-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.rk-stats { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
 .rk-stats-3 { grid-template-columns:1fr 1fr; }
 .rk-stat-grand { grid-column:1 / -1; }
 .rk-stat-laba  { grid-column:1 / -1; }
@@ -640,35 +667,40 @@ body { padding-bottom: 78px; }
 .rk-stat {
   background:rgba(255,255,255,0.16);
   border:1.5px solid rgba(255,255,255,0.25);
-  border-radius:12px;
-  padding:12px 14px;
-  backdrop-filter:blur(2px);
+  border-radius:9px;
+  padding:8px 10px;
 }
-.rk-stat-grand {
-  background:rgba(255,255,255,0.22);
-  border-color:rgba(255,255,255,0.35);
-}
-.rk-stat-laba {
+.rk-stat-grand, .rk-stat-laba {
   background:rgba(255,255,255,0.22);
   border-color:rgba(255,255,255,0.35);
 }
 .rk-stat-label {
-  font-size:10px; font-weight:700; color:rgba(255,255,255,0.72);
-  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;
+  font-size:9.5px; font-weight:700; color:rgba(255,255,255,0.72);
+  text-transform:uppercase; letter-spacing:0.4px; margin-bottom:3px;
 }
 .rk-stat-value {
-  font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;
-  color:white; line-height:1.3; padding-top:2px;
+  font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800;
+  color:white; line-height:1.2;
 }
-.rk-stat-value.sm { font-size:16px; }
-.rk-stat-note { font-size:10px; color:rgba(255,255,255,0.65); font-weight:600; margin-top:4px; }
+.rk-stat-value.sm { font-size:14px; }
+.rk-stat-note { font-size:9.5px; color:rgba(255,255,255,0.65); font-weight:600; margin-top:2px; }
 
 /* Override laba bersih warna teks agar tetap terbaca di atas card berwarna */
 .rk-stat-laba .rk-stat-value { color:white !important; }
-.rk-stat-laba .rk-stat-value.laba-pos::before { content:'▲ '; font-size:11px; opacity:0.85; }
-.rk-stat-laba .rk-stat-value.laba-neg::before { content:'▼ '; font-size:11px; opacity:0.85; }
-.rk-stat-laba .rk-stat-value.laba-pos { text-shadow: 0 0 12px rgba(134,239,172,0.6); }
-.rk-stat-laba .rk-stat-value.laba-neg { text-shadow: 0 0 12px rgba(252,165,165,0.6); }
+.rk-stat-laba .rk-stat-value.laba-pos::before { content:'▲ '; font-size:10px; opacity:0.85; }
+.rk-stat-laba .rk-stat-value.laba-neg::before { content:'▼ '; font-size:10px; opacity:0.85; }
+.rk-stat-laba .rk-stat-value.laba-pos { text-shadow: 0 0 10px rgba(134,239,172,0.5); }
+.rk-stat-laba .rk-stat-value.laba-neg { text-shadow: 0 0 10px rgba(252,165,165,0.5); }
+
+/* Tab lain (transaksi, produk, stok, payroll) tetap bisa scroll */
+#panel-transaksi, #panel-produk, #panel-stok, #panel-payroll {
+  padding: 14px 14px;
+  overflow-y: auto;
+  flex: 1;
+}
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+#panel-ringkasan.active { display:flex; }
 
 
 @media(max-width:900px) {
@@ -914,46 +946,38 @@ body { padding-bottom: 78px; }
 
 <div class="main-content">
 
-  <!-- FILTER BAR -->
+  <!-- FILTER BAR — compact 2-baris -->
   <div class="filter-bar" id="global-filter-bar">
-    <!-- Baris 1: Cabang -->
-    <div class="filter-row-cabang">
-      <label>Cabang</label>
+    <!-- Baris 1: Cabang + Tombol Muat Data -->
+    <div class="filter-row-top">
       <div class="custom-select-wrap" id="filter-cabang-wrap">
         <button type="button" class="custom-select-btn has-placeholder" id="filter-cabang-btn" onclick="toggleGenericDropdown('filter-cabang')" aria-haspopup="listbox" aria-expanded="false">
           <span id="filter-cabang-label">🏪 TOKO PUSAT</span>
-          <svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="custom-select-dropdown" id="filter-cabang-dropdown" role="listbox"></div>
       </div>
       <input type="hidden" id="filter-cabang" value="">
+      <button class="btn-refresh" id="btn-muat-data" onclick="loadAll()">
+        <span class="btn-refresh-fill" id="btn-refresh-fill"></span>
+        <svg class="btn-refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0114.5-4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M20 12a8 8 0 01-14.5 4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M18.5 4v3.5H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 20v-3.5H2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="btn-refresh-label" id="btn-refresh-label">Muat</span>
+      </button>
     </div>
-    <!-- Baris 2: Tanggal 2 kolom -->
-    <div class="filter-row-date">
-      <div class="filter-date-group">
-        <label>Dari</label>
+    <!-- Baris 2: Tanggal inline + Preset chips -->
+    <div class="filter-row-bottom">
+      <div class="filter-date-inline">
         <input type="date" id="date-from">
-      </div>
-      <div class="filter-date-group">
-        <label>s/d</label>
+        <span>—</span>
         <input type="date" id="date-to">
       </div>
-    </div>
-    <!-- Baris 3: Preset chips -->
-    <div class="filter-row-preset">
-      <div class="filter-preset">
+      <div class="filter-preset-inline">
         <button class="preset-btn" onclick="setPreset('today', this)">Hari ini</button>
         <button class="preset-btn" onclick="setPreset('week', this)">7 Hari</button>
         <button class="preset-btn active" onclick="setPreset('month', this)">Bulan ini</button>
         <button class="preset-btn" onclick="setPreset('year', this)">Tahun ini</button>
       </div>
     </div>
-    <!-- Baris 4: Tombol Muat Data -->
-    <button class="btn-refresh" id="btn-muat-data" onclick="loadAll()">
-      <span class="btn-refresh-fill" id="btn-refresh-fill"></span>
-      <svg class="btn-refresh-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0114.5-4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M20 12a8 8 0 01-14.5 4.6" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M18.5 4v3.5H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 20v-3.5H2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="btn-refresh-label" id="btn-refresh-label">Muat Data</span>
-    </button>
   </div>
 
   <!-- ===== TAB: RINGKASAN ===== -->
