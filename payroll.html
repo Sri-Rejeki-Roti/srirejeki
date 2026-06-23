@@ -1846,6 +1846,42 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   </div>
 
   <!-- ========================================================== -->
+  <!-- 2b. ⭐ JAM OPERASIONAL ABSEN PULANG (BARU)                 -->
+  <!-- ========================================================== -->
+  <div class="setting-group" id="setting-jam-pulang-group">
+    <div class="sg-title">🚪 Jam Operasional Absen Pulang</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+      Atur jam kapan pegawai bisa absen pulang (terpisah dari jam absen masuk)
+    </div>
+
+    <div class="setting-row">
+      <span class="label">Jam Buka</span>
+      <div style="min-width:130px;">
+        <input type="time" id="setting-jam-pulang-buka" value="16:00"
+               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <span class="label">Jam Tutup</span>
+      <div style="min-width:130px;">
+        <input type="time" id="setting-jam-pulang-tutup" value="18:00"
+               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+      <button class="btn-setting-save" id="btn-simpan-jam-pulang" onclick="simpanJamOperasionalPulang()" style="flex:1;min-width:200px;">
+        💾 Simpan Jam Pulang
+      </button>
+      <button class="btn-setting-save" id="btn-reset-jam-pulang" onclick="resetJamOperasionalPulang()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
+        ↺ Reset
+      </button>
+    </div>
+    <span class="setting-status" id="status-jam-pulang">✅ Dimuat</span>
+  </div>
+
+  <!-- ========================================================== -->
   <!-- 3. KELOLA BAGIAN                                           -->
   <!-- ========================================================== -->
   <div class="setting-group">
@@ -2429,6 +2465,155 @@ async function resetJamOperasional() {
   document.getElementById('status-jam').textContent = '↺ Direset ke default';
   document.getElementById('status-jam').style.color = 'var(--text-muted)';
   showToast('↺ Jam direset ke default (07:00 - 09:00)', 'warn');
+}
+
+// ============================================================
+// FUNGSI JAM OPERASIONAL PULANG (terpisah dari jam masuk)
+// ============================================================
+async function loadJamOperasionalPulang() {
+  if (!selectedCabangId) {
+    console.warn('⚠️ Cabang belum dipilih');
+    return;
+  }
+
+  try {
+    console.log('📥 Load jam operasional pulang untuk cabang:', selectedCabangId);
+
+    const { data, error } = await sb
+      .from('settings')
+      .select('value')
+      .eq('key', 'jam_operasional_pulang')
+      .eq('cabang_id', selectedCabangId)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    const statusEl = document.getElementById('status-jam-pulang');
+
+    if (data && data.value) {
+      let jam;
+      try {
+        jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      } catch(e) {
+        jam = { buka: '16:00', tutup: '18:00' };
+      }
+
+      document.getElementById('setting-jam-pulang-buka').value = jam.buka || '16:00';
+      document.getElementById('setting-jam-pulang-tutup').value = jam.tutup || '18:00';
+      statusEl.textContent = `✅ Dimuat (${jam.buka} - ${jam.tutup})`;
+      statusEl.style.color = 'var(--success)';
+      console.log('✅ Jam pulang loaded:', jam);
+    } else {
+      // Default
+      document.getElementById('setting-jam-pulang-buka').value = '16:00';
+      document.getElementById('setting-jam-pulang-tutup').value = '18:00';
+      statusEl.textContent = '✅ Default (16:00 - 18:00)';
+      statusEl.style.color = 'var(--text-muted)';
+    }
+  } catch (e) {
+    console.error('❌ Load jam pulang error:', e);
+    document.getElementById('status-jam-pulang').textContent = '⚠️ Gagal memuat: ' + (e.message || 'Unknown');
+    document.getElementById('status-jam-pulang').style.color = 'var(--danger)';
+  }
+}
+
+async function simpanJamOperasionalPulang() {
+  const btn = document.getElementById('btn-simpan-jam-pulang');
+  const statusEl = document.getElementById('status-jam-pulang');
+
+  const buka = document.getElementById('setting-jam-pulang-buka').value;
+  const tutup = document.getElementById('setting-jam-pulang-tutup').value;
+
+  if (!buka || !tutup) {
+    statusEl.textContent = '⚠️ Jam buka dan tutup wajib diisi!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Jam buka dan tutup wajib diisi', 'error');
+    return;
+  }
+
+  if (buka >= tutup) {
+    statusEl.textContent = '⚠️ Jam buka harus lebih awal dari jam tutup!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Jam buka harus lebih awal dari jam tutup!', 'error');
+    return;
+  }
+
+  if (!selectedCabangId) {
+    statusEl.textContent = '⚠️ Cabang belum dipilih!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Cabang belum dipilih', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Menyimpan...';
+  statusEl.textContent = '⏳ Menyimpan...';
+  statusEl.style.color = 'var(--text-muted)';
+
+  try {
+    const payload = {
+      cabang_id: selectedCabangId,
+      key: 'jam_operasional_pulang',
+      value: JSON.stringify({ buka, tutup }),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data: existing } = await sb
+      .from('settings')
+      .select('id')
+      .eq('key', 'jam_operasional_pulang')
+      .eq('cabang_id', selectedCabangId)
+      .maybeSingle();
+
+    let error;
+    if (existing) {
+      console.log('🔄 Update existing:', existing.id);
+      ({ error } = await sb
+        .from('settings')
+        .update(payload)
+        .eq('id', existing.id));
+    } else {
+      console.log('➕ Insert new');
+      ({ error } = await sb
+        .from('settings')
+        .insert(payload));
+    }
+
+    if (error) throw error;
+
+    statusEl.textContent = `✅ Disimpan! Buka: ${buka} - Tutup: ${tutup}`;
+    statusEl.style.color = 'var(--success)';
+    showToast(`✅ Jam pulang disimpan: ${buka} - ${tutup}`, 'success');
+
+    localStorage.removeItem('payroll_cache_jam_operasional_pulang_' + selectedCabangId);
+
+  } catch (e) {
+    console.error('❌ Simpan jam pulang error:', e);
+    statusEl.textContent = '❌ Gagal: ' + (e.message || 'Unknown');
+    statusEl.style.color = 'var(--danger)';
+    showToast('Gagal menyimpan: ' + (e.message || 'Unknown'), 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Jam Pulang';
+  }
+}
+
+async function resetJamOperasionalPulang() {
+  const confirm = await showConfirm({
+    icon: '↺',
+    title: 'Reset Jam Pulang?',
+    msg: 'Kembalikan ke default (16:00 - 18:00)?',
+    okLabel: 'Ya, Reset',
+    okColor: '#f59e0b'
+  });
+
+  if (!confirm) return;
+
+  document.getElementById('setting-jam-pulang-buka').value = '16:00';
+  document.getElementById('setting-jam-pulang-tutup').value = '18:00';
+  document.getElementById('status-jam-pulang').textContent = '↺ Direset ke default';
+  document.getElementById('status-jam-pulang').style.color = 'var(--text-muted)';
+  showToast('↺ Jam pulang direset ke default (16:00 - 18:00)', 'warn');
 }
 
 // ============================================================
@@ -3408,6 +3593,7 @@ async function init() {
   setProgress(15, 'Memuat pengaturan...');
   await loadPayrollSettings();
   await loadJamOperasional(); // <-- TAMBAHKAN INI
+  await loadJamOperasionalPulang();
   renderAbsShortcuts();
   
   setProgress(30, 'Memuat bagian...');
