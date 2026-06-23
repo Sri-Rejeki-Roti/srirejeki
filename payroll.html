@@ -1732,70 +1732,118 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   </div>
 
   <!-- ═══ TAB 5: SETTING ═══ -->
-  <div id="panel-setting" style="display:none">
-    <div class="setting-group">
-      <div class="sg-title">⚙️ Pengaturan Payroll</div>
-      <div class="setting-row">
-        <span class="label">Periode Gaji</span>
-        <div class="custom-select-wrap">
-          <button class="custom-select-btn" id="sel-periode-btn" onclick="toggleDropdown('periode')">
-            <span id="sel-periode-label">Mingguan</span><span class="caret">▼</span>
-          </button>
-          <div class="custom-select-dropdown" id="sel-periode-dropdown">
-            <div class="custom-option selected" data-val="mingguan" onclick="setSetting('periode','mingguan','Mingguan')">Mingguan</div>
-            <div class="custom-option" data-val="bulanan" onclick="setSetting('periode','bulanan','Bulanan')">Bulanan</div>
-          </div>
+<div id="panel-setting" style="display:none">
+  
+  <!-- ========================================================== -->
+  <!-- 1. PENGATURAN PAYROLL                                      -->
+  <!-- ========================================================== -->
+  <div class="setting-group">
+    <div class="sg-title">⚙️ Pengaturan Payroll</div>
+    
+    <div class="setting-row">
+      <span class="label">Periode Gaji</span>
+      <div class="custom-select-wrap">
+        <button class="custom-select-btn" id="sel-periode-btn" onclick="toggleDropdown('periode')">
+          <span id="sel-periode-label">Mingguan</span><span class="caret">▼</span>
+        </button>
+        <div class="custom-select-dropdown" id="sel-periode-dropdown">
+          <div class="custom-option selected" data-val="mingguan" onclick="setSetting('periode','mingguan','Mingguan')">Mingguan</div>
+          <div class="custom-option" data-val="bulanan" onclick="setSetting('periode','bulanan','Bulanan')">Bulanan</div>
         </div>
       </div>
-      <div class="setting-row">
-        <span class="label">Hari Gajian</span>
-        <div class="custom-select-wrap">
-          <button class="custom-select-btn" id="sel-hari-btn" onclick="toggleDropdown('hari')">
-            <span id="sel-hari-label">Kamis</span><span class="caret">▼</span>
-          </button>
-          <div class="custom-select-dropdown" id="sel-hari-dropdown">
-            <div class="custom-option" data-val="0" onclick="setSetting('hari_gajian',0,'Minggu')">Minggu</div>
-            <div class="custom-option" data-val="1" onclick="setSetting('hari_gajian',1,'Senin')">Senin</div>
-            <div class="custom-option" data-val="2" onclick="setSetting('hari_gajian',2,'Selasa')">Selasa</div>
-            <div class="custom-option" data-val="3" onclick="setSetting('hari_gajian',3,'Rabu')">Rabu</div>
-            <div class="custom-option selected" data-val="4" onclick="setSetting('hari_gajian',4,'Kamis')">Kamis</div>
-            <div class="custom-option" data-val="5" onclick="setSetting('hari_gajian',5,'Jumat')">Jumat</div>
-            <div class="custom-option" data-val="6" onclick="setSetting('hari_gajian',6,'Sabtu')">Sabtu</div>
-          </div>
-        </div>
-      </div>
-      <div class="setting-row">
-        <span class="label">Hari Libur</span>
-        <div class="custom-select-wrap">
-          <button class="custom-select-btn" id="sel-libur-btn" onclick="toggleDropdown('libur')">
-            <span id="sel-libur-label">Jumat</span><span class="caret">▼</span>
-          </button>
-          <div class="custom-select-dropdown" id="sel-libur-dropdown">
-            <div class="custom-option" data-val="0" onclick="setSetting('hari_libur',0,'Minggu')">Minggu</div>
-            <div class="custom-option" data-val="1" onclick="setSetting('hari_libur',1,'Senin')">Senin</div>
-            <div class="custom-option" data-val="2" onclick="setSetting('hari_libur',2,'Selasa')">Selasa</div>
-            <div class="custom-option" data-val="3" onclick="setSetting('hari_libur',3,'Rabu')">Rabu</div>
-            <div class="custom-option" data-val="4" onclick="setSetting('hari_libur',4,'Kamis')">Kamis</div>
-            <div class="custom-option selected" data-val="5" onclick="setSetting('hari_libur',5,'Jumat')">Jumat</div>
-            <div class="custom-option" data-val="6" onclick="setSetting('hari_libur',6,'Sabtu')">Sabtu</div>
-          </div>
-        </div>
-      </div>
-      <button class="btn-setting-save" onclick="simpanSettings()">💾 Simpan Pengaturan</button>
-      <span class="setting-status" id="setting-status">✅ Dimuat</span>
     </div>
-
-    <div class="setting-group">
-      <div class="sg-title">🏷️ Kelola Bagian</div>
-      <div class="bagian-form-row">
-        <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase">
-        <input type="text" id="bagian-gaji" placeholder="Gaji Harian" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
-        <input type="text" id="bagian-lembur" placeholder="Lembur/jam" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+    
+    <div class="setting-row">
+      <span class="label">Hari Gajian</span>
+      <div class="custom-select-wrap">
+        <button class="custom-select-btn" id="sel-hari-btn" onclick="toggleDropdown('hari')">
+          <span id="sel-hari-label">Kamis</span><span class="caret">▼</span>
+        </button>
+        <div class="custom-select-dropdown" id="sel-hari-dropdown">
+          <div class="custom-option" data-val="0" onclick="setSetting('hari_gajian',0,'Minggu')">Minggu</div>
+          <div class="custom-option" data-val="1" onclick="setSetting('hari_gajian',1,'Senin')">Senin</div>
+          <div class="custom-option" data-val="2" onclick="setSetting('hari_gajian',2,'Selasa')">Selasa</div>
+          <div class="custom-option" data-val="3" onclick="setSetting('hari_gajian',3,'Rabu')">Rabu</div>
+          <div class="custom-option selected" data-val="4" onclick="setSetting('hari_gajian',4,'Kamis')">Kamis</div>
+          <div class="custom-option" data-val="5" onclick="setSetting('hari_gajian',5,'Jumat')">Jumat</div>
+          <div class="custom-option" data-val="6" onclick="setSetting('hari_gajian',6,'Sabtu')">Sabtu</div>
+        </div>
       </div>
-      <button class="btn-setting-save" onclick="simpanBagian()" style="margin-top:4px">➕ Tambah Bagian</button>
-      <div id="bagian-list" style="margin-top:10px"></div>
     </div>
+    
+    <div class="setting-row">
+      <span class="label">Hari Libur</span>
+      <div class="custom-select-wrap">
+        <button class="custom-select-btn" id="sel-libur-btn" onclick="toggleDropdown('libur')">
+          <span id="sel-libur-label">Jumat</span><span class="caret">▼</span>
+        </button>
+        <div class="custom-select-dropdown" id="sel-libur-dropdown">
+          <div class="custom-option" data-val="0" onclick="setSetting('hari_libur',0,'Minggu')">Minggu</div>
+          <div class="custom-option" data-val="1" onclick="setSetting('hari_libur',1,'Senin')">Senin</div>
+          <div class="custom-option" data-val="2" onclick="setSetting('hari_libur',2,'Selasa')">Selasa</div>
+          <div class="custom-option" data-val="3" onclick="setSetting('hari_libur',3,'Rabu')">Rabu</div>
+          <div class="custom-option" data-val="4" onclick="setSetting('hari_libur',4,'Kamis')">Kamis</div>
+          <div class="custom-option selected" data-val="5" onclick="setSetting('hari_libur',5,'Jumat')">Jumat</div>
+          <div class="custom-option" data-val="6" onclick="setSetting('hari_libur',6,'Sabtu')">Sabtu</div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="btn-setting-save" onclick="simpanSettings()">💾 Simpan Pengaturan</button>
+    <span class="setting-status" id="setting-status">✅ Dimuat</span>
   </div>
+
+  <!-- ========================================================== -->
+  <!-- 2. ⭐ JAM OPERASIONAL ABSENSI (BARU)                       -->
+  <!-- ========================================================== -->
+  <div class="setting-group" id="setting-jam-group">
+    <div class="sg-title">⏰ Jam Operasional Absensi</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+      Atur jam kapan pegawai bisa melakukan absensi
+    </div>
+    
+    <div class="setting-row">
+      <span class="label">Jam Buka</span>
+      <div style="min-width:130px;">
+        <input type="time" id="setting-jam-buka" value="07:00" 
+               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      </div>
+    </div>
+    
+    <div class="setting-row">
+      <span class="label">Jam Tutup</span>
+      <div style="min-width:130px;">
+        <input type="time" id="setting-jam-tutup" value="09:00"
+               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+      <button class="btn-setting-save" id="btn-simpan-jam" onclick="simpanJamOperasional()" style="flex:1;min-width:200px;">
+        💾 Simpan Jam Operasional
+      </button>
+      <button class="btn-setting-save" id="btn-reset-jam" onclick="resetJamOperasional()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
+        ↺ Reset
+      </button>
+    </div>
+    <span class="setting-status" id="status-jam">✅ Dimuat</span>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- 3. KELOLA BAGIAN                                           -->
+  <!-- ========================================================== -->
+  <div class="setting-group">
+    <div class="sg-title">🏷️ Kelola Bagian</div>
+    
+    <div class="bagian-form-row">
+      <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase">
+      <input type="text" id="bagian-gaji" placeholder="Gaji Harian" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+      <input type="text" id="bagian-lembur" placeholder="Lembur/jam" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+    </div>
+    <button class="btn-setting-save" onclick="simpanBagian()" style="margin-top:4px">➕ Tambah Bagian</button>
+    <div id="bagian-list" style="margin-top:10px"></div>
+  </div>
+  
 </div>
 
 <!-- ═══════════ SAVE BAR (Absensi) ═══════════ -->
@@ -2206,6 +2254,161 @@ async function simpanSettings() {
   } catch (e) {
     showToast('Gagal: ' + (e.message || e), 'error');
   } finally { setLoading(false); }
+}
+
+// ============================================================
+// FUNGSI JAM OPERASIONAL
+// ============================================================
+
+async function loadJamOperasional() {
+  if (!selectedCabangId) {
+    console.warn('⚠️ Cabang belum dipilih');
+    return;
+  }
+  
+  try {
+    console.log('📥 Load jam operasional untuk cabang:', selectedCabangId);
+    
+    const { data, error } = await sb
+      .from('settings')
+      .select('value')
+      .eq('key', 'jam_operasional')
+      .eq('cabang_id', selectedCabangId)
+      .maybeSingle();
+    
+    if (error) throw error;
+    
+    const statusEl = document.getElementById('status-jam');
+    
+    if (data && data.value) {
+      let jam;
+      try {
+        jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      } catch(e) {
+        jam = { buka: '07:00', tutup: '09:00' };
+      }
+      
+      document.getElementById('setting-jam-buka').value = jam.buka || '07:00';
+      document.getElementById('setting-jam-tutup').value = jam.tutup || '09:00';
+      statusEl.textContent = `✅ Dimuat (${jam.buka} - ${jam.tutup})`;
+      statusEl.style.color = 'var(--success)';
+      console.log('✅ Jam loaded:', jam);
+    } else {
+      // Default
+      document.getElementById('setting-jam-buka').value = '07:00';
+      document.getElementById('setting-jam-tutup').value = '09:00';
+      statusEl.textContent = '✅ Default (07:00 - 09:00)';
+      statusEl.style.color = 'var(--text-muted)';
+    }
+  } catch (e) {
+    console.error('❌ Load jam error:', e);
+    document.getElementById('status-jam').textContent = '⚠️ Gagal memuat: ' + (e.message || 'Unknown');
+    document.getElementById('status-jam').style.color = 'var(--danger)';
+  }
+}
+
+async function simpanJamOperasional() {
+  const btn = document.getElementById('btn-simpan-jam');
+  const statusEl = document.getElementById('status-jam');
+  
+  const buka = document.getElementById('setting-jam-buka').value;
+  const tutup = document.getElementById('setting-jam-tutup').value;
+  
+  // Validasi
+  if (!buka || !tutup) {
+    statusEl.textContent = '⚠️ Jam buka dan tutup wajib diisi!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Jam buka dan tutup wajib diisi', 'error');
+    return;
+  }
+  
+  if (buka >= tutup) {
+    statusEl.textContent = '⚠️ Jam buka harus lebih awal dari jam tutup!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Jam buka harus lebih awal dari jam tutup!', 'error');
+    return;
+  }
+  
+  if (!selectedCabangId) {
+    statusEl.textContent = '⚠️ Cabang belum dipilih!';
+    statusEl.style.color = 'var(--danger)';
+    showToast('Cabang belum dipilih', 'error');
+    return;
+  }
+  
+  // Disable button
+  btn.disabled = true;
+  btn.textContent = '⏳ Menyimpan...';
+  statusEl.textContent = '⏳ Menyimpan...';
+  statusEl.style.color = 'var(--text-muted)';
+  
+  try {
+    const payload = {
+      cabang_id: selectedCabangId,
+      key: 'jam_operasional',
+      value: JSON.stringify({ buka, tutup }),
+      updated_at: new Date().toISOString()
+    };
+    
+    // Cek apakah sudah ada
+    const { data: existing } = await sb
+      .from('settings')
+      .select('id')
+      .eq('key', 'jam_operasional')
+      .eq('cabang_id', selectedCabangId)
+      .maybeSingle();
+    
+    let error;
+    if (existing) {
+      console.log('🔄 Update existing:', existing.id);
+      ({ error } = await sb
+        .from('settings')
+        .update(payload)
+        .eq('id', existing.id));
+    } else {
+      console.log('➕ Insert new');
+      ({ error } = await sb
+        .from('settings')
+        .insert(payload));
+    }
+    
+    if (error) throw error;
+    
+    // Success
+    statusEl.textContent = `✅ Disimpan! Buka: ${buka} - Tutup: ${tutup}`;
+    statusEl.style.color = 'var(--success)';
+    showToast(`✅ Jam operasional disimpan: ${buka} - ${tutup}`, 'success');
+    
+    // Hapus cache
+    localStorage.removeItem('payroll_cache_jam_operasional_' + selectedCabangId);
+    
+  } catch (e) {
+    console.error('❌ Simpan jam error:', e);
+    statusEl.textContent = '❌ Gagal: ' + (e.message || 'Unknown');
+    statusEl.style.color = 'var(--danger)';
+    showToast('Gagal menyimpan: ' + (e.message || 'Unknown'), 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Jam Operasional';
+  }
+}
+
+async function resetJamOperasional() {
+  const confirm = await showConfirm({
+    icon: '↺',
+    title: 'Reset Jam Operasional?',
+    msg: 'Kembalikan ke default (07:00 - 09:00)?',
+    okLabel: 'Ya, Reset',
+    okColor: '#f59e0b'
+  });
+  
+  if (!confirm) return;
+  
+  document.getElementById('setting-jam-buka').value = '07:00';
+  document.getElementById('setting-jam-tutup').value = '09:00';
+  document.getElementById('status-jam').textContent = '↺ Direset ke default';
+  document.getElementById('status-jam').style.color = 'var(--text-muted)';
+  showToast('↺ Jam direset ke default (07:00 - 09:00)', 'warn');
 }
 
 // ============================================================
@@ -3158,7 +3361,9 @@ async function init() {
 
   setProgress(15, 'Memuat pengaturan...');
   await loadPayrollSettings();
+  await loadJamOperasional(); // <-- TAMBAHKAN INI
   renderAbsShortcuts();
+  
   setProgress(30, 'Memuat bagian...');
   await loadBagian();
   setProgress(45, 'Memuat data pegawai...');
