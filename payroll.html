@@ -2736,7 +2736,7 @@ function renderAbsensi(date) {
   const existing = absCache[date] || [];
   const aktif = allPegawai.filter(p => p.aktif !== false);
   const hadirMap = {};
-  existing.forEach(a => { if (a.status === 'hadir') { hadirMap[a.pegawai_id] = true; } });
+  existing.forEach(a => { if (a.status === 'hadir') { hadirMap[a.pegawai_id] = a; } });
 
   if (!aktif.length) {
     document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-title">Belum ada pegawai aktif</div><div class="empty-sub">Tambahkan pegawai di tab Pegawai</div></div>';
@@ -2747,11 +2747,14 @@ function renderAbsensi(date) {
 
   document.getElementById('abs-list').innerHTML = aktif.map((p, i) => {
     const clr = avatarColors(i);
-    const isHadir = hadirMap[p.id] || false;
+    const isHadir = !!hadirMap[p.id];
     const statusText = isHadir ? 'Hadir' : '';
+    const jamMasuk = isHadir && hadirMap[p.id].jam_masuk
+      ? new Date(hadirMap[p.id].jam_masuk).toLocaleTimeString('id', { hour: '2-digit', minute: '2-digit' })
+      : null;
     return `<div class="abs-item" id="abs-row-${p.id}">
       <div class="abs-avatar" style="background:${clr.bg};color:${clr.fg}">${p.nama.charAt(0).toUpperCase()}</div>
-      <div class="abs-info"><div class="abs-name">${p.nama}</div><div class="abs-jabatan">${p.jabatan || 'Pegawai'}</div></div>
+      <div class="abs-info"><div class="abs-name">${p.nama}</div><div class="abs-jabatan">${p.jabatan || 'Pegawai'}${jamMasuk ? ` · ⏰ ${jamMasuk}` : ''}</div></div>
       <div class="toggle-wrapper">
         <button class="toggle-hadir ${isHadir ? 'active' : ''}" onclick="toggleAbsen(${p.id})" id="toggle-${p.id}">
           <div class="toggle-hadir-track"><div class="toggle-hadir-thumb"></div></div>
@@ -2806,7 +2809,7 @@ async function simpanAbsensi() {
   try {
     await sb.from('absensi').delete().eq('tanggal', date);
     if (rows.length > 0) {
-      const insertData = rows.map(r => ({ pegawai_id: r.pegawai_id, tanggal: date, status: 'hadir', lembur_jam: 0 }));
+      const insertData = rows.map(r => ({ pegawai_id: r.pegawai_id, tanggal: date, status: 'hadir', lembur_jam: 0, jam_masuk: r.jam_masuk || null }));
       const { error } = await sb.from('absensi').insert(insertData);
       if (error) throw error;
     }
