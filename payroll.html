@@ -808,22 +808,58 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   .rekap-stats-grid .stat-box .num { font-size: 15px; }
 }
 
-/* ── SETTING ── */
+/* ── SETTING ACCORDION ── */
 .setting-group {
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-}
-.setting-group .sg-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
   margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.setting-group .sg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 0.15s;
+  gap: 10px;
+}
+.setting-group .sg-header:active { background: var(--primary-light); }
+.setting-group .sg-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.2px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.setting-group .sg-arrow {
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.setting-group.open .sg-arrow { transform: rotate(180deg); }
+.setting-group .sg-body {
+  padding: 0 14px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.setting-group.open .sg-body {
+  padding: 0 14px 14px;
+  max-height: 1000px;
 }
 .setting-row {
   display: flex;
@@ -912,6 +948,52 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 }
 .btn-setting-save:disabled { opacity: 0.6; cursor: not-allowed; }
 .setting-status { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 6px; display: block; }
+
+/* ── LEMBUR DETEKSI PENDING ── */
+.lembur-pending-card {
+  background: #fff8e6;
+  border: 1.5px solid #f59e0b;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.lembur-pending-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  background: #fffbf0;
+  border-bottom: 1px solid #f59e0b;
+  font-size: 12px; font-weight: 700; color: #92400e;
+}
+.lembur-pending-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(245,158,11,0.2);
+  background: #fff8e6;
+}
+.lembur-pending-item:last-child { border-bottom: none; }
+.lp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.lp-name { font-weight: 700; font-size: 13px; color: var(--text); }
+.lp-info { font-size: 11px; color: #92400e; margin-top: 3px; }
+.lp-badge { background: #f59e0b; color: white; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.lp-jam-edit { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.lp-jam-edit label { font-size: 11px; font-weight: 600; color: #92400e; white-space: nowrap; }
+.lp-jam-input { width: 70px; padding: 6px 8px; border: 1.5px solid #f59e0b; border-radius: 6px; font-size: 13px; font-weight: 700; font-family: inherit; background: white; text-align: center; }
+.lp-jam-input:focus { outline: none; border-color: var(--primary); }
+.lp-actions { display: flex; gap: 6px; margin-top: 8px; }
+.btn-lp-approve {
+  flex: 2; padding: 8px; border: none; border-radius: 8px;
+  background: var(--success); color: white;
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+  min-height: 36px;
+}
+.btn-lp-approve:active { opacity: 0.85; }
+.btn-lp-skip {
+  flex: 1; padding: 8px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: white; color: var(--text-muted);
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+  min-height: 36px;
+}
+.btn-lp-skip:active { background: var(--danger-bg); color: var(--danger); }
+.lp-note { font-size: 10px; color: #b45309; font-style: italic; margin-top: 4px; }
 
 /* ── BAGIAN ── */
 .bagian-item {
@@ -1641,6 +1723,16 @@ button, .clickable { min-height: 44px; min-width: 44px; }
       </div>
     </div>
 
+    <!-- ⭐ PANEL DETEKSI LEMBUR OTOMATIS -->
+    <div id="panel-lembur-pending" style="display:none">
+      <div class="lembur-pending-card">
+        <div class="lembur-pending-header">
+          ⚠️ Deteksi Lembur Otomatis — Menunggu Konfirmasi Admin
+        </div>
+        <div id="lembur-pending-list"></div>
+      </div>
+    </div>
+
     <div class="lembur-form">
       <div class="lf-title">📝 Input Lembur</div>
       <div class="form-group">
@@ -1753,147 +1845,213 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   <!-- ========================================================== -->
   <!-- 1. PENGATURAN PAYROLL                                      -->
   <!-- ========================================================== -->
-  <div class="setting-group">
-    <div class="sg-title">⚙️ Pengaturan Payroll</div>
-    
-    <div class="setting-row">
-      <span class="label">Periode Gaji</span>
-      <div class="custom-select-wrap">
-        <button class="custom-select-btn" id="sel-periode-btn" onclick="toggleDropdown('periode')">
-          <span id="sel-periode-label">Mingguan</span><span class="caret">▼</span>
-        </button>
-        <div class="custom-select-dropdown" id="sel-periode-dropdown">
-          <div class="custom-option selected" data-val="mingguan" onclick="setSetting('periode','mingguan','Mingguan')">Mingguan</div>
-          <div class="custom-option" data-val="bulanan" onclick="setSetting('periode','bulanan','Bulanan')">Bulanan</div>
+  <div class="setting-group open">
+    <div class="sg-header" onclick="toggleSettingGroup(this)">
+      <div class="sg-title">⚙️ Pengaturan Payroll</div>
+      <span class="sg-arrow">▼</span>
+    </div>
+    <div class="sg-body">
+      <div class="setting-row">
+        <span class="label">Periode Gaji</span>
+        <div class="custom-select-wrap">
+          <button class="custom-select-btn" id="sel-periode-btn" onclick="toggleDropdown('periode')">
+            <span id="sel-periode-label">Mingguan</span><span class="caret">▼</span>
+          </button>
+          <div class="custom-select-dropdown" id="sel-periode-dropdown">
+            <div class="custom-option selected" data-val="mingguan" onclick="setSetting('periode','mingguan','Mingguan')">Mingguan</div>
+            <div class="custom-option" data-val="bulanan" onclick="setSetting('periode','bulanan','Bulanan')">Bulanan</div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="setting-row">
-      <span class="label">Hari Gajian</span>
-      <div class="custom-select-wrap">
-        <button class="custom-select-btn" id="sel-hari-btn" onclick="toggleDropdown('hari')">
-          <span id="sel-hari-label">Kamis</span><span class="caret">▼</span>
-        </button>
-        <div class="custom-select-dropdown" id="sel-hari-dropdown">
-          <div class="custom-option" data-val="0" onclick="setSetting('hari_gajian',0,'Minggu')">Minggu</div>
-          <div class="custom-option" data-val="1" onclick="setSetting('hari_gajian',1,'Senin')">Senin</div>
-          <div class="custom-option" data-val="2" onclick="setSetting('hari_gajian',2,'Selasa')">Selasa</div>
-          <div class="custom-option" data-val="3" onclick="setSetting('hari_gajian',3,'Rabu')">Rabu</div>
-          <div class="custom-option selected" data-val="4" onclick="setSetting('hari_gajian',4,'Kamis')">Kamis</div>
-          <div class="custom-option" data-val="5" onclick="setSetting('hari_gajian',5,'Jumat')">Jumat</div>
-          <div class="custom-option" data-val="6" onclick="setSetting('hari_gajian',6,'Sabtu')">Sabtu</div>
+      
+      <div class="setting-row">
+        <span class="label">Hari Gajian</span>
+        <div class="custom-select-wrap">
+          <button class="custom-select-btn" id="sel-hari-btn" onclick="toggleDropdown('hari')">
+            <span id="sel-hari-label">Kamis</span><span class="caret">▼</span>
+          </button>
+          <div class="custom-select-dropdown" id="sel-hari-dropdown">
+            <div class="custom-option" data-val="0" onclick="setSetting('hari_gajian',0,'Minggu')">Minggu</div>
+            <div class="custom-option" data-val="1" onclick="setSetting('hari_gajian',1,'Senin')">Senin</div>
+            <div class="custom-option" data-val="2" onclick="setSetting('hari_gajian',2,'Selasa')">Selasa</div>
+            <div class="custom-option" data-val="3" onclick="setSetting('hari_gajian',3,'Rabu')">Rabu</div>
+            <div class="custom-option selected" data-val="4" onclick="setSetting('hari_gajian',4,'Kamis')">Kamis</div>
+            <div class="custom-option" data-val="5" onclick="setSetting('hari_gajian',5,'Jumat')">Jumat</div>
+            <div class="custom-option" data-val="6" onclick="setSetting('hari_gajian',6,'Sabtu')">Sabtu</div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="setting-row">
-      <span class="label">Hari Libur</span>
-      <div class="custom-select-wrap">
-        <button class="custom-select-btn" id="sel-libur-btn" onclick="toggleDropdown('libur')">
-          <span id="sel-libur-label">Jumat</span><span class="caret">▼</span>
-        </button>
-        <div class="custom-select-dropdown" id="sel-libur-dropdown">
-          <div class="custom-option" data-val="0" onclick="setSetting('hari_libur',0,'Minggu')">Minggu</div>
-          <div class="custom-option" data-val="1" onclick="setSetting('hari_libur',1,'Senin')">Senin</div>
-          <div class="custom-option" data-val="2" onclick="setSetting('hari_libur',2,'Selasa')">Selasa</div>
-          <div class="custom-option" data-val="3" onclick="setSetting('hari_libur',3,'Rabu')">Rabu</div>
-          <div class="custom-option" data-val="4" onclick="setSetting('hari_libur',4,'Kamis')">Kamis</div>
-          <div class="custom-option selected" data-val="5" onclick="setSetting('hari_libur',5,'Jumat')">Jumat</div>
-          <div class="custom-option" data-val="6" onclick="setSetting('hari_libur',6,'Sabtu')">Sabtu</div>
+      
+      <div class="setting-row">
+        <span class="label">Hari Libur</span>
+        <div class="custom-select-wrap">
+          <button class="custom-select-btn" id="sel-libur-btn" onclick="toggleDropdown('libur')">
+            <span id="sel-libur-label">Jumat</span><span class="caret">▼</span>
+          </button>
+          <div class="custom-select-dropdown" id="sel-libur-dropdown">
+            <div class="custom-option" data-val="0" onclick="setSetting('hari_libur',0,'Minggu')">Minggu</div>
+            <div class="custom-option" data-val="1" onclick="setSetting('hari_libur',1,'Senin')">Senin</div>
+            <div class="custom-option" data-val="2" onclick="setSetting('hari_libur',2,'Selasa')">Selasa</div>
+            <div class="custom-option" data-val="3" onclick="setSetting('hari_libur',3,'Rabu')">Rabu</div>
+            <div class="custom-option" data-val="4" onclick="setSetting('hari_libur',4,'Kamis')">Kamis</div>
+            <div class="custom-option selected" data-val="5" onclick="setSetting('hari_libur',5,'Jumat')">Jumat</div>
+            <div class="custom-option" data-val="6" onclick="setSetting('hari_libur',6,'Sabtu')">Sabtu</div>
+          </div>
         </div>
       </div>
+      
+      <button class="btn-setting-save" onclick="simpanSettings()">💾 Simpan Pengaturan</button>
+      <span class="setting-status" id="setting-status">✅ Dimuat</span>
     </div>
-    
-    <button class="btn-setting-save" onclick="simpanSettings()">💾 Simpan Pengaturan</button>
-    <span class="setting-status" id="setting-status">✅ Dimuat</span>
   </div>
 
   <!-- ========================================================== -->
-  <!-- 2. ⭐ JAM OPERASIONAL ABSENSI (BARU)                       -->
+  <!-- 2. JAM OPERASIONAL ABSENSI                                 -->
   <!-- ========================================================== -->
   <div class="setting-group" id="setting-jam-group">
-    <div class="sg-title">⏰ Jam Operasional Absensi</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
-      Atur jam kapan pegawai bisa melakukan absensi
+    <div class="sg-header" onclick="toggleSettingGroup(this)">
+      <div class="sg-title">⏰ Jam Operasional Absensi</div>
+      <span class="sg-arrow">▼</span>
     </div>
-    
-    <div class="setting-row">
-      <span class="label">Jam Buka</span>
-      <div style="min-width:130px;">
-        <input type="time" id="setting-jam-buka" value="07:00" 
-               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+    <div class="sg-body">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+        Atur jam kapan pegawai bisa melakukan absensi
       </div>
-    </div>
-    
-    <div class="setting-row">
-      <span class="label">Jam Tutup</span>
-      <div style="min-width:130px;">
-        <input type="time" id="setting-jam-tutup" value="09:00"
-               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      
+      <div class="setting-row">
+        <span class="label">Jam Buka</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-buka" value="07:00" 
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
       </div>
+      
+      <div class="setting-row">
+        <span class="label">Jam Tutup</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-tutup" value="09:00"
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn-setting-save" id="btn-simpan-jam" onclick="simpanJamOperasional()" style="flex:1;min-width:200px;">
+          💾 Simpan Jam Operasional
+        </button>
+        <button class="btn-setting-save" id="btn-reset-jam" onclick="resetJamOperasional()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
+          ↺ Reset
+        </button>
+      </div>
+      <span class="setting-status" id="status-jam">✅ Dimuat</span>
     </div>
-    
-    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
-      <button class="btn-setting-save" id="btn-simpan-jam" onclick="simpanJamOperasional()" style="flex:1;min-width:200px;">
-        💾 Simpan Jam Operasional
-      </button>
-      <button class="btn-setting-save" id="btn-reset-jam" onclick="resetJamOperasional()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
-        ↺ Reset
-      </button>
-    </div>
-    <span class="setting-status" id="status-jam">✅ Dimuat</span>
   </div>
 
   <!-- ========================================================== -->
-  <!-- 2b. ⭐ JAM OPERASIONAL ABSEN PULANG (BARU)                 -->
+  <!-- 2b. JAM OPERASIONAL ABSEN PULANG                           -->
   <!-- ========================================================== -->
   <div class="setting-group" id="setting-jam-pulang-group">
-    <div class="sg-title">🚪 Jam Operasional Absen Pulang</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
-      Atur jam kapan pegawai bisa absen pulang (terpisah dari jam absen masuk)
+    <div class="sg-header" onclick="toggleSettingGroup(this)">
+      <div class="sg-title">🚪 Jam Operasional Absen Pulang</div>
+      <span class="sg-arrow">▼</span>
     </div>
-
-    <div class="setting-row">
-      <span class="label">Jam Buka</span>
-      <div style="min-width:130px;">
-        <input type="time" id="setting-jam-pulang-buka" value="16:00"
-               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+    <div class="sg-body">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+        Atur jam kapan pegawai bisa absen pulang (terpisah dari jam absen masuk)
       </div>
-    </div>
 
-    <div class="setting-row">
-      <span class="label">Jam Tutup</span>
-      <div style="min-width:130px;">
-        <input type="time" id="setting-jam-pulang-tutup" value="18:00"
-               style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+      <div class="setting-row">
+        <span class="label">Jam Buka</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-pulang-buka" value="16:00"
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
       </div>
-    </div>
 
-    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
-      <button class="btn-setting-save" id="btn-simpan-jam-pulang" onclick="simpanJamOperasionalPulang()" style="flex:1;min-width:200px;">
-        💾 Simpan Jam Pulang
-      </button>
-      <button class="btn-setting-save" id="btn-reset-jam-pulang" onclick="resetJamOperasionalPulang()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
-        ↺ Reset
-      </button>
+      <div class="setting-row">
+        <span class="label">Jam Tutup</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-pulang-tutup" value="18:00"
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn-setting-save" id="btn-simpan-jam-pulang" onclick="simpanJamOperasionalPulang()" style="flex:1;min-width:200px;">
+          💾 Simpan Jam Pulang
+        </button>
+        <button class="btn-setting-save" id="btn-reset-jam-pulang" onclick="resetJamOperasionalPulang()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
+          ↺ Reset
+        </button>
+      </div>
+      <span class="setting-status" id="status-jam-pulang">✅ Dimuat</span>
     </div>
-    <span class="setting-status" id="status-jam-pulang">✅ Dimuat</span>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- 2c. JAM KERJA (untuk deteksi lembur otomatis)             -->
+  <!-- ========================================================== -->
+  <div class="setting-group" id="setting-jam-kerja-group">
+    <div class="sg-header" onclick="toggleSettingGroup(this)">
+      <div class="sg-title">🏢 Jam Kerja (Deteksi Lembur Otomatis)</div>
+      <span class="sg-arrow">▼</span>
+    </div>
+    <div class="sg-body">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+        Atur jam kerja resmi. Jika pegawai pulang melebihi jam selesai, sistem akan mendeteksi lembur secara otomatis (dibulatkan ke jam penuh, minimal 1 jam).
+      </div>
+
+      <div class="setting-row">
+        <span class="label">Jam Mulai Kerja</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-kerja-mulai" value="08:00"
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <span class="label">Jam Selesai Kerja</span>
+        <div style="min-width:130px;">
+          <input type="time" id="setting-jam-kerja-selesai" value="17:00"
+                 style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);">
+        </div>
+      </div>
+
+      <div style="background:#fff8e6;border:1px solid #f59e0b;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:11.5px;color:#92400e;line-height:1.6;">
+        <b>📌 Aturan deteksi lembur:</b><br>
+        • Lembur dihitung jika pulang <b>≥ 1 jam</b> setelah jam selesai kerja<br>
+        • Dibulatkan ke jam penuh (misal: 17:50 → 0 jam, 18:05 → 1 jam, 19:30 → 2 jam)<br>
+        • Admin bisa <b>edit/sesuaikan jam</b> sebelum menyimpan ke data lembur
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn-setting-save" id="btn-simpan-jam-kerja" onclick="simpanJamKerja()" style="flex:1;min-width:200px;">
+          💾 Simpan Jam Kerja
+        </button>
+        <button class="btn-setting-save" id="btn-reset-jam-kerja" onclick="resetJamKerja()" style="flex:0;background:var(--border);color:var(--text);min-width:100px;">
+          ↺ Reset
+        </button>
+      </div>
+      <span class="setting-status" id="status-jam-kerja">✅ Dimuat</span>
+    </div>
   </div>
 
   <!-- ========================================================== -->
   <!-- 3. KELOLA BAGIAN                                           -->
   <!-- ========================================================== -->
   <div class="setting-group">
-    <div class="sg-title">🏷️ Kelola Bagian</div>
-    
-    <div class="bagian-form-row">
-      <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase" oninput="this.value = this.value.toUpperCase()">
-      <input type="text" id="bagian-gaji" placeholder="Gaji Harian" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
-      <input type="text" id="bagian-lembur" placeholder="Lembur/jam" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+    <div class="sg-header" onclick="toggleSettingGroup(this)">
+      <div class="sg-title">🏷️ Kelola Bagian</div>
+      <span class="sg-arrow">▼</span>
     </div>
-    <button class="btn-setting-save" onclick="simpanBagian()" style="margin-top:4px">➕ Tambah Bagian</button>
-    <div id="bagian-list" style="margin-top:10px"></div>
+    <div class="sg-body">
+      <div class="bagian-form-row">
+        <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase" oninput="this.value = this.value.toUpperCase()">
+        <input type="text" id="bagian-gaji" placeholder="Gaji Harian" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+        <input type="text" id="bagian-lembur" placeholder="Lembur/jam" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
+      </div>
+      <button class="btn-setting-save" onclick="simpanBagian()" style="margin-top:4px">➕ Tambah Bagian</button>
+      <div id="bagian-list" style="margin-top:10px"></div>
+    </div>
   </div>
   
 </div>
@@ -2117,6 +2275,11 @@ function toggleDropdown(type) {
   if (!isOpen) { dd.classList.add('open'); btn.classList.add('open'); }
 }
 
+function toggleSettingGroup(headerEl) {
+  const group = headerEl.closest('.setting-group');
+  group.classList.toggle('open');
+}
+
 function setSetting(key, val, label) {
   if (key === 'periode') document.getElementById('sel-periode-label').textContent = label;
   else if (key === 'hari_gajian') document.getElementById('sel-hari-label').textContent = label;
@@ -2235,7 +2398,7 @@ function switchTab(name) {
   // SCROLL KE ATAS
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  if (name === 'kegiatan') { loadLembur(); populateLemburSelect(); }
+  if (name === 'kegiatan') { loadLembur(); populateLemburSelect(); deteksiLemburOtomatis(); }
   if (name === 'pegawai') { renderPegawai(); populateBagianSelect(); }
   if (name === 'setting') { loadBagian(); }
   if (name === 'rekap') { updateRekapPillLabels(); loadRekap(); }
@@ -2617,6 +2780,225 @@ async function resetJamOperasionalPulang() {
 }
 
 // ============================================================
+// FUNGSI JAM KERJA (untuk deteksi lembur otomatis)
+// ============================================================
+let jamKerjaSettings = { mulai: '08:00', selesai: '17:00' };
+
+async function loadJamKerja() {
+  if (!selectedCabangId) return;
+  try {
+    const { data, error } = await sb
+      .from('settings')
+      .select('value')
+      .eq('key', 'jam_kerja')
+      .eq('cabang_id', selectedCabangId)
+      .maybeSingle();
+    if (error) throw error;
+    const statusEl = document.getElementById('status-jam-kerja');
+    if (data && data.value) {
+      let jam;
+      try { jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value; }
+      catch(e) { jam = { mulai: '08:00', selesai: '17:00' }; }
+      document.getElementById('setting-jam-kerja-mulai').value = jam.mulai || '08:00';
+      document.getElementById('setting-jam-kerja-selesai').value = jam.selesai || '17:00';
+      jamKerjaSettings = { mulai: jam.mulai || '08:00', selesai: jam.selesai || '17:00' };
+      if (statusEl) { statusEl.textContent = `✅ Dimuat (${jam.mulai} - ${jam.selesai})`; statusEl.style.color = 'var(--success)'; }
+    } else {
+      document.getElementById('setting-jam-kerja-mulai').value = '08:00';
+      document.getElementById('setting-jam-kerja-selesai').value = '17:00';
+      jamKerjaSettings = { mulai: '08:00', selesai: '17:00' };
+      if (statusEl) { statusEl.textContent = '✅ Default (08:00 - 17:00)'; statusEl.style.color = 'var(--text-muted)'; }
+    }
+  } catch (e) {
+    console.error('Load jam kerja error:', e);
+  }
+}
+
+async function simpanJamKerja() {
+  const btn = document.getElementById('btn-simpan-jam-kerja');
+  const statusEl = document.getElementById('status-jam-kerja');
+  const mulai = document.getElementById('setting-jam-kerja-mulai').value;
+  const selesai = document.getElementById('setting-jam-kerja-selesai').value;
+  if (!mulai || !selesai) { showToast('Jam mulai dan selesai wajib diisi', 'error'); return; }
+  if (mulai >= selesai) { showToast('Jam mulai harus lebih awal dari jam selesai', 'error'); return; }
+  if (!selectedCabangId) { showToast('Cabang belum dipilih', 'error'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
+  if (statusEl) { statusEl.textContent = '⏳ Menyimpan...'; statusEl.style.color = 'var(--text-muted)'; }
+  try {
+    const payload = { cabang_id: selectedCabangId, key: 'jam_kerja', value: JSON.stringify({ mulai, selesai }), updated_at: new Date().toISOString() };
+    const { data: existing } = await sb.from('settings').select('id').eq('key', 'jam_kerja').eq('cabang_id', selectedCabangId).maybeSingle();
+    let error;
+    if (existing) { ({ error } = await sb.from('settings').update(payload).eq('id', existing.id)); }
+    else { ({ error } = await sb.from('settings').insert(payload)); }
+    if (error) throw error;
+    jamKerjaSettings = { mulai, selesai };
+    if (statusEl) { statusEl.textContent = `✅ Disimpan! ${mulai} - ${selesai}`; statusEl.style.color = 'var(--success)'; }
+    showToast(`✅ Jam kerja disimpan: ${mulai} - ${selesai}`);
+  } catch(e) {
+    showToast('Gagal menyimpan: ' + (e.message || e), 'error');
+    if (statusEl) { statusEl.textContent = '❌ Gagal'; statusEl.style.color = 'var(--danger)'; }
+  } finally { btn.disabled = false; btn.textContent = '💾 Simpan Jam Kerja'; }
+}
+
+async function resetJamKerja() {
+  const ok = await showConfirm({ icon: '↺', title: 'Reset Jam Kerja?', msg: 'Kembalikan ke default (08:00 - 17:00)?', okLabel: 'Ya, Reset', okColor: '#f59e0b' });
+  if (!ok) return;
+  document.getElementById('setting-jam-kerja-mulai').value = '08:00';
+  document.getElementById('setting-jam-kerja-selesai').value = '17:00';
+  const statusEl = document.getElementById('status-jam-kerja');
+  if (statusEl) { statusEl.textContent = '↺ Direset ke default'; statusEl.style.color = 'var(--text-muted)'; }
+  showToast('↺ Jam kerja direset ke default (08:00 - 17:00)', 'warn');
+}
+
+// ============================================================
+// DETEKSI LEMBUR OTOMATIS dari absensi (jam_keluar > jam selesai kerja)
+// ============================================================
+// Menyimpan item pending yang belum dikonfirmasi admin (hanya di memori, tidak ke DB)
+let lemburPendingList = [];
+
+/**
+ * Hitung jam lembur dari jam_keluar dan jam selesai kerja.
+ * Aturan: dibulatkan ke jam penuh, minimal 1 jam (< 1 jam tidak dihitung).
+ */
+function hitungJamLembur(jamKeluarStr, jamSelesaiKerja) {
+  // jamKeluarStr: ISO string datetime; jamSelesaiKerja: 'HH:MM'
+  const tgl = jamKeluarStr.slice(0, 10); // 'YYYY-MM-DD'
+  const selesaiDt = new Date(tgl + 'T' + jamSelesaiKerja + ':00');
+  const keluarDt = new Date(jamKeluarStr);
+  const selisihMs = keluarDt - selesaiDt;
+  if (selisihMs <= 0) return 0;
+  const selisihJam = selisihMs / (1000 * 60 * 60);
+  if (selisihJam < 1) return 0; // kurang dari 1 jam = tidak lembur
+  return Math.floor(selisihJam); // bulatkan ke bawah (jam penuh)
+}
+
+/**
+ * Scan absensi hari ini (atau tanggal dipilih) untuk mendeteksi lembur.
+ * Dijalankan saat switchTab ke 'kegiatan'.
+ */
+async function deteksiLemburOtomatis() {
+  if (!jamKerjaSettings || !jamKerjaSettings.selesai) return;
+  const date = document.getElementById('abs-date')?.value || todayStr();
+  const absList = absCache[date] || [];
+  const hadirList = absList.filter(a => a.status === 'hadir' && a.jam_keluar);
+
+  // Ambil tanggal-tanggal yang sudah ada di lembur (untuk skip duplikat)
+  let sudahLembur = new Set();
+  try {
+    const pegIds = allPegawai.map(p => p.id);
+    const { data } = await sb.from('lembur').select('pegawai_id,tanggal').eq('tanggal', date).in('pegawai_id', pegIds);
+    (data || []).forEach(l => sudahLembur.add(l.pegawai_id + '_' + l.tanggal));
+  } catch(e) { /* ignore */ }
+
+  const newPending = [];
+  for (const a of hadirList) {
+    const key = a.pegawai_id + '_' + date;
+    if (sudahLembur.has(key)) continue; // sudah ada di lembur, skip
+    const jamLembur = hitungJamLembur(a.jam_keluar, jamKerjaSettings.selesai);
+    if (jamLembur <= 0) continue;
+    const peg = allPegawai.find(p => p.id === a.pegawai_id);
+    if (!peg) continue;
+    // Cek apakah sudah ada di pending list (jangan duplikat)
+    const sudahPending = lemburPendingList.find(lp => lp.pegawai_id === a.pegawai_id && lp.tanggal === date);
+    if (sudahPending) { newPending.push(sudahPending); continue; }
+
+    const jamKeluarStr = new Date(a.jam_keluar).toLocaleTimeString('id', { hour: '2-digit', minute: '2-digit' });
+    newPending.push({
+      pegawai_id: a.pegawai_id,
+      nama: peg.nama,
+      jabatan: peg.jabatan || 'Pegawai',
+      tanggal: date,
+      jam_keluar: a.jam_keluar,
+      jam_keluar_str: jamKeluarStr,
+      jam_selesai_kerja: jamKerjaSettings.selesai,
+      jam_lembur_deteksi: jamLembur,
+      jam_lembur_edit: jamLembur // bisa diedit admin
+    });
+  }
+  lemburPendingList = newPending;
+  renderLemburPending();
+}
+
+function renderLemburPending() {
+  const panel = document.getElementById('panel-lembur-pending');
+  const list = document.getElementById('lembur-pending-list');
+  if (!panel || !list) return;
+  if (!lemburPendingList.length) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  list.innerHTML = lemburPendingList.map((lp, idx) => {
+    const tgl = new Date(lp.tanggal + 'T00:00:00');
+    const tglStr = `${String(tgl.getDate()).padStart(2,'0')}/${String(tgl.getMonth()+1).padStart(2,'0')}`;
+    return `<div class="lembur-pending-item" id="lp-item-${idx}">
+      <div class="lp-top">
+        <div>
+          <div class="lp-name">${lp.nama}</div>
+          <div class="lp-info">📅 ${tglStr} · Pulang: ${lp.jam_keluar_str} · Jam kerja s.d. ${lp.jam_selesai_kerja}</div>
+        </div>
+        <div class="lp-badge">+${lp.jam_lembur_deteksi}j terdeteksi</div>
+      </div>
+      <div class="lp-jam-edit">
+        <label>Jam lembur disetujui:</label>
+        <input type="number" class="lp-jam-input" id="lp-jam-${idx}" value="${lp.jam_lembur_edit}" min="1" step="1" oninput="updateLemburPendingJam(${idx}, this.value)">
+        <span style="font-size:11px;color:#92400e">jam</span>
+      </div>
+      <div class="lp-note">Admin dapat mengubah jam jika ada potongan istirahat, sholat, dll.</div>
+      <div class="lp-actions">
+        <button class="btn-lp-approve" onclick="approveLemburPending(${idx})">✅ Setujui & Simpan Lembur</button>
+        <button class="btn-lp-skip" onclick="skipLemburPending(${idx})">✕ Abaikan</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateLemburPendingJam(idx, val) {
+  const jam = parseInt(val) || 1;
+  if (lemburPendingList[idx]) lemburPendingList[idx].jam_lembur_edit = Math.max(1, jam);
+}
+
+async function approveLemburPending(idx) {
+  const lp = lemburPendingList[idx];
+  if (!lp) return;
+  // Baca jam dari input (bisa sudah diubah admin)
+  const inputEl = document.getElementById('lp-jam-' + idx);
+  const jamFinal = inputEl ? (parseInt(inputEl.value) || lp.jam_lembur_edit) : lp.jam_lembur_edit;
+  if (jamFinal < 1) { showToast('Jam lembur minimal 1 jam', 'warn'); return; }
+  const peg = allPegawai.find(p => p.id === lp.pegawai_id);
+  const upah_per_jam = peg?.upah_lembur || 0;
+  setLoading(true);
+  try {
+    const { error } = await sb.from('lembur').insert({
+      pegawai_id: lp.pegawai_id,
+      jam: jamFinal,
+      tanggal: lp.tanggal,
+      upah_per_jam: upah_per_jam
+    });
+    if (error) throw error;
+    lemburPendingList.splice(idx, 1);
+    renderLemburPending();
+    showToast(`✅ Lembur ${lp.nama} ${jamFinal}j disimpan`);
+    await loadLembur();
+  } catch(e) {
+    showToast('Gagal: ' + (e.message || e), 'error');
+  } finally { setLoading(false); }
+}
+
+async function skipLemburPending(idx) {
+  const lp = lemburPendingList[idx];
+  if (!lp) return;
+  const ok = await showConfirm({
+    icon: '✕',
+    title: 'Abaikan Lembur?',
+    msg: `Lembur ${lp.nama} tidak akan disimpan. Admin menganggap jam tambahan ini bukan lembur (misal: pengganti waktu kerja yang terlewat).`,
+    okLabel: 'Ya, Abaikan',
+    okColor: '#f59e0b'
+  });
+  if (!ok) return;
+  lemburPendingList.splice(idx, 1);
+  renderLemburPending();
+  showToast('Lembur diabaikan');
+}
+
+// ============================================================
 // BAGIAN (dengan konfirmasi hapus jika digunakan)
 // ============================================================
 async function loadBagian() {
@@ -2932,6 +3314,8 @@ async function loadAbsensi() {
     const jmlHadir = (absCache[date] || []).filter(a => a.status === 'hadir').length;
     updateAbsStatusBadge(jmlHadir);
     renderAbsensi(date);
+    // Jika panel kegiatan sedang aktif, refresh deteksi lembur
+    if (document.getElementById('panel-kegiatan').style.display !== 'none') deteksiLemburOtomatis();
   } catch (e) {
     console.error('Load absensi error:', e);
     if (cached) { absCache[date] = cached; renderAbsensi(date); }
@@ -3599,8 +3983,9 @@ async function init() {
 
   setProgress(15, 'Memuat pengaturan...');
   await loadPayrollSettings();
-  await loadJamOperasional(); // <-- TAMBAHKAN INI
+  await loadJamOperasional();
   await loadJamOperasionalPulang();
+  await loadJamKerja();
   renderAbsShortcuts();
   
   setProgress(30, 'Memuat bagian...');
