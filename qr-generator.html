@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Absen</title>
+  <!-- PASTIKAN INI ADA -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -49,6 +50,14 @@
       align-items: center;
       justify-content: center;
     }
+    .qr-wrapper #qrcode {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-wrapper img {
+      display: block !important;
+    }
     .info {
       font-size: 13px;
       color: #2b2620;
@@ -81,6 +90,14 @@
       margin-bottom: 16px;
       background: white;
     }
+    .cabang-select:focus {
+      outline: none;
+      border-color: #0f9b8e;
+    }
+    .loading-text {
+      color: #8a8071;
+      font-size: 14px;
+    }
     @media print {
       .no-print { display: none !important; }
       .card { border: 1px solid #ddd; box-shadow: none; }
@@ -93,6 +110,7 @@
   <div class="title">📋 QR Code Absen</div>
   <div class="sub">Tempel di pintu masuk kantor</div>
 
+  <!-- Pilih Cabang -->
   <div class="no-print">
     <label style="font-size:12px;font-weight:600;display:block;text-align:left;margin-bottom:4px;">🏢 Pilih Cabang:</label>
     <select class="cabang-select" id="cabang-select" onchange="generateQR()">
@@ -101,7 +119,9 @@
   </div>
 
   <div class="qr-wrapper">
-    <div id="qrcode"></div>
+    <div id="qrcode">
+      <span class="loading-text">⏳ Generating QR...</span>
+    </div>
   </div>
 
   <div class="info">
@@ -111,18 +131,20 @@
     3. Pilih nama → Klik "Absen"<br>
     4. ✅ Selesai!<br><br>
     <strong>⏰ Jam Operasional:</strong><br>
-    <span style="color:#0f9b8e;font-weight:700;">07:00 - 09:00 WIB</span>
+    <span id="jam-info" style="color:#0f9b8e;font-weight:700;">07:00 - 09:00 WIB</span>
   </div>
 
   <button class="btn-print no-print" onclick="window.print()">🖨️ Cetak QR</button>
   <button class="btn-print no-print" onclick="window.location.href='index.html'" style="background:#ece4d3;color:#2b2620;">⬅ Kembali</button>
 </div>
 
+<script src="config.js"></script>
 <script>
-// ============================================================
-// QR CODE GENERATOR (TANPA SUPABASE)
-// ============================================================
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ============================================================
+// 1. GENERATE QR CODE (PASTIKAN QRCODE TERSEDIA)
+// ============================================================
 function generateQR() {
   const cabangId = document.getElementById('cabang-select').value;
   const baseUrl = window.location.origin + '/absen-scan.html';
@@ -157,10 +179,37 @@ function generateQR() {
     console.error('❌ QR Generation error:', e);
     qrContainer.innerHTML = '❌ Gagal generate QR: ' + e.message;
   }
+  
+  // Update jam info
+  loadJamInfo(cabangId);
 }
 
 // ============================================================
-// 2. CEK LIBRARY SAAT LOAD
+// 2. LOAD JAM INFO
+// ============================================================
+async function loadJamInfo(cabangId) {
+  try {
+    const { data, error } = await sb
+      .from('settings')
+      .select('value')
+      .eq('key', 'jam_operasional')
+      .eq('cabang_id', parseInt(cabangId))
+      .maybeSingle();
+    
+    if (error) throw error;
+    
+    if (data && data.value) {
+      const jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      document.getElementById('jam-info').textContent = 
+        `${jam.buka || '07:00'} - ${jam.tutup || '09:00'} WIB`;
+    }
+  } catch (e) {
+    console.error('Load jam info error:', e);
+  }
+}
+
+// ============================================================
+// 3. CEK LIBRARY SAAT LOAD
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🔍 Checking QRCode library...');
@@ -176,6 +225,12 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('✅ QRCode library loaded!');
   generateQR();
 });
+
+// ============================================================
+// 4. FALLBACK: PAKAI CDN LAIN JIKA ERROR
+// ============================================================
+// Jika QRCode tidak muncul, coba ganti CDN di bagian <head>
+// Ganti: https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js
 </script>
 </body>
 </html>
