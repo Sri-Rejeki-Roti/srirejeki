@@ -2780,7 +2780,9 @@ function switchTab(name, btn) {
   } else if (name === 'rekapjual') {
     mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-rekapjual').classList.add('active');
-    loadRekapJual();
+    const rDari = document.getElementById('rekapjual-dari');
+    if (rDari && !rDari.value) setRekapJualPeriode('hari');
+    else loadRekapJual();
   } else if (name === 'rekappel') {
     mainDefault.style.display = 'block'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'none';
     document.getElementById('sec-rekappel').classList.add('active');
