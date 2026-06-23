@@ -271,11 +271,11 @@
   <div id="sudah-absen" class="hidden">
     <div style="padding:20px 0;">
       <div style="font-size:48px;">✅</div>
-      <div style="font-size:20px;font-weight:800;color:#0a9d5c;margin:8px 0;">Sudah Absen!</div>
+      <div style="font-size:20px;font-weight:800;color:#0a9d5c;margin:8px 0;" id="sudah-absen-title">Sudah Absen!</div>
       <div style="font-size:14px;color:#8a8071;" id="absen-nama">-</div>
       <div style="font-size:12px;color:#8a8071;margin-top:4px;" id="absen-waktu">-</div>
     </div>
-    <button class="btn btn-success" disabled>
+    <button class="btn btn-success" disabled id="btn-sudah-absen">
       ✅ Sudah Absen
     </button>
   </div>
@@ -320,14 +320,43 @@ if (window.SUPABASE_URL && window.SUPABASE_KEY) {
 // ============================================================
 // VARIABEL GLOBAL
 // ============================================================
-let JAM_BUKA = 7;
-let JAM_TUTUP = 9;
-let jamStrBuka = '07:00';
-let jamStrTutup = '09:00';
+const _params = new URLSearchParams(window.location.search);
+const MODE = (_params.get('mode') === 'pulang') ? 'pulang' : 'masuk'; // 'masuk' | 'pulang'
+const SETTING_KEY = (MODE === 'pulang') ? 'jam_operasional_pulang' : 'jam_operasional';
+const DEFAULT_JAM = (MODE === 'pulang') ? { buka: '16:00', tutup: '18:00' } : { buka: '07:00', tutup: '09:00' };
+
+let JAM_BUKA = parseInt(DEFAULT_JAM.buka.split(':')[0]);
+let JAM_TUTUP = parseInt(DEFAULT_JAM.tutup.split(':')[0]);
+let jamStrBuka = DEFAULT_JAM.buka;
+let jamStrTutup = DEFAULT_JAM.tutup;
 let pegawaiList = [];
 let selectedPegawai = null;
 let sudahAbsenHariIni = false;
 let isOpen = false;
+
+// Teks UI sesuai mode
+const TEKS = MODE === 'pulang'
+  ? {
+      title: 'Absen Pulang', sub: 'Scan QR untuk absen pulang',
+      btnIdle: '🚪 Absen Pulang Sekarang', btnDone: '✅ Sudah Absen Pulang',
+      sukses: 'ABSEN PULANG BERHASIL!', selesai: 'Selamat istirahat',
+      labelWaktu: '🚪 Pulang', emptyList: 'Tidak ada nama tersisa (semua sudah absen pulang)',
+      sudahSemua: '🎉 Semua pegawai sudah absen pulang hari ini'
+    }
+  : {
+      title: 'Absen QR', sub: 'Scan QR untuk absen',
+      btnIdle: '✅ Absen Sekarang', btnDone: '✅ Sudah Absen',
+      sukses: 'ABSEN BERHASIL!', selesai: 'Selamat bekerja',
+      labelWaktu: '⏰', emptyList: 'Tidak ada nama tersisa (semua sudah absen)',
+      sudahSemua: '🎉 Semua pegawai sudah absen hari ini'
+    };
+
+document.getElementById('title').textContent = TEKS.title;
+document.getElementById('sub').textContent = TEKS.sub;
+document.getElementById('btn-absen').textContent = TEKS.btnIdle;
+document.getElementById('btn-sudah-absen').textContent = TEKS.btnDone;
+document.getElementById('sudah-absen-title').textContent = MODE === 'pulang' ? 'Sudah Absen Pulang!' : 'Sudah Absen!';
+document.title = TEKS.title;
 
 // ============================================================
 // LOAD JAM OPERASIONAL (PASTI JALAN)
@@ -337,17 +366,17 @@ async function loadJamOperasional() {
   const statusEl = document.getElementById('jam-status');
   
   // SET DEFAULT DULU (BIAR TIDAK LOADING TERUS)
-  document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
+  document.getElementById('info-text').textContent = `⏰ Buka: ${DEFAULT_JAM.buka} - ${DEFAULT_JAM.tutup} WIB`;
   statusEl.textContent = '⏳ Memuat pengaturan...';
   
   if (!sb || !supabaseConnected) {
     // JIKA TIDAK KONEK, PAKAI DEFAULT
-    JAM_BUKA = 7;
-    JAM_TUTUP = 9;
-    jamStrBuka = '07:00';
-    jamStrTutup = '09:00';
-    document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
-    statusEl.textContent = '✅ Default (07:00 - 09:00)';
+    jamStrBuka = DEFAULT_JAM.buka;
+    jamStrTutup = DEFAULT_JAM.tutup;
+    JAM_BUKA = parseInt(jamStrBuka.split(':')[0]);
+    JAM_TUTUP = parseInt(jamStrTutup.split(':')[0]);
+    document.getElementById('info-text').textContent = `⏰ Buka: ${jamStrBuka} - ${jamStrTutup} WIB`;
+    statusEl.textContent = `✅ Default (${jamStrBuka} - ${jamStrTutup})`;
     console.log('⚠️ Using default jam (no Supabase)');
     return;
   }
@@ -357,25 +386,25 @@ async function loadJamOperasional() {
     const params = new URLSearchParams(window.location.search);
     const cabangId = params.get('cabang') || '1';
     
-    console.log('📥 Load jam untuk cabang:', cabangId);
+    console.log('📥 Load jam (' + SETTING_KEY + ') untuk cabang:', cabangId);
     
     const { data, error } = await sb
       .from('settings')
       .select('value')
-      .eq('key', 'jam_operasional')
+      .eq('key', SETTING_KEY)
       .eq('cabang_id', parseInt(cabangId))
       .maybeSingle();
     
     if (error) throw error;
     
-    let buka = '07:00';
-    let tutup = '09:00';
+    let buka = DEFAULT_JAM.buka;
+    let tutup = DEFAULT_JAM.tutup;
     
     if (data && data.value) {
       try {
         const jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-        buka = jam.buka || '07:00';
-        tutup = jam.tutup || '09:00';
+        buka = jam.buka || DEFAULT_JAM.buka;
+        tutup = jam.tutup || DEFAULT_JAM.tutup;
       } catch(e) {
         console.warn('Parse jam error:', e);
       }
@@ -396,11 +425,11 @@ async function loadJamOperasional() {
   } catch (e) {
     console.error('❌ Load jam error:', e);
     // TETAP PAKAI DEFAULT
-    JAM_BUKA = 7;
-    JAM_TUTUP = 9;
-    jamStrBuka = '07:00';
-    jamStrTutup = '09:00';
-    document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
+    jamStrBuka = DEFAULT_JAM.buka;
+    jamStrTutup = DEFAULT_JAM.tutup;
+    JAM_BUKA = parseInt(jamStrBuka.split(':')[0]);
+    JAM_TUTUP = parseInt(jamStrTutup.split(':')[0]);
+    document.getElementById('info-text').textContent = `⏰ Buka: ${jamStrBuka} - ${jamStrTutup} WIB`;
     statusEl.textContent = '⚠️ Gagal load, pakai default';
   }
 }
@@ -428,9 +457,9 @@ function cekJamOperasional() {
     info.className = 'jam-info buka';
     badge.className = 'readonly-badge buka';
     badge.textContent = '✅ BUKA';
-    document.getElementById('icon').textContent = '📷';
-    document.getElementById('title').textContent = 'Absen QR';
-    document.getElementById('sub').textContent = 'Scan QR untuk absen';
+    document.getElementById('icon').textContent = MODE === 'pulang' ? '🚪' : '📷';
+    document.getElementById('title').textContent = TEKS.title;
+    document.getElementById('sub').textContent = TEKS.sub;
     statusEl.textContent = '✅ Buka — Silakan absen!';
   } else {
     info.className = 'jam-info tutup';
@@ -488,29 +517,52 @@ async function loadPegawai() {
     if (error) throw error;
     let list = data || [];
 
-    // Ambil daftar pegawai_id yang SUDAH absen hari ini,
-    // biar nama mereka tidak muncul lagi di dropdown.
     const today = new Date().toISOString().slice(0, 10);
-    try {
-      const { data: sudahData, error: sudahErr } = await sb
-        .from('absensi')
-        .select('pegawai_id')
-        .eq('tanggal', today)
-        .eq('status', 'hadir');
 
-      if (sudahErr) throw sudahErr;
+    if (MODE === 'pulang') {
+      // ABSEN PULANG: hanya tampilkan pegawai yang SUDAH absen masuk
+      // hari ini tapi BELUM absen pulang (jam_keluar masih kosong).
+      try {
+        const { data: absData, error: absErr } = await sb
+          .from('absensi')
+          .select('pegawai_id, jam_keluar')
+          .eq('tanggal', today)
+          .eq('status', 'hadir');
 
-      const idsSudahAbsen = new Set((sudahData || []).map(r => r.pegawai_id));
-      list = list.filter(p => !idsSudahAbsen.has(p.id));
-    } catch (e2) {
-      console.warn('⚠️ Gagal cek pegawai yang sudah absen:', e2);
+        if (absErr) throw absErr;
+
+        const idsBolehPulang = new Set(
+          (absData || []).filter(r => !r.jam_keluar).map(r => r.pegawai_id)
+        );
+        list = list.filter(p => idsBolehPulang.has(p.id));
+      } catch (e2) {
+        console.warn('⚠️ Gagal cek pegawai yang boleh absen pulang:', e2);
+        list = [];
+      }
+    } else {
+      // ABSEN MASUK: keluarkan pegawai yang SUDAH absen masuk hari ini
+      // biar nama mereka tidak muncul lagi di dropdown.
+      try {
+        const { data: sudahData, error: sudahErr } = await sb
+          .from('absensi')
+          .select('pegawai_id')
+          .eq('tanggal', today)
+          .eq('status', 'hadir');
+
+        if (sudahErr) throw sudahErr;
+
+        const idsSudahAbsen = new Set((sudahData || []).map(r => r.pegawai_id));
+        list = list.filter(p => !idsSudahAbsen.has(p.id));
+      } catch (e2) {
+        console.warn('⚠️ Gagal cek pegawai yang sudah absen:', e2);
+      }
     }
 
     pegawaiList = list;
     renderPegawaiDropdown();
 
     if (pegawaiList.length === 0) {
-      document.getElementById('status').textContent = '🎉 Semua pegawai sudah absen hari ini';
+      document.getElementById('status').textContent = TEKS.sudahSemua;
       document.getElementById('status').className = 'status success';
       document.getElementById('status').classList.remove('hidden');
       document.getElementById('btn-absen').disabled = true;
@@ -598,7 +650,7 @@ function renderPegawaiDropdown(filterText = '') {
     const empty = document.createElement('div');
     empty.className = 'cdd-empty';
     empty.textContent = pegawaiList.length === 0
-      ? 'Tidak ada nama tersisa (semua sudah absen)'
+      ? TEKS.emptyList
       : 'Nama tidak ditemukan';
     cddEl.list.appendChild(empty);
     return;
@@ -635,7 +687,7 @@ async function cekSudahAbsen() {
   try {
     const { data, error } = await sb
       .from('absensi')
-      .select('id, jam_masuk')
+      .select('id, jam_masuk, jam_keluar')
       .eq('pegawai_id', selectedPegawai.id)
       .eq('tanggal', today)
       .eq('status', 'hadir')
@@ -643,13 +695,18 @@ async function cekSudahAbsen() {
 
     if (error) throw error;
 
-    if (data) {
+    const sudahSelesai = MODE === 'pulang'
+      ? !!(data && data.jam_keluar)   // pulang: dianggap "selesai" kalau jam_keluar sudah terisi
+      : !!data;                       // masuk: dianggap "selesai" kalau row absensi sudah ada
+
+    if (sudahSelesai) {
       sudahAbsenHariIni = true;
       document.getElementById('form-absen').style.display = 'none';
       document.getElementById('sudah-absen').classList.remove('hidden');
       document.getElementById('absen-nama').textContent = selectedPegawai.nama;
-      document.getElementById('absen-waktu').textContent = 
-        `⏰ ${data.jam_masuk ? new Date(data.jam_masuk).toLocaleTimeString('id') : '-'}`;
+      const waktu = MODE === 'pulang' ? data.jam_keluar : data.jam_masuk;
+      document.getElementById('absen-waktu').textContent =
+        `${TEKS.labelWaktu} ${waktu ? new Date(waktu).toLocaleTimeString('id') : '-'}`;
       document.getElementById('btn-absen').disabled = true;
       setDropdownDisabled(true);
     } else {
@@ -687,18 +744,36 @@ async function absen() {
   }
 
   const today = new Date().toISOString().slice(0, 10);
-  const { data: sudah } = await sb
+
+  const { data: existing, error: cekErr } = await sb
     .from('absensi')
-    .select('id')
+    .select('id, jam_keluar')
     .eq('pegawai_id', selectedPegawai.id)
     .eq('tanggal', today)
     .eq('status', 'hadir')
     .maybeSingle();
 
-  if (sudah) {
-    setStatus('✅ Anda sudah absen hari ini!', 'success');
-    document.getElementById('btn-absen').disabled = true;
+  if (cekErr) {
+    setStatus('❌ Gagal cek data: ' + (cekErr.message || 'Unknown'), 'error');
     return;
+  }
+
+  if (MODE === 'pulang') {
+    if (!existing) {
+      setStatus('❌ Belum absen masuk hari ini, tidak bisa absen pulang!', 'error');
+      return;
+    }
+    if (existing.jam_keluar) {
+      setStatus('✅ Anda sudah absen pulang hari ini!', 'success');
+      document.getElementById('btn-absen').disabled = true;
+      return;
+    }
+  } else {
+    if (existing) {
+      setStatus('✅ Anda sudah absen hari ini!', 'success');
+      document.getElementById('btn-absen').disabled = true;
+      return;
+    }
   }
 
   const btn = document.getElementById('btn-absen');
@@ -707,24 +782,32 @@ async function absen() {
   setStatus('⏳ Menyimpan...', 'info');
 
   try {
-    const { error } = await sb
-      .from('absensi')
-      .insert({
-        pegawai_id: selectedPegawai.id,
-        tanggal: today,
-        status: 'hadir',
-        lembur_jam: 0,
-        jam_masuk: new Date().toISOString()
-      });
+    let error;
+    if (MODE === 'pulang') {
+      ({ error } = await sb
+        .from('absensi')
+        .update({ jam_keluar: new Date().toISOString() })
+        .eq('id', existing.id));
+    } else {
+      ({ error } = await sb
+        .from('absensi')
+        .insert({
+          pegawai_id: selectedPegawai.id,
+          tanggal: today,
+          status: 'hadir',
+          lembur_jam: 0,
+          jam_masuk: new Date().toISOString()
+        }));
+    }
 
     if (error) throw error;
 
     sudahAbsenHariIni = true;
 
-    setStatus(`🎉 ${selectedPegawai.nama} — ABSEN BERHASIL!`, 'success');
+    setStatus(`🎉 ${selectedPegawai.nama} — ${TEKS.sukses}`, 'success');
     document.getElementById('icon').textContent = '✅';
-    document.getElementById('title').textContent = 'Absen Berhasil!';
-    document.getElementById('sub').textContent = `Selamat bekerja, ${selectedPegawai.nama}! 💪`;
+    document.getElementById('title').textContent = MODE === 'pulang' ? 'Absen Pulang Berhasil!' : 'Absen Berhasil!';
+    document.getElementById('sub').textContent = `${TEKS.selesai}, ${selectedPegawai.nama}! 💪`;
     btn.disabled = true;
     btn.textContent = '✅ Selesai';
 
@@ -736,7 +819,7 @@ async function absen() {
     document.getElementById('sudah-absen').classList.remove('hidden');
     document.getElementById('absen-nama').textContent = selectedPegawai.nama;
     document.getElementById('absen-waktu').textContent = 
-      `⏰ ${new Date().toLocaleTimeString('id')}`;
+      `${TEKS.labelWaktu} ${new Date().toLocaleTimeString('id')}`;
 
     try {
       // Beep sederhana pakai Web Audio API (tidak perlu internet/file eksternal)
