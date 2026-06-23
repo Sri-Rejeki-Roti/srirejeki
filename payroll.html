@@ -2961,15 +2961,22 @@ function renderAbsensi(date) {
     const jamMasuk = isHadir && hadirMap[p.id].jam_masuk
       ? new Date(hadirMap[p.id].jam_masuk).toLocaleTimeString('id', { hour: '2-digit', minute: '2-digit' })
       : null;
+    const jamKeluar = isHadir && hadirMap[p.id].jam_keluar
+      ? new Date(hadirMap[p.id].jam_keluar).toLocaleTimeString('id', { hour: '2-digit', minute: '2-digit' })
+      : null;
     let lockIconHtml = '';
     if (locked) {
       lockIconHtml = `<button class="abs-lock-btn" onclick="event.stopPropagation(); unlockAbsenRow(${p.id})" title="Ketuk untuk ubah status">🔒</button>`;
     } else if (isHadir && overridden) {
       lockIconHtml = `<button class="abs-lock-btn unlocked" onclick="event.stopPropagation(); lockAbsenRow(${p.id})" title="Ketuk untuk kunci lagi">🔓</button>`;
     }
+    const jamHtml = [
+      jamMasuk ? `⏰ ${jamMasuk}` : '',
+      jamKeluar ? `🚪 ${jamKeluar}` : ''
+    ].filter(Boolean).join(' · ');
     return `<div class="abs-item" id="abs-row-${p.id}">
       <div class="abs-avatar" style="background:${clr.bg};color:${clr.fg}">${p.nama.charAt(0).toUpperCase()}</div>
-      <div class="abs-info"><div class="abs-name">${p.nama}</div><div class="abs-jabatan">${p.jabatan || 'Pegawai'}${jamMasuk ? ` · ⏰ ${jamMasuk}` : ''}</div></div>
+      <div class="abs-info"><div class="abs-name">${p.nama}</div><div class="abs-jabatan">${p.jabatan || 'Pegawai'}${jamHtml ? ` · ${jamHtml}` : ''}</div></div>
       <div class="toggle-wrapper">
         ${lockIconHtml}
         <button class="toggle-hadir ${isHadir ? 'active' : ''} ${locked ? 'locked' : ''}" onclick="toggleAbsen(${p.id})" id="toggle-${p.id}">
