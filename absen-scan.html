@@ -541,8 +541,7 @@ async function absen() {
         tanggal: today,
         status: 'hadir',
         lembur_jam: 0,
-        scanned_at: new Date().toISOString(),
-        device: 'qr_scan'
+        scanned_at: new Date().toISOString()
       });
 
     if (error) throw error;
