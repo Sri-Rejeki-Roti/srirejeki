@@ -77,7 +77,9 @@
       display: block;
       margin-bottom: 4px;
     }
-    .form-group select {
+    /* ===================== CUSTOM DROPDOWN ===================== */
+    .cdd { position: relative; }
+    .cdd-trigger {
       width: 100%;
       padding: 12px;
       border: 2px solid #ece4d3;
@@ -86,14 +88,76 @@
       font-family: inherit;
       background: white;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s;
     }
-    .form-group select:focus {
-      outline: none;
-      border-color: #0f9b8e;
+    .cdd-trigger span.cdd-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #2b2620;
     }
-    .form-group select:disabled {
+    .cdd-trigger span.cdd-text.placeholder { color: #999; font-weight: 400; }
+    .cdd-trigger .cdd-arrow {
+      font-size: 12px;
+      color: #8a8071;
+      transition: transform 0.15s;
+      flex-shrink: 0;
+    }
+    .cdd.open .cdd-trigger { border-color: #0f9b8e; }
+    .cdd.open .cdd-trigger .cdd-arrow { transform: rotate(180deg); }
+    .cdd.disabled .cdd-trigger {
       background: #f5f5f5;
       color: #999;
+      cursor: not-allowed;
+    }
+    .cdd-panel {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #ece4d3;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 20;
+      overflow: hidden;
+      text-align: left;
+    }
+    .cdd-search {
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-bottom: 2px solid #ece4d3;
+      font-size: 14px;
+      font-family: inherit;
+      text-transform: none;
+      outline: none;
+    }
+    .cdd-list {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .cdd-item {
+      padding: 12px;
+      font-size: 15px;
+      text-transform: uppercase;
+      color: #2b2620;
+      cursor: pointer;
+    }
+    .cdd-item:hover, .cdd-item.highlight { background: #f0f9f7; }
+    .cdd-item.selected { background: #e6f9ef; color: #0a9d5c; font-weight: 700; }
+    .cdd-empty {
+      padding: 14px 12px;
+      font-size: 13px;
+      color: #8a8071;
+      text-align: center;
+      text-transform: none;
     }
     .btn {
       width: 100%;
@@ -183,9 +247,16 @@
   <div id="form-absen">
     <div class="form-group">
       <label>👤 Nama Anda</label>
-      <select id="pegawai-select" disabled>
-        <option value="">— Pilih Nama —</option>
-      </select>
+      <div class="cdd disabled" id="pegawai-dropdown">
+        <div class="cdd-trigger" id="pegawai-trigger" tabindex="0">
+          <span class="cdd-text placeholder" id="pegawai-trigger-text">— Pilih Nama —</span>
+          <span class="cdd-arrow">▾</span>
+        </div>
+        <div class="cdd-panel hidden" id="pegawai-panel">
+          <input type="text" class="cdd-search" id="pegawai-search" placeholder="Cari nama...">
+          <div class="cdd-list" id="pegawai-list"></div>
+        </div>
+      </div>
     </div>
 
     <div id="status" class="status hidden"></div>
@@ -380,16 +451,16 @@ function cekJamOperasional() {
   }
 
   // Update form
-  const select = document.getElementById('pegawai-select');
+  const dropdown = document.getElementById('pegawai-dropdown');
   const btn = document.getElementById('btn-absen');
 
   if (isOpen && !sudahAbsenHariIni) {
-    select.disabled = false;
+    setDropdownDisabled(false);
     btn.disabled = false;
     document.getElementById('form-absen').style.display = 'block';
     document.getElementById('sudah-absen').classList.add('hidden');
   } else {
-    select.disabled = true;
+    setDropdownDisabled(true);
     btn.disabled = true;
   }
 
@@ -405,7 +476,7 @@ async function loadPegawai() {
     console.warn('⚠️ Cannot load pegawai, Supabase not connected');
     return;
   }
-  
+
   try {
     const { data, error } = await sb
       .from('pegawai')
@@ -414,25 +485,39 @@ async function loadPegawai() {
       .order('nama');
 
     if (error) throw error;
-    pegawaiList = data || [];
+    let list = data || [];
 
-    const select = document.getElementById('pegawai-select');
-    pegawaiList.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = `${p.nama} ${p.jabatan ? '— ' + p.jabatan : ''}`;
-      select.appendChild(opt);
-    });
+    // Ambil daftar pegawai_id yang SUDAH absen hari ini,
+    // biar nama mereka tidak muncul lagi di dropdown.
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const { data: sudahData, error: sudahErr } = await sb
+        .from('absensi')
+        .select('pegawai_id')
+        .eq('tanggal', today)
+        .eq('status', 'hadir');
+
+      if (sudahErr) throw sudahErr;
+
+      const idsSudahAbsen = new Set((sudahData || []).map(r => r.pegawai_id));
+      list = list.filter(p => !idsSudahAbsen.has(p.id));
+    } catch (e2) {
+      console.warn('⚠️ Gagal cek pegawai yang sudah absen:', e2);
+    }
+
+    pegawaiList = list;
+    renderPegawaiDropdown();
 
     if (pegawaiList.length === 0) {
-      document.getElementById('status').textContent = '❌ Belum ada pegawai aktif';
-      document.getElementById('status').className = 'status error';
+      document.getElementById('status').textContent = '🎉 Semua pegawai sudah absen hari ini';
+      document.getElementById('status').className = 'status success';
+      document.getElementById('status').classList.remove('hidden');
       document.getElementById('btn-absen').disabled = true;
+      setDropdownDisabled(true);
     }
 
     if (pegawaiList.length === 1) {
-      select.value = pegawaiList[0].id;
-      onSelectPegawai();
+      selectPegawai(pegawaiList[0]);
     }
 
   } catch (err) {
@@ -440,12 +525,103 @@ async function loadPegawai() {
   }
 }
 
-function onSelectPegawai() {
-  const id = parseInt(document.getElementById('pegawai-select').value, 10);
-  selectedPegawai = pegawaiList.find(p => p.id === id) || null;
+// ============================================================
+// CUSTOM DROPDOWN PEGAWAI
+// ============================================================
+const cddEl = {
+  wrap: null, trigger: null, triggerText: null, panel: null, search: null, list: null
+};
+
+function initPegawaiDropdown() {
+  cddEl.wrap = document.getElementById('pegawai-dropdown');
+  cddEl.trigger = document.getElementById('pegawai-trigger');
+  cddEl.triggerText = document.getElementById('pegawai-trigger-text');
+  cddEl.panel = document.getElementById('pegawai-panel');
+  cddEl.search = document.getElementById('pegawai-search');
+  cddEl.list = document.getElementById('pegawai-list');
+
+  cddEl.trigger.addEventListener('click', () => {
+    if (cddEl.wrap.classList.contains('disabled')) return;
+    const isOpenNow = !cddEl.panel.classList.contains('hidden');
+    if (isOpenNow) {
+      closeDropdown();
+    } else {
+      openDropdown();
+    }
+  });
+
+  cddEl.search.addEventListener('input', () => {
+    renderPegawaiDropdown(cddEl.search.value);
+  });
+
+  cddEl.search.addEventListener('click', (e) => e.stopPropagation());
+
+  document.addEventListener('click', (e) => {
+    if (!cddEl.wrap.contains(e.target)) closeDropdown();
+  });
 }
 
-document.getElementById('pegawai-select').addEventListener('change', onSelectPegawai);
+function openDropdown() {
+  if (cddEl.wrap.classList.contains('disabled')) return;
+  cddEl.panel.classList.remove('hidden');
+  cddEl.wrap.classList.add('open');
+  cddEl.search.value = '';
+  renderPegawaiDropdown();
+  setTimeout(() => cddEl.search.focus(), 0);
+}
+
+function closeDropdown() {
+  cddEl.panel.classList.add('hidden');
+  cddEl.wrap.classList.remove('open');
+}
+
+function setDropdownDisabled(disabled) {
+  if (disabled) {
+    cddEl.wrap.classList.add('disabled');
+    closeDropdown();
+  } else {
+    cddEl.wrap.classList.remove('disabled');
+  }
+}
+
+function renderPegawaiDropdown(filterText = '') {
+  if (!cddEl.list) return;
+  cddEl.list.innerHTML = '';
+
+  const q = filterText.trim().toLowerCase();
+  const filtered = q
+    ? pegawaiList.filter(p => p.nama.toLowerCase().includes(q))
+    : pegawaiList;
+
+  if (filtered.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'cdd-empty';
+    empty.textContent = pegawaiList.length === 0
+      ? 'Tidak ada nama tersisa (semua sudah absen)'
+      : 'Nama tidak ditemukan';
+    cddEl.list.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'cdd-item';
+    if (selectedPegawai && selectedPegawai.id === p.id) item.classList.add('selected');
+    item.textContent = `${p.nama}${p.jabatan ? ' — ' + p.jabatan : ''}`;
+    item.addEventListener('click', () => selectPegawai(p));
+    cddEl.list.appendChild(item);
+  });
+}
+
+function selectPegawai(p) {
+  selectedPegawai = p;
+  cddEl.triggerText.textContent = p.nama;
+  cddEl.triggerText.classList.remove('placeholder');
+  closeDropdown();
+  cekSudahAbsen();
+}
+
+initPegawaiDropdown();
 
 // ============================================================
 // CEK SUDAH ABSEN HARI INI?
@@ -474,7 +650,7 @@ async function cekSudahAbsen() {
       document.getElementById('absen-waktu').textContent = 
         `⏰ ${data.jam_masuk ? new Date(data.jam_masuk).toLocaleTimeString('id') : '-'}`;
       document.getElementById('btn-absen').disabled = true;
-      document.getElementById('pegawai-select').disabled = true;
+      setDropdownDisabled(true);
     } else {
       sudahAbsenHariIni = false;
       document.getElementById('form-absen').style.display = 'block';
@@ -549,6 +725,10 @@ async function absen() {
     btn.disabled = true;
     btn.textContent = '✅ Selesai';
 
+    // Keluarkan nama yang baru absen dari list dropdown
+    pegawaiList = pegawaiList.filter(p => p.id !== selectedPegawai.id);
+    renderPegawaiDropdown();
+
     document.getElementById('form-absen').style.display = 'none';
     document.getElementById('sudah-absen').classList.remove('hidden');
     document.getElementById('absen-nama').textContent = selectedPegawai.nama;
@@ -580,12 +760,7 @@ async function absen() {
 // ============================================================
 // CEK DAN TAMPILKAN STATUS
 // ============================================================
-document.getElementById('pegawai-select').addEventListener('change', () => {
-  setTimeout(async () => {
-    onSelectPegawai();
-    await cekSudahAbsen();
-  }, 100);
-});
+// (listener pemilihan nama sudah ditangani langsung di selectPegawai())
 
 // ============================================================
 // INIT
