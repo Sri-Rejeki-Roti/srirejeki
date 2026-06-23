@@ -77,7 +77,7 @@
       display: block;
       margin-bottom: 4px;
     }
-    /* ===================== CUSTOM DROPDOWN ===================== */
+    /* ===================== CUSTOM DROPDOWN TRIGGER ===================== */
     .cdd { position: relative; }
     .cdd-trigger {
       width: 100%;
@@ -116,46 +116,100 @@
       color: #999;
       cursor: not-allowed;
     }
-    .cdd-panel {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      right: 0;
+
+    /* ===================== BOTTOM SHEET ===================== */
+    .bs-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .bs-overlay.show { opacity: 1; pointer-events: all; }
+    .bs-sheet {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
       background: white;
-      border: 2px solid #ece4d3;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      z-index: 20;
-      overflow: hidden;
-      text-align: left;
+      border-radius: 20px 20px 0 0;
+      z-index: 101;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.34, 1.1, 0.64, 1);
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
     }
-    .cdd-search {
-      width: 100%;
-      padding: 10px 12px;
-      border: none;
-      border-bottom: 2px solid #ece4d3;
+    .bs-sheet.show { transform: translateY(0); }
+    .bs-handle-bar {
+      width: 40px; height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+    .bs-header {
+      padding: 14px 20px 12px;
       font-size: 14px;
-      font-family: inherit;
-      text-transform: none;
-      outline: none;
+      font-weight: 700;
+      color: #8a8071;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #ece4d3;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .cdd-list {
-      max-height: 220px;
+    .bs-close {
+      font-size: 20px;
+      color: #8a8071;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .bs-list {
       overflow-y: auto;
+      flex: 1;
+      padding: 8px 0 24px;
+      -webkit-overflow-scrolling: touch;
     }
-    .cdd-item {
-      padding: 14px 12px;
+    .bs-item {
+      padding: 16px 20px;
       font-size: 17px;
       font-weight: 700;
       text-transform: uppercase;
       color: #2b2620;
       cursor: pointer;
+      border-bottom: 1px solid #f3ede3;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.1s;
     }
-    .cdd-item:hover, .cdd-item.highlight { background: #f0f9f7; }
-    .cdd-item.selected { background: #e6f9ef; color: #0a9d5c; font-weight: 700; }
-    .cdd-empty {
-      padding: 14px 12px;
-      font-size: 13px;
+    .bs-item:last-child { border-bottom: none; }
+    .bs-item:active { background: #f0f9f7; }
+    .bs-item.selected { background: #e6f9ef; color: #0a9d5c; }
+    .bs-item .bs-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .bs-item.selected .bs-avatar { background: #d1fae5; color: #0a9d5c; }
+    .bs-item .bs-name-wrap { flex: 1; overflow: hidden; }
+    .bs-item .bs-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bs-item .bs-jabatan { font-size: 11px; font-weight: 400; color: #8a8071; text-transform: none; margin-top: 1px; display: block; }
+    .bs-item.selected .bs-jabatan { color: #0a9d5c; }
+    .bs-item .bs-check { font-size: 18px; flex-shrink: 0; }
+    .bs-empty {
+      padding: 40px 20px;
+      font-size: 14px;
       color: #8a8071;
       text-align: center;
       text-transform: none;
@@ -249,13 +303,9 @@
     <div class="form-group">
       <label>👤 Nama Anda</label>
       <div class="cdd disabled" id="pegawai-dropdown">
-        <div class="cdd-trigger" id="pegawai-trigger" tabindex="0">
+        <div class="cdd-trigger" id="pegawai-trigger" tabindex="-1">
           <span class="cdd-text placeholder" id="pegawai-trigger-text">— Pilih Nama —</span>
           <span class="cdd-arrow">▾</span>
-        </div>
-        <div class="cdd-panel hidden" id="pegawai-panel">
-          <input type="text" class="cdd-search" id="pegawai-search" placeholder="Cari nama...">
-          <div class="cdd-list" id="pegawai-list"></div>
         </div>
       </div>
     </div>
@@ -283,6 +333,17 @@
   <div class="info-text" id="info-text">
     ⏰ Buka: 07:00 - 09:00 WIB
   </div>
+</div>
+
+<!-- BOTTOM SHEET PILIH NAMA -->
+<div class="bs-overlay" id="bs-overlay"></div>
+<div class="bs-sheet" id="bs-sheet">
+  <div class="bs-handle-bar"></div>
+  <div class="bs-header">
+    <span>👤 Pilih Nama Anda</span>
+    <span class="bs-close" id="bs-close">✕</span>
+  </div>
+  <div class="bs-list" id="bs-list"></div>
 </div>
 
 <script>
@@ -579,53 +640,52 @@ async function loadPegawai() {
 }
 
 // ============================================================
-// CUSTOM DROPDOWN PEGAWAI
+// BOTTOM SHEET PILIH NAMA
 // ============================================================
 const cddEl = {
-  wrap: null, trigger: null, triggerText: null, panel: null, search: null, list: null
+  wrap: null, trigger: null, triggerText: null
+};
+
+const bsEl = {
+  overlay: null, sheet: null, list: null, close: null
 };
 
 function initPegawaiDropdown() {
   cddEl.wrap = document.getElementById('pegawai-dropdown');
   cddEl.trigger = document.getElementById('pegawai-trigger');
   cddEl.triggerText = document.getElementById('pegawai-trigger-text');
-  cddEl.panel = document.getElementById('pegawai-panel');
-  cddEl.search = document.getElementById('pegawai-search');
-  cddEl.list = document.getElementById('pegawai-list');
+
+  bsEl.overlay = document.getElementById('bs-overlay');
+  bsEl.sheet   = document.getElementById('bs-sheet');
+  bsEl.list    = document.getElementById('bs-list');
+  bsEl.close   = document.getElementById('bs-close');
 
   cddEl.trigger.addEventListener('click', () => {
     if (cddEl.wrap.classList.contains('disabled')) return;
-    const isOpenNow = !cddEl.panel.classList.contains('hidden');
-    if (isOpenNow) {
-      closeDropdown();
-    } else {
-      openDropdown();
-    }
+    openDropdown();
   });
 
-  cddEl.search.addEventListener('input', () => {
-    renderPegawaiDropdown(cddEl.search.value);
-  });
-
-  cddEl.search.addEventListener('click', (e) => e.stopPropagation());
-
-  document.addEventListener('click', (e) => {
-    if (!cddEl.wrap.contains(e.target)) closeDropdown();
-  });
+  bsEl.overlay.addEventListener('click', closeDropdown);
+  bsEl.close.addEventListener('click', closeDropdown);
 }
 
 function openDropdown() {
   if (cddEl.wrap.classList.contains('disabled')) return;
-  cddEl.panel.classList.remove('hidden');
-  cddEl.wrap.classList.add('open');
-  cddEl.search.value = '';
   renderPegawaiDropdown();
-  setTimeout(() => cddEl.search.focus(), 0);
+  // Sedikit delay agar DOM siap sebelum animasi
+  requestAnimationFrame(() => {
+    bsEl.overlay.classList.add('show');
+    bsEl.sheet.classList.add('show');
+    cddEl.wrap.classList.add('open');
+  });
+  document.body.style.overflow = 'hidden';
 }
 
 function closeDropdown() {
-  cddEl.panel.classList.add('hidden');
+  bsEl.overlay.classList.remove('show');
+  bsEl.sheet.classList.remove('show');
   cddEl.wrap.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function setDropdownDisabled(disabled) {
@@ -637,32 +697,34 @@ function setDropdownDisabled(disabled) {
   }
 }
 
-function renderPegawaiDropdown(filterText = '') {
-  if (!cddEl.list) return;
-  cddEl.list.innerHTML = '';
+function renderPegawaiDropdown() {
+  if (!bsEl.list) return;
+  bsEl.list.innerHTML = '';
 
-  const q = filterText.trim().toLowerCase();
-  const filtered = q
-    ? pegawaiList.filter(p => p.nama.toLowerCase().includes(q))
-    : pegawaiList;
-
-  if (filtered.length === 0) {
+  if (pegawaiList.length === 0) {
     const empty = document.createElement('div');
-    empty.className = 'cdd-empty';
-    empty.textContent = pegawaiList.length === 0
-      ? TEKS.emptyList
-      : 'Nama tidak ditemukan';
-    cddEl.list.appendChild(empty);
+    empty.className = 'bs-empty';
+    empty.textContent = TEKS.emptyList;
+    bsEl.list.appendChild(empty);
     return;
   }
 
-  filtered.forEach(p => {
+  pegawaiList.forEach(p => {
     const item = document.createElement('div');
-    item.className = 'cdd-item';
+    item.className = 'bs-item';
     if (selectedPegawai && selectedPegawai.id === p.id) item.classList.add('selected');
-    item.textContent = `${p.nama}${p.jabatan ? ' — ' + p.jabatan : ''}`;
+
+    const initial = (p.nama || '?').charAt(0).toUpperCase();
+    item.innerHTML = `
+      <div class="bs-avatar">${initial}</div>
+      <div class="bs-name-wrap">
+        <span class="bs-name">${p.nama}</span>
+        ${p.jabatan ? `<span class="bs-jabatan">${p.jabatan}</span>` : ''}
+      </div>
+      ${(selectedPegawai && selectedPegawai.id === p.id) ? '<span class="bs-check">✅</span>' : ''}
+    `;
     item.addEventListener('click', () => selectPegawai(p));
-    cddEl.list.appendChild(item);
+    bsEl.list.appendChild(item);
   });
 }
 
