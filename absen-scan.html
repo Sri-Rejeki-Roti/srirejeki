@@ -719,6 +719,8 @@ async function absen() {
 
     if (error) throw error;
 
+    sudahAbsenHariIni = true;
+
     setStatus(`🎉 ${selectedPegawai.nama} — ABSEN BERHASIL!`, 'success');
     document.getElementById('icon').textContent = '✅';
     document.getElementById('title').textContent = 'Absen Berhasil!';
