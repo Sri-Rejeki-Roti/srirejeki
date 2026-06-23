@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Absen</title>
-  <!-- PASTIKAN INI ADA -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -50,13 +48,10 @@
       align-items: center;
       justify-content: center;
     }
-    .qr-wrapper #qrcode {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
     .qr-wrapper img {
-      display: block !important;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
     }
     .info {
       font-size: 13px;
@@ -94,9 +89,18 @@
       outline: none;
       border-color: #0f9b8e;
     }
-    .loading-text {
+    .jam-info {
+      color: #0f9b8e;
+      font-weight: 700;
+    }
+    .url-display {
+      font-size: 11px;
       color: #8a8071;
-      font-size: 14px;
+      word-break: break-all;
+      background: #f5f5f5;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
     }
     @media print {
       .no-print { display: none !important; }
@@ -110,19 +114,23 @@
   <div class="title">📋 QR Code Absen</div>
   <div class="sub">Tempel di pintu masuk kantor</div>
 
-  <!-- Pilih Cabang -->
   <div class="no-print">
     <label style="font-size:12px;font-weight:600;display:block;text-align:left;margin-bottom:4px;">🏢 Pilih Cabang:</label>
-    <select class="cabang-select" id="cabang-select" onchange="generateQR()">
+    <select class="cabang-select" id="cabang-select" onchange="updateQR()">
       <option value="1">Cabang Utama</option>
     </select>
   </div>
 
+  <!-- QR CODE -->
   <div class="qr-wrapper">
-    <div id="qrcode">
-      <span class="loading-text">⏳ Generating QR...</span>
-    </div>
+    <img id="qr-image" 
+         src="" 
+         alt="QR Code"
+         style="max-width:100%;max-height:100%;display:block;">
   </div>
+
+  <!-- Tampilkan URL -->
+  <div class="url-display no-print" id="url-display"></div>
 
   <div class="info">
     <strong>📌 Cara Pakai:</strong><br>
@@ -131,106 +139,54 @@
     3. Pilih nama → Klik "Absen"<br>
     4. ✅ Selesai!<br><br>
     <strong>⏰ Jam Operasional:</strong><br>
-    <span id="jam-info" style="color:#0f9b8e;font-weight:700;">07:00 - 09:00 WIB</span>
+    <span class="jam-info" id="jam-info">07:00 - 09:00 WIB</span>
   </div>
 
   <button class="btn-print no-print" onclick="window.print()">🖨️ Cetak QR</button>
   <button class="btn-print no-print" onclick="window.location.href='index.html'" style="background:#ece4d3;color:#2b2620;">⬅ Kembali</button>
 </div>
 
-<script src="config.js"></script>
 <script>
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ============================================================
+// KONFIGURASI DOMAIN ANDA
+// ============================================================
+const DOMAIN = 'https://sri-rejeki-roti.github.io/srirejeki';
 
 // ============================================================
-// 1. GENERATE QR CODE (PASTIKAN QRCODE TERSEDIA)
+// GENERATE QR
 // ============================================================
-function generateQR() {
+function updateQR() {
   const cabangId = document.getElementById('cabang-select').value;
-  const baseUrl = window.location.origin + '/absen-scan.html';
-  const url = baseUrl + '?cabang=' + cabangId;
   
-  console.log('📱 Generating QR for URL:', url);
+  // URL lengkap ke absen-scan.html
+  const url = DOMAIN + '/absen-scan.html?cabang=' + cabangId;
   
-  const qrContainer = document.getElementById('qrcode');
+  console.log('📱 URL:', url);
   
-  // Cek apakah QRCode library tersedia
-  if (typeof QRCode === 'undefined') {
-    qrContainer.innerHTML = '❌ Library QRCode tidak ditemukan!';
-    console.error('QRCode library not loaded!');
-    return;
-  }
+  // Tampilkan URL
+  document.getElementById('url-display').textContent = '🔗 ' + url;
   
-  // Bersihkan container
-  qrContainer.innerHTML = '';
+  // Set gambar QR dari API
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(url) + '&color=0f9b8e&bgcolor=ffffff&margin=20';
   
-  try {
-    // Generate QR
-    new QRCode(qrContainer, {
-      text: url,
-      width: 220,
-      height: 220,
-      colorDark: '#0f9b8e',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.H
-    });
-    console.log('✅ QR Code generated successfully!');
-  } catch (e) {
-    console.error('❌ QR Generation error:', e);
-    qrContainer.innerHTML = '❌ Gagal generate QR: ' + e.message;
-  }
+  const img = document.getElementById('qr-image');
+  img.src = qrUrl;
+  img.alt = 'QR Code untuk ' + url;
   
-  // Update jam info
-  loadJamInfo(cabangId);
+  console.log('✅ QR Image set to:', qrUrl);
 }
 
 // ============================================================
-// 2. LOAD JAM INFO
-// ============================================================
-async function loadJamInfo(cabangId) {
-  try {
-    const { data, error } = await sb
-      .from('settings')
-      .select('value')
-      .eq('key', 'jam_operasional')
-      .eq('cabang_id', parseInt(cabangId))
-      .maybeSingle();
-    
-    if (error) throw error;
-    
-    if (data && data.value) {
-      const jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-      document.getElementById('jam-info').textContent = 
-        `${jam.buka || '07:00'} - ${jam.tutup || '09:00'} WIB`;
-    }
-  } catch (e) {
-    console.error('Load jam info error:', e);
-  }
-}
-
-// ============================================================
-// 3. CEK LIBRARY SAAT LOAD
+// JALANKAN SAAT HALAMAN LOAD
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔍 Checking QRCode library...');
-  console.log('QRCode:', typeof QRCode);
-  
-  if (typeof QRCode === 'undefined') {
-    console.error('❌ QRCode library NOT LOADED!');
-    document.getElementById('qrcode').innerHTML = 
-      '❌ Library QRCode tidak ditemukan. Cek koneksi internet.';
-    return;
-  }
-  
-  console.log('✅ QRCode library loaded!');
-  generateQR();
+  updateQR();
+  console.log('✅ QR Generator ready!');
+  console.log('🌐 Domain:', DOMAIN);
 });
 
-// ============================================================
-// 4. FALLBACK: PAKAI CDN LAIN JIKA ERROR
-// ============================================================
-// Jika QRCode tidak muncul, coba ganti CDN di bagian <head>
-// Ganti: https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js
+// Update saat cabang berubah
+document.getElementById('cabang-select').addEventListener('change', updateQR);
 </script>
 </body>
 </html>
