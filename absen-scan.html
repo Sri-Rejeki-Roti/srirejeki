@@ -462,7 +462,7 @@ async function cekSudahAbsen() {
   try {
     const { data, error } = await sb
       .from('absensi')
-      .select('id, scanned_at')
+      .select('id')
       .eq('pegawai_id', selectedPegawai.id)
       .eq('tanggal', today)
       .eq('status', 'hadir')
@@ -476,7 +476,7 @@ async function cekSudahAbsen() {
       document.getElementById('sudah-absen').classList.remove('hidden');
       document.getElementById('absen-nama').textContent = selectedPegawai.nama;
       document.getElementById('absen-waktu').textContent = 
-        `⏰ ${new Date(data.scanned_at).toLocaleTimeString('id')}`;
+        `⏰ ${new Date().toLocaleTimeString('id')}`;
       document.getElementById('btn-absen').disabled = true;
       document.getElementById('pegawai-select').disabled = true;
     } else {
@@ -540,8 +540,7 @@ async function absen() {
         pegawai_id: selectedPegawai.id,
         tanggal: today,
         status: 'hadir',
-        lembur_jam: 0,
-        scanned_at: new Date().toISOString()
+        lembur_jam: 0
       });
 
     if (error) throw error;
@@ -560,9 +559,34 @@ async function absen() {
       `⏰ ${new Date().toLocaleTimeString('id')}`;
 
     try {
-      const audio = new Audio('https://www.soundjay.com/misc/success-bell-01.wav');
-      audio.play().catch(() => {});
+      // Beep sederhana pakai Web Audio API (tidak perlu internet/file eksternal)
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
     } catch(e) {}
+
+    // Reset otomatis ke form pilih nama setelah 4 detik,
+    // supaya pegawai berikutnya bisa absen tanpa nama sebelumnya nyangkut.
+    setTimeout(() => {
+      selectedPegawai = null;
+      sudahAbsenHariIni = false;
+      document.getElementById('pegawai-select').value = '';
+      document.getElementById('icon').textContent = '📷';
+      document.getElementById('title').textContent = 'Absen QR';
+      document.getElementById('sub').textContent = 'Scan QR untuk absen';
+      document.getElementById('form-absen').style.display = 'block';
+      document.getElementById('sudah-absen').classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = '✅ Absen Sekarang';
+      document.getElementById('status').classList.add('hidden');
+    }, 4000);
 
   } catch (err) {
     console.error('Error:', err);
