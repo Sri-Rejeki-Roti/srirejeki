@@ -2745,8 +2745,7 @@ async function init() {
     if (iniEl) iniEl.textContent = isMingguan ? 'Periode Ini' : 'Bulan Ini';
     if (laluEl) laluEl.textContent = isMingguan ? 'Periode Lalu' : 'Bulan Lalu';
 
-    // BUG FIX 4: loadPayroll di init() juga harus filter per cabang
-    await Promise.all([loadPayroll(prFrom, prTo, cabangId), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
+    await Promise.all([loadPayroll(prFrom, prTo), loadTrx(from, to, cabangId), loadTrxRingkasan(from, to), loadOmsetSepanjangWaktu()]);
 
     setProgress(90, 'Menyiapkan tampilan...');
     renderRingkasan();
@@ -2789,9 +2788,7 @@ function refreshPayrollFromRealtime(label) {
       // Gunakan tanggal periode payroll, fallback ke filter global jika belum di-set
       const from = (prFrom && prFrom.value) ? prFrom.value : document.getElementById('date-from').value;
       const to = (prTo && prTo.value) ? prTo.value : document.getElementById('date-to').value;
-      // BUG FIX 5: realtime sync juga harus filter per cabang
-      const cabangId = document.getElementById('filter-cabang')?.value || '';
-      await loadPayroll(from, to, cabangId);
+      await loadPayroll(from, to);
       renderPayroll();
       showToast('Data payroll diperbarui (' + label + ')', 'success');
     } catch (e) {
