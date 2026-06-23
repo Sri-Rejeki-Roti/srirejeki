@@ -215,25 +215,25 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 
 /* ── ABSENSI ── */
 .abs-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 12px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
   border-bottom: 1px solid var(--border);
-  min-height: 56px;
+  min-height: 40px;
 }
 .abs-item:last-child { border-bottom: none; }
 .abs-item:active { background: var(--primary-light); }
 .abs-avatar {
-  width: 36px; height: 36px;
+  width: 28px; height: 28px;
   border-radius: 50%;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 12px;
 }
-.abs-info { flex: 1; min-width: 0; }
-.abs-name { font-size: 14px; font-weight: 700; }
-.abs-jabatan { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+.abs-info { flex: 1; min-width: 0; max-width: 56%; }
+.abs-name { font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.abs-jabatan { font-size: 9.5px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .toggle-wrapper {
   display: flex;
@@ -278,6 +278,21 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 }
 .toggle-status.on { color: var(--success); }
 .toggle-status.off { color: var(--text-muted); }
+.abs-lock-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+}
+.abs-lock-btn:active { transform: scale(0.92); }
+.abs-lock-btn.unlocked { background: #fff8e6; color: #b45309; }
+.toggle-hadir.locked { cursor: default; opacity: 0.85; }
 
 /* ── REKAP PILLS ── */
 .rekap-pill {
@@ -1069,11 +1084,11 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   .sum-label { font-size: 9px; }
   .bottom-nav .nav-btn { font-size: 10px; }
   .bottom-nav .nav-btn svg { width: 24px; height: 24px; }
-  .abs-item { padding: 14px 16px; }
-  .toggle-hadir { width: 56px; height: 32px; }
-  .toggle-hadir-thumb { width: 26px; height: 26px; }
-  .toggle-hadir.active .toggle-hadir-thumb { transform: translateX(24px); }
-  .toggle-status { font-size: 13px; min-width: 44px; }
+  .abs-item { padding: 9px 14px; }
+  .toggle-hadir { width: 48px; height: 28px; }
+  .toggle-hadir-thumb { width: 22px; height: 22px; }
+  .toggle-hadir.active .toggle-hadir-thumb { transform: translateX(20px); }
+  .toggle-status { font-size: 12px; min-width: 40px; }
 }
 @media (min-width: 768px) {
   .main { max-width: 720px; }
@@ -1691,7 +1706,7 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
       <div class="pf-title" id="peg-form-title">➕ Tambah Pegawai</div>
       <input type="hidden" id="peg-edit-id">
       <div class="peg-form-row">
-        <div class="form-group"><label>Nama *</label><input type="text" id="peg-nama" placeholder="Nama lengkap..." style="text-transform:uppercase"></div>
+        <div class="form-group"><label>Nama *</label><input type="text" id="peg-nama" placeholder="Nama lengkap..." style="text-transform:uppercase" oninput="this.value = this.value.toUpperCase()"></div>
         <div class="form-group"><label>Bagian</label>
           <div class="custom-select-wrap full">
             <input type="hidden" id="peg-bagian-select" value="">
@@ -1836,7 +1851,7 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
     <div class="sg-title">🏷️ Kelola Bagian</div>
     
     <div class="bagian-form-row">
-      <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase">
+      <input type="text" id="bagian-nama" placeholder="Nama Bagian" style="text-transform:uppercase" oninput="this.value = this.value.toUpperCase()">
       <input type="text" id="bagian-gaji" placeholder="Gaji Harian" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
       <input type="text" id="bagian-lembur" placeholder="Lembur/jam" inputmode="numeric" oninput="formatRupiahInput(this)" data-raw="0">
     </div>
@@ -1896,6 +1911,7 @@ let lemburCache = [];
 let bagianList = [];
 let absDirty = false;
 let editAbsDate = '';
+let absLockOverride = new Set(); // id pegawai yang sudah Hadir tapi sengaja di-unlock admin untuk diubah
 let payrollSettings = {};
 let selectedCabangId = null;
 let isOnline = navigator.onLine;
@@ -2027,6 +2043,15 @@ function updateAbsStatusBadge(hadir) {
   }
 }
 function rp(n) { if (n == null || isNaN(n)) return 'Rp 0'; return 'Rp ' + Math.round(n).toLocaleString('id'); }
+// Pastikan nama (& jabatan) selalu tampil HURUF BESAR walaupun data lama tersimpan campuran besar/kecil.
+function upperNamaList(list) {
+  (list || []).forEach(o => { if (o && typeof o.nama === 'string') o.nama = o.nama.toUpperCase(); });
+  return list || [];
+}
+function upperJabatanList(list) {
+  (list || []).forEach(o => { if (o && typeof o.jabatan === 'string') o.jabatan = o.jabatan.toUpperCase(); });
+  return list || [];
+}
 
 function formatRupiahInput(el) {
   const raw = el.value.replace(/[^\d]/g, '');
@@ -2417,17 +2442,17 @@ async function resetJamOperasional() {
 async function loadBagian() {
   if (!selectedCabangId) { bagianList = []; renderBagian(); return; }
   const cached = getCache('bagian_' + selectedCabangId);
-  if (cached && !isOnline) { bagianList = cached; renderBagian(); populateBagianSelect(); return; }
+  if (cached && !isOnline) { bagianList = upperNamaList(cached); renderBagian(); populateBagianSelect(); return; }
   try {
     const { data, error } = await sb.from('bagian').select('*').eq('cabang_id', selectedCabangId).order('nama');
     if (error) throw error;
-    bagianList = data || [];
+    bagianList = upperNamaList(data || []);
     saveCache('bagian_' + selectedCabangId, bagianList);
     renderBagian();
     populateBagianSelect();
   } catch (e) {
     console.error('Load bagian error:', e);
-    if (cached) { bagianList = cached; renderBagian(); populateBagianSelect(); }
+    if (cached) { bagianList = upperNamaList(cached); renderBagian(); populateBagianSelect(); }
   }
 }
 
@@ -2472,7 +2497,7 @@ document.getElementById('peg-bagian-select').addEventListener('change', function
 });
 
 async function simpanBagian() {
-  const nama = document.getElementById('bagian-nama').value.trim();
+  const nama = document.getElementById('bagian-nama').value.trim().toUpperCase();
   const gaji_harian = parseFloat(document.getElementById('bagian-gaji').dataset.raw) || 0;
   const upah_lembur = parseFloat(document.getElementById('bagian-lembur').dataset.raw) || 0;
 
@@ -2534,19 +2559,19 @@ async function hapusBagian(id) {
 
 async function loadPegawai() {
   const cached = getCache('pegawai_' + selectedCabangId);
-  if (cached && !isOnline) { allPegawai = cached; renderPegawai(); populateLemburSelect(); return allPegawai; }
+  if (cached && !isOnline) { allPegawai = upperJabatanList(upperNamaList(cached)); renderPegawai(); populateLemburSelect(); return allPegawai; }
   try {
     // AMBIL SEMUA PEGAWAI, TANPA FILTER CABANG
     const { data, error } = await sb.from('pegawai').select('*').order('nama');
     if (error) throw error;
-    allPegawai = data || [];
+    allPegawai = upperJabatanList(upperNamaList(data || []));
     saveCache('pegawai_' + selectedCabangId, allPegawai);
     renderPegawai();
     populateLemburSelect();
     return allPegawai;
   } catch (e) {
     console.error('Load pegawai error:', e);
-    if (cached) { allPegawai = cached; renderPegawai(); populateLemburSelect(); }
+    if (cached) { allPegawai = upperJabatanList(upperNamaList(cached)); renderPegawai(); populateLemburSelect(); }
     return allPegawai || [];
   }
 }
@@ -2604,7 +2629,7 @@ function resetPegawaiForm() {
 
 async function simpanPegawai() {
   const id = document.getElementById('peg-edit-id').value;
-  const nama = document.getElementById('peg-nama').value.trim();
+  const nama = document.getElementById('peg-nama').value.trim().toUpperCase();
   if (!nama) { showToast('Nama pegawai wajib diisi', 'warn'); return; }
 
   const bagianId = document.getElementById('peg-bagian-select').value;
@@ -2645,6 +2670,9 @@ async function simpanPegawai() {
     showToast(id ? 'Pegawai diperbarui' : 'Pegawai ditambahkan');
     populateLemburSelect();
     saveCache('pegawai_' + selectedCabangId, allPegawai);
+    // Langsung sinkronkan tampilan TAB ABSENSI (kalau sudah ada tanggal yang dimuat)
+    // supaya pegawai baru/ubahan langsung muncul tanpa perlu refresh manual.
+    if (editAbsDate) { renderAbsensi(editAbsDate); }
   } catch (e) {
     showToast('Gagal: ' + (e.message || e), 'error');
   } finally { setLoading(false); }
@@ -2694,6 +2722,7 @@ async function loadAbsensi() {
     return;
   }
   editAbsDate = date;
+  absLockOverride.clear();
   setLoading(true, 'btn-load-absensi');
   const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
   const cached = getCache(cacheKey);
@@ -2748,15 +2777,24 @@ function renderAbsensi(date) {
   document.getElementById('abs-list').innerHTML = aktif.map((p, i) => {
     const clr = avatarColors(i);
     const isHadir = !!hadirMap[p.id];
+    const overridden = absLockOverride.has(p.id);
+    const locked = isHadir && !overridden;
     const statusText = isHadir ? 'Hadir' : '';
     const jamMasuk = isHadir && hadirMap[p.id].jam_masuk
       ? new Date(hadirMap[p.id].jam_masuk).toLocaleTimeString('id', { hour: '2-digit', minute: '2-digit' })
       : null;
+    let lockIconHtml = '';
+    if (locked) {
+      lockIconHtml = `<button class="abs-lock-btn" onclick="event.stopPropagation(); unlockAbsenRow(${p.id})" title="Ketuk untuk ubah status">🔒</button>`;
+    } else if (isHadir && overridden) {
+      lockIconHtml = `<button class="abs-lock-btn unlocked" onclick="event.stopPropagation(); lockAbsenRow(${p.id})" title="Ketuk untuk kunci lagi">🔓</button>`;
+    }
     return `<div class="abs-item" id="abs-row-${p.id}">
       <div class="abs-avatar" style="background:${clr.bg};color:${clr.fg}">${p.nama.charAt(0).toUpperCase()}</div>
       <div class="abs-info"><div class="abs-name">${p.nama}</div><div class="abs-jabatan">${p.jabatan || 'Pegawai'}${jamMasuk ? ` · ⏰ ${jamMasuk}` : ''}</div></div>
       <div class="toggle-wrapper">
-        <button class="toggle-hadir ${isHadir ? 'active' : ''}" onclick="toggleAbsen(${p.id})" id="toggle-${p.id}">
+        ${lockIconHtml}
+        <button class="toggle-hadir ${isHadir ? 'active' : ''} ${locked ? 'locked' : ''}" onclick="toggleAbsen(${p.id})" id="toggle-${p.id}">
           <div class="toggle-hadir-track"><div class="toggle-hadir-thumb"></div></div>
         </button>
         <span class="toggle-status ${isHadir ? 'on' : 'off'}" id="label-${p.id}">${statusText}</span>
@@ -2773,23 +2811,36 @@ function toggleAbsen(pegawaiId) {
   if (!absCache[date]) absCache[date] = [];
   const idx = absCache[date].findIndex(a => a.pegawai_id === pegawaiId);
   const isHadir = idx >= 0 && absCache[date][idx].status === 'hadir';
+
+  // Status Hadir terkunci secara default supaya admin tidak salah klik (misal kelewat tap saat scroll).
+  // Harus ketuk ikon 🔒 dulu untuk bisa membatalkan status Hadir.
+  if (isHadir && !absLockOverride.has(pegawaiId)) {
+    showToast('Status Hadir terkunci. Ketuk ikon 🔒 untuk mengubah', 'warn');
+    return;
+  }
+  absLockOverride.delete(pegawaiId);
+
   if (idx >= 0) {
     if (isHadir) { absCache[date].splice(idx, 1); } else { absCache[date][idx].status = 'hadir'; absCache[date][idx].lembur_jam = 0; }
   } else {
     absCache[date].push({ pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date });
   }
-  const toggle = document.getElementById('toggle-' + pegawaiId);
-  const label = document.getElementById('label-' + pegawaiId);
-  const isNowHadir = absCache[date].some(a => a.pegawai_id === pegawaiId && a.status === 'hadir');
-  if (toggle) toggle.classList.toggle('active', isNowHadir);
-  if (label) {
-    label.textContent = isNowHadir ? 'Hadir' : '';
-    label.className = 'toggle-status ' + (isNowHadir ? 'on' : 'off');
-  }
   absDirty = true;
-  updateAbsSummary(absCache[date]);
   const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
   saveCache(cacheKey, absCache[date]);
+  renderAbsensi(date);
+}
+
+function unlockAbsenRow(pegawaiId) {
+  absLockOverride.add(pegawaiId);
+  showToast('Status bisa diubah, ketuk toggle untuk membatalkan kehadiran', 'warn');
+  renderAbsensi(editAbsDate);
+}
+
+function lockAbsenRow(pegawaiId) {
+  absLockOverride.delete(pegawaiId);
+  showToast('Status Hadir dikunci kembali 🔒');
+  renderAbsensi(editAbsDate);
 }
 
 function updateAbsSummary(rows) {
@@ -2835,6 +2886,7 @@ async function cancelAbsensi() {
     if (!confirm) return;
   }
   absDirty = false;
+  absLockOverride.clear();
   delete absCache[editAbsDate];
   document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-sub">Pilih tanggal untuk memuat absensi</div></div>';
   document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
@@ -2885,19 +2937,28 @@ async function loadLembur() {
   
   const cacheKey = 'lembur_' + selectedCabangId + '_' + toStr(start) + '_' + toStr(end);
   const cached = getCache(cacheKey);
-  if (cached && !isOnline) { lemburCache = cached; renderLembur(); return; }
+  if (cached && !isOnline) { lemburCache = upperLemburPegawaiCase(cached); renderLembur(); return; }
   
   try {
     const { data, error } = await query;
     if (error) throw error;
-    lemburCache = data || [];
+    lemburCache = upperLemburPegawaiCase(data || []);
     saveCache(cacheKey, lemburCache);
     renderLembur();
   } catch (e) {
     console.error('Load lembur error:', e);
-    if (cached) { lemburCache = cached; renderLembur(); }
+    if (cached) { lemburCache = upperLemburPegawaiCase(cached); renderLembur(); }
     showToast('Gagal memuat lembur', 'error');
   }
+}
+function upperLemburPegawaiCase(list) {
+  (list || []).forEach(l => {
+    if (l && l.pegawai) {
+      if (typeof l.pegawai.nama === 'string') l.pegawai.nama = l.pegawai.nama.toUpperCase();
+      if (typeof l.pegawai.jabatan === 'string') l.pegawai.jabatan = l.pegawai.jabatan.toUpperCase();
+    }
+  });
+  return list || [];
 }
 
 function renderLembur() {
