@@ -9,7 +9,10 @@
   <!-- CONFIG.JS (PASTIKAN ADA)                                   -->
   <!-- ========================================================== -->
   <script src="config.js"></script>
-  
+  <!-- FIX: library Supabase-nya kemarin tidak ter-load, makanya absen-scan
+       selalu pakai jam default (07:00-09:00) dan gagal load Supabase. -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
