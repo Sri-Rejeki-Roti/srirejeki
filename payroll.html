@@ -3316,11 +3316,19 @@ async function loadCabangFromURL() {
     selectedCabangId = id;
     document.getElementById('cabang-label').textContent = nama;
   } else {
+    // FIX: default ke cabang_id = 1 agar SELALU sinkron dengan
+    // absen-scan.html dan qr-generator.html (yang hardcode cabang=1).
+    // Jangan ambil "cabang pertama dari DB" karena id-nya bisa berbeda
+    // dari 1, sehingga setting jam operasional tersimpan di cabang_id
+    // yang berbeda dari yang dibaca QR/absen-scan.
+    selectedCabangId = 1;
     try {
-      const { data } = await sb.from('cabang').select('id, nama').order('id').limit(1);
-      if (data && data.length > 0) {
-        selectedCabangId = data[0].id;
-        document.getElementById('cabang-label').textContent = data[0].nama;
+      const { data } = await sb.from('cabang').select('id, nama').eq('id', 1).maybeSingle();
+      if (data) {
+        document.getElementById('cabang-label').textContent = data.nama;
+      } else {
+        console.warn('⚠️ Cabang dengan id=1 tidak ditemukan di tabel cabang!');
+        document.getElementById('cabang-label').textContent = 'Cabang Utama';
       }
     } catch (e) { console.warn('Gagal load cabang:', e); }
   }
