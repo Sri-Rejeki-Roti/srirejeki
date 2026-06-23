@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Absen</title>
+  <script src="config.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -19,7 +21,7 @@
       background: white;
       border-radius: 24px;
       padding: 40px;
-      max-width: 500px;
+      max-width: 600px;
       width: 100%;
       text-align: center;
       box-shadow: 0 8px 40px rgba(15,155,142,0.12);
@@ -37,13 +39,13 @@
     }
     .qr-wrapper {
       display: inline-block;
-      padding: 20px;
+      padding: 24px;
       background: white;
       border-radius: 16px;
       border: 3px solid #0f9b8e;
       margin-bottom: 16px;
-      min-height: 260px;
-      min-width: 260px;
+      min-height: 420px;
+      min-width: 420px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -75,20 +77,6 @@
       margin: 12px 0;
     }
     .btn-print:hover { background: #0b756c; }
-    .cabang-select {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ece4d3;
-      border-radius: 10px;
-      font-size: 14px;
-      font-family: inherit;
-      margin-bottom: 16px;
-      background: white;
-    }
-    .cabang-select:focus {
-      outline: none;
-      border-color: #0f9b8e;
-    }
     .jam-info {
       color: #0f9b8e;
       font-weight: 700;
@@ -104,7 +92,36 @@
     }
     @media print {
       .no-print { display: none !important; }
-      .card { border: 1px solid #ddd; box-shadow: none; }
+      html, body {
+        height: auto;
+        padding: 0;
+        background: white;
+        align-items: flex-start;
+      }
+      .card {
+        max-width: 100%;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        padding: 4vh 4vw;
+      }
+      .title { font-size: 7vw; }
+      .sub { font-size: 3vw; margin-bottom: 4vh; }
+      .qr-wrapper {
+        min-width: 0;
+        min-height: 0;
+        width: 70vw;
+        height: 70vw;
+        max-height: 60vh;
+        max-width: 60vh;
+        padding: 3vw;
+        margin: 0 auto 4vh;
+      }
+      .info {
+        font-size: 2.6vw;
+        max-width: 80vw;
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
@@ -113,13 +130,6 @@
 <div class="card">
   <div class="title">📋 QR Code Absen</div>
   <div class="sub">Tempel di pintu masuk kantor</div>
-
-  <div class="no-print">
-    <label style="font-size:12px;font-weight:600;display:block;text-align:left;margin-bottom:4px;">🏢 Pilih Cabang:</label>
-    <select class="cabang-select" id="cabang-select" onchange="updateQR()">
-      <option value="1">Cabang Utama</option>
-    </select>
-  </div>
 
   <!-- QR CODE -->
   <div class="qr-wrapper">
@@ -148,32 +158,81 @@
 
 <script>
 // ============================================================
-// KONFIGURASI DOMAIN ANDA
+// KONFIGURASI DOMAIN & CABANG
 // ============================================================
 const DOMAIN = 'https://sri-rejeki-roti.github.io/srirejeki';
+
+// Ganti angka ini kalau mau cetak QR untuk cabang lain
+const CABANG_ID = 1;
+
+// ============================================================
+// SUPABASE
+// ============================================================
+let sb;
+try {
+  if (typeof supabase === 'undefined') throw new Error('Library Supabase gagal dimuat');
+  sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+} catch (e) { console.error('Supabase init error:', e); }
 
 // ============================================================
 // GENERATE QR
 // ============================================================
 function updateQR() {
-  const cabangId = document.getElementById('cabang-select').value;
-  
   // URL lengkap ke absen-scan.html
-  const url = DOMAIN + '/absen-scan.html?cabang=' + cabangId;
-  
+  const url = DOMAIN + '/absen-scan.html?cabang=' + CABANG_ID;
+
   console.log('📱 URL:', url);
-  
+
   // Tampilkan URL
   document.getElementById('url-display').textContent = '🔗 ' + url;
-  
+
   // Set gambar QR dari API
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(url) + '&color=0f9b8e&bgcolor=ffffff&margin=20';
-  
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=' + encodeURIComponent(url) + '&color=0f9b8e&bgcolor=ffffff&margin=20';
+
   const img = document.getElementById('qr-image');
   img.src = qrUrl;
   img.alt = 'QR Code untuk ' + url;
-  
+
   console.log('✅ QR Image set to:', qrUrl);
+}
+
+// ============================================================
+// AMBIL JAM OPERASIONAL DARI SUPABASE (sinkron dengan Payroll)
+// ============================================================
+async function loadJamOperasional() {
+  const jamInfoEl = document.getElementById('jam-info');
+
+  if (!sb) {
+    console.warn('⚠️ Supabase belum siap, pakai default');
+    return;
+  }
+
+  try {
+    const { data, error } = await sb
+      .from('settings')
+      .select('value')
+      .eq('key', 'jam_operasional')
+      .eq('cabang_id', CABANG_ID)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (data && data.value) {
+      let jam;
+      try {
+        jam = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      } catch (e) {
+        jam = { buka: '07:00', tutup: '09:00' };
+      }
+      jamInfoEl.textContent = (jam.buka || '07:00') + ' - ' + (jam.tutup || '09:00') + ' WIB';
+      console.log('✅ Jam operasional dimuat dari Supabase:', jam);
+    } else {
+      console.log('ℹ️ Belum ada setting jam operasional untuk cabang ini, pakai default');
+    }
+  } catch (e) {
+    console.error('❌ Gagal memuat jam operasional:', e);
+    // Biarkan teks default di HTML kalau gagal fetch
+  }
 }
 
 // ============================================================
@@ -181,12 +240,10 @@ function updateQR() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   updateQR();
+  loadJamOperasional();
   console.log('✅ QR Generator ready!');
   console.log('🌐 Domain:', DOMAIN);
 });
-
-// Update saat cabang berubah
-document.getElementById('cabang-select').addEventListener('change', updateQR);
 </script>
 </body>
 </html>
