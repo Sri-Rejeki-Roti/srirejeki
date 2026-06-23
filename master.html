@@ -371,6 +371,117 @@ svg.icon { display:block; flex-shrink:0; }
 .setp-btn-owner   { background:linear-gradient(135deg,#0f9b8e,#0b756c); box-shadow:0 4px 14px rgba(15,155,142,0.3); }
 .setp-btn-payroll { background:linear-gradient(135deg,#0f9b8e,#0b756c); box-shadow:0 4px 14px rgba(15,155,142,0.3); }
 .setp-btn:hover { opacity:0.9; }
+
+/* ── RESET DATABASE ── */
+.tab-subitem-danger { color: var(--danger) !important; font-weight: 700 !important; }
+.tab-subitem-danger.active { background: var(--danger-bg) !important; color: var(--danger) !important; border-color: var(--danger) !important; }
+.reset-hero {
+  background: linear-gradient(135deg, #e8485f 0%, #c0344c 100%);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.reset-hero-icon { font-size: 36px; line-height: 1; flex-shrink: 0; }
+.reset-hero-title { font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; }
+.reset-hero-sub { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; margin-top: 2px; }
+.reset-warning-box {
+  background: #fff5f5;
+  border: 2px solid var(--danger);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #7f1d1d;
+  line-height: 1.7;
+}
+.reset-table-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin: 12px 0 20px;
+}
+.reset-table-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--danger-bg);
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #991b1b;
+}
+.reset-table-item input[type="checkbox"] { accent-color: var(--danger); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+.reset-table-item label { cursor: pointer; flex: 1; }
+.reset-confirm-input-wrap {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.reset-confirm-input-wrap label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.reset-confirm-input-wrap input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  letter-spacing: 2px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.reset-confirm-input-wrap input:focus { outline: none; border-color: var(--danger); }
+.btn-reset-execute {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #e8485f, #c0344c);
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(232,72,95,0.35);
+  min-height: 52px;
+  letter-spacing: 0.3px;
+  transition: opacity 0.2s;
+}
+.btn-reset-execute:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-reset-execute:not(:disabled):active { transform: scale(0.98); }
+.reset-progress-wrap {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+}
+.reset-progress-wrap.show { display: flex; }
+.reset-progress-bar-bg {
+  background: var(--border);
+  border-radius: 20px;
+  height: 8px;
+  overflow: hidden;
+}
+.reset-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e8485f, #c0344c);
+  border-radius: 20px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+.reset-progress-step { font-size: 12px; color: var(--text-muted); font-weight: 600; text-align: center; }
 .form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
 .form-group { display:flex; flex-direction:column; gap:6px; }
 .form-group label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px; }
@@ -1202,6 +1313,9 @@ svg.icon { display:block; flex-shrink:0; }
         <button class="tab-subitem" onclick="switchTab('backup',this)" id="tab-backup-btn">
           🗄️ Backup & Migrasi
         </button>
+        <button class="tab-subitem tab-subitem-danger" onclick="switchTab('reset-database',this)" id="tab-reset-btn">
+          🗑️ Reset Database
+        </button>
       </div>
     </div>
   </div>
@@ -1843,6 +1957,75 @@ svg.icon { display:block; flex-shrink:0; }
       </div>
     </div>
   </div>
+
+  <!-- ═══ RESET DATABASE ═══ -->
+  <div class="tab-section" id="sec-reset-database">
+    <div style="padding:16px;max-width:700px">
+
+      <div class="reset-hero">
+        <div class="reset-hero-icon">🗑️</div>
+        <div>
+          <div class="reset-hero-title">Reset Database</div>
+          <div class="reset-hero-sub">Hapus semua data & mulai dari awal (fresh start)</div>
+        </div>
+      </div>
+
+      <div class="reset-warning-box">
+        ⚠️ <b>PERHATIAN — Tindakan ini tidak bisa dibatalkan!</b><br>
+        Semua data yang terpilih akan <b>dihapus permanen</b> dari Supabase.<br>
+        Gunakan fitur ini hanya saat pertama kali setup atau saat ingin memulai ulang dari awal.<br><br>
+        💡 <b>Disarankan:</b> Buat backup terlebih dahulu sebelum melakukan reset.
+      </div>
+
+      <!-- Pilih tabel yang akan direset -->
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">📋 Pilih tabel yang akan dikosongkan:</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+        <button onclick="resetSelectAll(true)" style="padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">☑️ Pilih Semua</button>
+        <button onclick="resetSelectAll(false)" style="padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">⬜ Hapus Semua Centang</button>
+      </div>
+      <div class="reset-table-list">
+        <div class="reset-table-item"><input type="checkbox" id="rst-transaksi" checked><label for="rst-transaksi">🧾 transaksi</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-transaksi_item" checked><label for="rst-transaksi_item">📦 transaksi_item</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-absensi" checked><label for="rst-absensi">📅 absensi</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-lembur" checked><label for="rst-lembur">⏱️ lembur</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-stok_log" checked><label for="rst-stok_log">📊 stok_log</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-pengambilan_bahan" checked><label for="rst-pengambilan_bahan">🥄 pengambilan_bahan</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-restok" checked><label for="rst-restok">🔄 restok</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-retur" checked><label for="rst-retur">↩️ retur</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-stok_cabang"><label for="rst-stok_cabang">🏪 stok_cabang</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-pelanggan"><label for="rst-pelanggan">👥 pelanggan</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-produk"><label for="rst-produk">🍞 produk</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-kategori"><label for="rst-kategori">🏷️ kategori</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-pegawai"><label for="rst-pegawai">👤 pegawai</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-bagian"><label for="rst-bagian">🏷️ bagian</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-bahan_baku"><label for="rst-bahan_baku">🧂 bahan_baku</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-settings"><label for="rst-settings">⚙️ settings</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-payroll_settings"><label for="rst-payroll_settings">💰 payroll_settings</label></div>
+        <div class="reset-table-item"><input type="checkbox" id="rst-push_subscriptions"><label for="rst-push_subscriptions">🔔 push_subscriptions</label></div>
+      </div>
+
+      <!-- Konfirmasi ketik RESET -->
+      <div class="reset-confirm-input-wrap">
+        <label>🔐 Ketik <b>RESET</b> untuk konfirmasi:</label>
+        <input type="text" id="reset-konfirmasi" placeholder="ketik RESET di sini" autocomplete="off" spellcheck="false"
+               oninput="onResetKonfirmasiInput()" style="background:var(--bg);">
+      </div>
+
+      <!-- Tombol eksekusi -->
+      <button class="btn-reset-execute" id="btn-reset-execute" onclick="eksekusiResetDatabase()" disabled>
+        🗑️ HAPUS DATA SEKARANG
+      </button>
+
+      <!-- Progress bar -->
+      <div class="reset-progress-wrap" id="reset-progress-wrap">
+        <div class="reset-progress-bar-bg">
+          <div class="reset-progress-bar-fill" id="reset-progress-fill"></div>
+        </div>
+        <div class="reset-progress-step" id="reset-progress-step">Menghapus...</div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <!-- MODALS -->
@@ -1980,7 +2163,9 @@ svg.icon { display:block; flex-shrink:0; }
     <div class="form-group" style="margin-bottom:14px;">
       <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;display:block;">PASSWORD MASTER</label>
       <input type="password" id="master-password-input" placeholder="Masukkan password..."
-        style="width:100%;height:46px;padding:10px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:border-color 0.15s;"
+        maxlength="4" inputmode="numeric" pattern="[0-9]*"
+        style="width:100%;height:46px;padding:10px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:border-color 0.15s;letter-spacing:6px;text-align:center;"
+        oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===4) verifyMasterPassword();"
         onkeydown="if(event.key==='Enter') verifyMasterPassword();"
         onfocus="this.style.borderColor='var(--primary)'"
         onblur="this.style.borderColor='var(--border)'">
@@ -2085,6 +2270,7 @@ const TAB_TITLES = {
   'pengambilan-bahan': { title: 'Pengambilan Bahan', tagline: 'Riwayat Pengambilan Bahan Baku' },
   'setting-password': { title: 'Setting',  tagline: 'Setting Password Aplikasi' },
   'setting-cabang':   { title: 'Setting',  tagline: 'Manajemen Cabang' },
+  'reset-database':   { title: 'Setting',  tagline: '⚠️ Reset & Hapus Database' },
 };
 function updateTopbarTitle(name) {
   const info = TAB_TITLES[name] || TAB_TITLES.produk;
@@ -2575,6 +2761,12 @@ function switchTab(name, btn) {
     mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
     document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-backup').classList.add('active');
+  } else if (name === 'reset-database') {
+    mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
+    document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-reset-database').classList.add('active');
+    const ki = document.getElementById('reset-konfirmasi'); if (ki) { ki.value = ''; }
+    const btn = document.getElementById('btn-reset-execute'); if (btn) btn.disabled = true;
   } else if (name === 'setting-password') {
     mainDefault.style.display = 'none'; mainStok.style.display = 'none'; mainStoklog.style.display = 'none'; mainBahan.style.display = 'none'; mainSetting.style.display = 'block';
     document.querySelectorAll('#main-setting .tab-section').forEach(s => s.classList.remove('active'));
@@ -4301,6 +4493,120 @@ async function copyBackupSQL() {
     setTimeout(() => { btn.innerHTML = orig; }, 2000);
   } catch(e) {
     alert('Copy gagal, silakan select teks di kotak preview lalu Ctrl+C');
+  }
+}
+
+// ============================================================
+// RESET DATABASE
+// ============================================================
+// Urutan hapus penting: child dulu sebelum parent (foreign key)
+const RESET_TABLE_ORDER = [
+  'transaksi_item',
+  'transaksi',
+  'absensi',
+  'lembur',
+  'stok_log',
+  'pengambilan_bahan',
+  'restok',
+  'retur',
+  'stok_cabang',
+  'pelanggan',
+  'produk',
+  'kategori',
+  'pegawai',
+  'bagian',
+  'bahan_baku',
+  'settings',
+  'payroll_settings',
+  'push_subscriptions',
+];
+
+function resetSelectAll(state) {
+  RESET_TABLE_ORDER.forEach(t => {
+    const cb = document.getElementById('rst-' + t);
+    if (cb) cb.checked = state;
+  });
+}
+
+function onResetKonfirmasiInput() {
+  const val = document.getElementById('reset-konfirmasi').value.trim();
+  const btn = document.getElementById('btn-reset-execute');
+  btn.disabled = (val !== 'RESET');
+}
+
+function setResetProgress(pct, step) {
+  const fill = document.getElementById('reset-progress-fill');
+  const stepEl = document.getElementById('reset-progress-step');
+  const wrap = document.getElementById('reset-progress-wrap');
+  if (wrap) wrap.classList.add('show');
+  if (fill) fill.style.width = pct + '%';
+  if (stepEl) stepEl.textContent = step;
+}
+
+async function eksekusiResetDatabase() {
+  // Ambil tabel yang dicentang (dalam urutan aman)
+  const selected = RESET_TABLE_ORDER.filter(t => {
+    const cb = document.getElementById('rst-' + t);
+    return cb && cb.checked;
+  });
+
+  if (selected.length === 0) {
+    showToast('Pilih minimal satu tabel untuk direset', 'warn');
+    return;
+  }
+
+  // Konfirmasi ganda
+  const konfirmasi = window.confirm(
+    `⚠️ PERINGATAN TERAKHIR!\n\nAnda akan menghapus data dari ${selected.length} tabel:\n${selected.join(', ')}\n\nTindakan ini TIDAK BISA DIBATALKAN!\nLanjutkan?`
+  );
+  if (!konfirmasi) return;
+
+  const btn = document.getElementById('btn-reset-execute');
+  btn.disabled = true;
+  btn.textContent = '⏳ Menghapus...';
+  setResetProgress(5, 'Memulai proses reset...');
+
+  const errors = [];
+  let done = 0;
+
+  for (const tabel of selected) {
+    setResetProgress(
+      Math.round(5 + (done / selected.length) * 90),
+      `Menghapus tabel: ${tabel}...`
+    );
+    try {
+      // delete semua baris: filter gt id 0 atau neq id null agar tidak error "no rows affected"
+      const { error } = await sb.from(tabel).delete().gte('id', 0);
+      if (error) {
+        // Coba dengan filter alternatif jika id bukan integer
+        const { error: e2 } = await sb.from(tabel).delete().neq('id', '');
+        if (e2) {
+          // Terakhir coba tanpa filter (delete semua)
+          const { error: e3 } = await sb.from(tabel).delete().not('id', 'is', null);
+          if (e3) errors.push(`${tabel}: ${e3.message}`);
+        }
+      }
+    } catch(e) {
+      errors.push(`${tabel}: ${e.message || 'unknown error'}`);
+    }
+    done++;
+  }
+
+  setResetProgress(100, 'Selesai!');
+
+  if (errors.length === 0) {
+    showToast(`✅ Reset selesai! ${selected.length} tabel berhasil dikosongkan.`, 'success');
+    // Reset UI
+    setTimeout(() => {
+      document.getElementById('reset-konfirmasi').value = '';
+      btn.textContent = '🗑️ HAPUS DATA SEKARANG';
+      document.getElementById('reset-progress-wrap').classList.remove('show');
+      document.getElementById('reset-progress-fill').style.width = '0%';
+    }, 2000);
+  } else {
+    showToast(`⚠️ Sebagian gagal (${errors.length} error). Cek console.`, 'error');
+    console.error('Reset errors:', errors);
+    btn.textContent = '🗑️ HAPUS DATA SEKARANG';
   }
 }
 </script>
