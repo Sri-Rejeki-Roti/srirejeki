@@ -53,6 +53,7 @@ if ('serviceWorker' in navigator) {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --nav-height: 56px;
   --topbar-height: 52px;
+  --dashboardbar-height: 46px;
 }
 html {
   overscroll-behavior-y: none;
@@ -63,7 +64,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   min-height: 100dvh;
-  padding-bottom: calc(var(--nav-height) + 16px + var(--safe-bottom));
+  padding-bottom: calc(var(--nav-height) + var(--dashboardbar-height) + 16px + var(--safe-bottom));
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -91,14 +92,6 @@ button, .clickable { min-height: 44px; min-width: 44px; }
 .topbar-title { font-family: 'Baloo 2', sans-serif; font-size: 16px; font-weight: 800; line-height: 1.1; }
 .topbar-sub { font-size: 9px; opacity: 0.8; font-weight: 500; }
 .topbar .spacer { flex: 1; }
-.topbar-back {
-  display: flex; align-items: center; gap: 6px; padding: 8px 14px;
-  border-radius: 10px; background: rgba(255,255,255,0.18);
-  font-size: 13px; font-weight: 600; text-decoration: none; color: white;
-  transition: background 0.15s;
-}
-.topbar-back:hover { background: rgba(255,255,255,0.28); }
-.topbar-back:active { background: rgba(255,255,255,0.30); }
 .network-indicator {
   width: 8px; height: 8px;
   border-radius: 50%;
@@ -317,24 +310,6 @@ button, .clickable { min-height: 44px; min-width: 44px; }
   color: white;
 }
 
-/* ── SAVE BAR ── */
-.save-bar {
-  position: fixed;
-  bottom: var(--nav-height);
-  left: 0;
-  right: 0;
-  z-index: 55;
-  background: var(--card);
-  border-top: 1.5px solid var(--border);
-  padding: 8px 12px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  box-shadow: 0 -4px 16px rgba(43,38,32,0.08);
-  padding-bottom: calc(8px + var(--safe-bottom));
-}
-.save-bar.hidden { display: none; }
-body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--safe-bottom)); }
 .btn-save {
   flex: 1;
   padding: 12px;
@@ -365,6 +340,36 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   cursor: pointer;
   min-height: 48px;
 }
+
+/* ── DASHBOARD BAR (di atas Navbar) ── */
+.dashboard-bar {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--safe-bottom));
+  left: 0;
+  right: 0;
+  z-index: 58;
+  background: var(--card);
+  border-top: 1.5px solid var(--border);
+  padding: 5px 12px;
+  height: var(--dashboardbar-height);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.dashboard-bar-btn {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 13px; font-weight: 700;
+  font-family: inherit;
+  text-decoration: none;
+  min-height: 36px;
+  transition: opacity 0.15s;
+}
+.dashboard-bar-btn:active { opacity: 0.85; }
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
@@ -1600,10 +1605,6 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   </div>
   <div class="spacer"></div>
   <div class="network-indicator online" id="net-indicator"></div>
-  <a href="index.html" class="topbar-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Dashboard
-  </a>
 </div>
 
 <!-- ═══════════ MAIN CONTENT ═══════════ -->
@@ -1861,13 +1862,12 @@ body.save-bar-visible { padding-bottom: calc(var(--nav-height) + 70px + var(--sa
   
 </div>
 
-<!-- ═══════════ SAVE BAR (Absensi) ═══════════ -->
-<div class="save-bar hidden" id="abs-save-bar">
-  <button class="btn-cancel-save" onclick="cancelAbsensi()">Batal</button>
-  <button class="btn-save" onclick="simpanAbsensi()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Simpan Absensi
-  </button>
+<!-- ═══════════ DASHBOARD BAR (di atas Navbar) ═══════════ -->
+<div class="dashboard-bar">
+  <a href="index.html" class="dashboard-bar-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Kembali ke Dashboard
+  </a>
 </div>
 
 <!-- ═══════════ NAVBAR BAWAH ═══════════ -->
@@ -2195,11 +2195,6 @@ function switchTab(name) {
   });
 
   if (name === 'absensi') { renderAbsShortcuts(); }
-  if (name !== 'absensi') {
-    document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
-  } else if (document.getElementById('abs-list').querySelector('.abs-item')) {
-    document.getElementById('abs-save-bar').classList.remove('hidden'); document.body.classList.add('save-bar-visible');
-  }
 
   // SCROLL KE ATAS
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2746,7 +2741,6 @@ async function loadAbsensi() {
     if (!aktif.length) {
       document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-title">Belum ada pegawai aktif</div><div class="empty-sub">Tambahkan pegawai di tab Pegawai</div></div>';
       updateAbsSummary([]);
-      document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
       setLoading(false, 'btn-load-absensi');
       return;
     }
@@ -2770,7 +2764,6 @@ function renderAbsensi(date) {
   if (!aktif.length) {
     document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-title">Belum ada pegawai aktif</div><div class="empty-sub">Tambahkan pegawai di tab Pegawai</div></div>';
     updateAbsSummary([]);
-    document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
     return;
   }
 
@@ -2803,10 +2796,9 @@ function renderAbsensi(date) {
   }).join('');
 
   updateAbsSummary(existing);
-  document.getElementById('abs-save-bar').classList.remove('hidden'); document.body.classList.add('save-bar-visible');
 }
 
-function toggleAbsen(pegawaiId) {
+async function toggleAbsen(pegawaiId) {
   const date = editAbsDate;
   if (!absCache[date]) absCache[date] = [];
   const idx = absCache[date].findIndex(a => a.pegawai_id === pegawaiId);
@@ -2820,15 +2812,41 @@ function toggleAbsen(pegawaiId) {
   }
   absLockOverride.delete(pegawaiId);
 
-  if (idx >= 0) {
-    if (isHadir) { absCache[date].splice(idx, 1); } else { absCache[date][idx].status = 'hadir'; absCache[date][idx].lembur_jam = 0; }
-  } else {
-    absCache[date].push({ pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date });
+  // Kunci toggle sementara selagi proses simpan ke server berjalan,
+  // supaya tidak ke-tap dobel.
+  const toggleBtn = document.getElementById('toggle-' + pegawaiId);
+  if (toggleBtn) toggleBtn.disabled = true;
+
+  const pegawai = allPegawai.find(p => p.id === pegawaiId);
+  const namaPegawai = pegawai ? pegawai.nama : 'Pegawai';
+
+  try {
+    if (isHadir) {
+      // Batalkan kehadiran -> langsung hapus dari Supabase, otomatis hilang dari hitungan rekap
+      const { error } = await sb.from('absensi').delete()
+        .eq('pegawai_id', pegawaiId).eq('tanggal', date).eq('status', 'hadir');
+      if (error) throw error;
+      absCache[date].splice(idx, 1);
+      showToast(`↩️ ${namaPegawai} — kehadiran dibatalkan`, 'warn');
+    } else {
+      // Tandai Hadir -> langsung simpan ke Supabase (sama seperti absen via barcode/QR),
+      // otomatis masuk hitungan rekap tanpa perlu tombol Simpan.
+      const jamMasuk = new Date().toISOString();
+      const { error } = await sb.from('absensi').insert({
+        pegawai_id: pegawaiId, tanggal: date, status: 'hadir', lembur_jam: 0, jam_masuk: jamMasuk
+      });
+      if (error) throw error;
+      const row = { pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date, jam_masuk: jamMasuk };
+      if (idx >= 0) absCache[date][idx] = row; else absCache[date].push(row);
+      showToast(`✅ ${namaPegawai} — Hadir (tersimpan otomatis)`);
+    }
+    const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
+    saveCache(cacheKey, absCache[date]);
+  } catch (e) {
+    showToast('Gagal simpan absensi: ' + (e.message || e), 'error');
+  } finally {
+    renderAbsensi(date);
   }
-  absDirty = true;
-  const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
-  saveCache(cacheKey, absCache[date]);
-  renderAbsensi(date);
 }
 
 function unlockAbsenRow(pegawaiId) {
@@ -2850,50 +2868,6 @@ function updateAbsSummary(rows) {
   document.getElementById('abs-hadir').textContent = hadir;
   document.getElementById('abs-tidak').textContent = Math.max(0, total - hadir);
   updateAbsStatusBadge(hadir);
-}
-
-async function simpanAbsensi() {
-  const date = editAbsDate;
-  if (!date) { showToast('Tidak ada tanggal aktif', 'warn'); return; }
-  const rows = (absCache[date] || []).filter(r => r.status === 'hadir');
-  setLoading(true);
-  try {
-    await sb.from('absensi').delete().eq('tanggal', date);
-    if (rows.length > 0) {
-      const insertData = rows.map(r => ({ pegawai_id: r.pegawai_id, tanggal: date, status: 'hadir', lembur_jam: 0, jam_masuk: r.jam_masuk || null }));
-      const { error } = await sb.from('absensi').insert(insertData);
-      if (error) throw error;
-    }
-    absDirty = false;
-    const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
-    saveCache(cacheKey, absCache[date] || []);
-    showToast('Absensi disimpan ✓');
-    await loadAbsensi();
-  } catch (e) {
-    showToast('Gagal simpan: ' + (e.message || e), 'error');
-  } finally { setLoading(false); }
-}
-
-async function cancelAbsensi() {
-  if (absDirty) {
-    const confirm = await showConfirm({
-      icon: '↩️',
-      title: 'Batalkan Perubahan?',
-      msg: 'Perubahan absensi yang belum disimpan akan dibatalkan.',
-      okLabel: 'Ya, Batalkan',
-      okColor: '#f59e0b'
-    });
-    if (!confirm) return;
-  }
-  absDirty = false;
-  absLockOverride.clear();
-  delete absCache[editAbsDate];
-  document.getElementById('abs-list').innerHTML = '<div class="empty-state"><div class="empty-sub">Pilih tanggal untuk memuat absensi</div></div>';
-  document.getElementById('abs-save-bar').classList.add('hidden'); document.body.classList.remove('save-bar-visible');
-  updateAbsSummary([]);
-  editAbsDate = '';
-  const cacheKey = 'absensi_' + selectedCabangId + '_' + editAbsDate;
-  localStorage.removeItem('payroll_cache_' + cacheKey);
 }
 
 function populateLemburSelect() {
