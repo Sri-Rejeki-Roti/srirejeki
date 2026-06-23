@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absen QR</title>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  
+  <!-- ========================================================== -->
+  <!-- CONFIG.JS (PASTIKAN ADA)                                   -->
+  <!-- ========================================================== -->
   <script src="config.js"></script>
+  
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -151,11 +155,6 @@
       color: #8a8071;
       margin-top: 12px;
     }
-    .countdown {
-      font-size: 14px;
-      font-weight: 700;
-      color: #4f46e5;
-    }
   </style>
 </head>
 <body>
@@ -216,32 +215,76 @@
 </div>
 
 <script>
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ============================================================
+// CEK APAKAH CONFIG.JS TERBACA
+// ============================================================
+console.log('🔍 Checking config.js...');
+console.log('SUPABASE_URL:', window.SUPABASE_URL);
+console.log('SUPABASE_KEY:', window.SUPABASE_KEY);
 
 // ============================================================
-// 1. VARIABEL JAM OPERASIONAL (akan di-load dari database)
+// INISIALISASI SUPABASE
 // ============================================================
-let JAM_BUKA = 7;   // default
-let JAM_TUTUP = 9;  // default
+let sb = null;
+let supabaseConnected = false;
+
+if (window.SUPABASE_URL && window.SUPABASE_KEY) {
+  try {
+    if (typeof supabase !== 'undefined') {
+      sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+      supabaseConnected = true;
+      console.log('✅ Supabase connected!');
+    } else {
+      console.warn('⚠️ Supabase library not loaded!');
+    }
+  } catch (e) {
+    console.error('❌ Supabase init error:', e);
+  }
+} else {
+  console.warn('⚠️ config.js not loaded properly!');
+  // TAMPILKAN PESAN DI HALAMAN
+  document.getElementById('jam-status').textContent = '⚠️ Config tidak terbaca';
+}
+
+// ============================================================
+// VARIABEL GLOBAL
+// ============================================================
+let JAM_BUKA = 7;
+let JAM_TUTUP = 9;
 let jamStrBuka = '07:00';
 let jamStrTutup = '09:00';
-
 let pegawaiList = [];
 let selectedPegawai = null;
 let sudahAbsenHariIni = false;
 let isOpen = false;
 
 // ============================================================
-// 2. LOAD JAM OPERASIONAL DARI DATABASE
-// ============================================================
-// ============================================================
-// LOAD JAM OPERASIONAL DARI DATABASE
+// LOAD JAM OPERASIONAL (PASTI JALAN)
 // ============================================================
 async function loadJamOperasional() {
+  // UPDATE: PASTIKAN JAM TERISI (JANGAN LOADING TERUS)
+  const statusEl = document.getElementById('jam-status');
+  
+  // SET DEFAULT DULU (BIAR TIDAK LOADING TERUS)
+  document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
+  statusEl.textContent = '⏳ Memuat pengaturan...';
+  
+  if (!sb || !supabaseConnected) {
+    // JIKA TIDAK KONEK, PAKAI DEFAULT
+    JAM_BUKA = 7;
+    JAM_TUTUP = 9;
+    jamStrBuka = '07:00';
+    jamStrTutup = '09:00';
+    document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
+    statusEl.textContent = '✅ Default (07:00 - 09:00)';
+    console.log('⚠️ Using default jam (no Supabase)');
+    return;
+  }
+  
   try {
     // Ambil cabang_id dari URL
     const params = new URLSearchParams(window.location.search);
-    const cabangId = params.get('cabang') || '1';  // default 1
+    const cabangId = params.get('cabang') || '1';
     
     console.log('📥 Load jam untuk cabang:', cabangId);
     
@@ -276,36 +319,23 @@ async function loadJamOperasional() {
     console.log('✅ Jam loaded:', JAM_BUKA, '-', JAM_TUTUP);
     
     // Update info di UI
-    document.getElementById('info-text').textContent = 
-      `⏰ Buka: ${buka} - ${tutup} WIB`;
+    document.getElementById('info-text').textContent = `⏰ Buka: ${buka} - ${tutup} WIB`;
+    statusEl.textContent = `✅ ${buka} - ${tutup}`;
     
   } catch (e) {
     console.error('❌ Load jam error:', e);
+    // TETAP PAKAI DEFAULT
+    JAM_BUKA = 7;
+    JAM_TUTUP = 9;
+    jamStrBuka = '07:00';
+    jamStrTutup = '09:00';
     document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
-  }
-}
-    
-    // Set variable global
-    jamStrBuka = buka;
-    jamStrTutup = tutup;
-    JAM_BUKA = parseInt(buka.split(':')[0]);
-    JAM_TUTUP = parseInt(tutup.split(':')[0]);
-    
-    console.log('✅ Jam loaded:', JAM_BUKA, '-', JAM_TUTUP);
-    
-    // Update info di UI
-    document.getElementById('info-text').textContent = 
-      `⏰ Buka: ${buka} - ${tutup} WIB`;
-    
-  } catch (e) {
-    console.error('❌ Load jam error:', e);
-    // Tetap pakai default
-    document.getElementById('info-text').textContent = '⏰ Buka: 07:00 - 09:00 WIB';
+    statusEl.textContent = '⚠️ Gagal load, pakai default';
   }
 }
 
 // ============================================================
-// 3. CEK JAM OPERASIONAL
+// CEK JAM OPERASIONAL
 // ============================================================
 function cekJamOperasional() {
   const now = new Date();
@@ -325,12 +355,12 @@ function cekJamOperasional() {
 
   if (isOpen) {
     info.className = 'jam-info buka';
-    statusEl.textContent = `✅ Buka — Silakan absen!`;
     badge.className = 'readonly-badge buka';
     badge.textContent = '✅ BUKA';
     document.getElementById('icon').textContent = '📷';
     document.getElementById('title').textContent = 'Absen QR';
     document.getElementById('sub').textContent = 'Scan QR untuk absen';
+    statusEl.textContent = '✅ Buka — Silakan absen!';
   } else {
     info.className = 'jam-info tutup';
     const nextOpen = new Date(now);
@@ -369,9 +399,14 @@ function cekJamOperasional() {
 }
 
 // ============================================================
-// 4. LOAD PEGAWAI
+// LOAD PEGAWAI
 // ============================================================
 async function loadPegawai() {
+  if (!sb || !supabaseConnected) {
+    console.warn('⚠️ Cannot load pegawai, Supabase not connected');
+    return;
+  }
+  
   try {
     const { data, error } = await sb
       .from('pegawai')
@@ -402,7 +437,7 @@ async function loadPegawai() {
     }
 
   } catch (err) {
-    console.error('Load error:', err);
+    console.error('Load pegawai error:', err);
   }
 }
 
@@ -414,10 +449,10 @@ function onSelectPegawai() {
 document.getElementById('pegawai-select').addEventListener('change', onSelectPegawai);
 
 // ============================================================
-// 5. CEK SUDAH ABSEN HARI INI?
+// CEK SUDAH ABSEN HARI INI?
 // ============================================================
 async function cekSudahAbsen() {
-  if (!selectedPegawai) return;
+  if (!selectedPegawai || !sb || !supabaseConnected) return;
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -452,7 +487,7 @@ async function cekSudahAbsen() {
 }
 
 // ============================================================
-// 6. FUNGSI ABSEN
+// FUNGSI ABSEN
 // ============================================================
 function setStatus(msg, type = 'info') {
   const el = document.getElementById('status');
@@ -467,7 +502,7 @@ async function absen() {
     return;
   }
 
-  // Cek jam lagi (keamanan tambahan)
+  // Cek jam lagi
   const now = new Date();
   const jam = now.getHours();
   if (jam < JAM_BUKA || jam >= JAM_TUTUP) {
@@ -475,7 +510,6 @@ async function absen() {
     return;
   }
 
-  // Cek sudah absen
   const today = new Date().toISOString().slice(0, 10);
   const { data: sudah } = await sb
     .from('absensi')
@@ -510,7 +544,6 @@ async function absen() {
 
     if (error) throw error;
 
-    // SUKSES!
     setStatus(`🎉 ${selectedPegawai.nama} — ABSEN BERHASIL!`, 'success');
     document.getElementById('icon').textContent = '✅';
     document.getElementById('title').textContent = 'Absen Berhasil!';
@@ -518,14 +551,12 @@ async function absen() {
     btn.disabled = true;
     btn.textContent = '✅ Selesai';
 
-    // Tampilkan readonly
     document.getElementById('form-absen').style.display = 'none';
     document.getElementById('sudah-absen').classList.remove('hidden');
     document.getElementById('absen-nama').textContent = selectedPegawai.nama;
     document.getElementById('absen-waktu').textContent = 
       `⏰ ${new Date().toLocaleTimeString('id')}`;
 
-    // Suara
     try {
       const audio = new Audio('https://www.soundjay.com/misc/success-bell-01.wav');
       audio.play().catch(() => {});
@@ -540,28 +571,34 @@ async function absen() {
 }
 
 // ============================================================
-// 7. INIT
+// CEK DAN TAMPILKAN STATUS
+// ============================================================
+document.getElementById('pegawai-select').addEventListener('change', () => {
+  setTimeout(async () => {
+    onSelectPegawai();
+    await cekSudahAbsen();
+  }, 100);
+});
+
+// ============================================================
+// INIT
 // ============================================================
 async function init() {
-  // 1. LOAD JAM DARI DATABASE DULU
+  console.log('🚀 Init absen-scan.html...');
+  
+  // 1. Load jam
   await loadJamOperasional();
   
-  // 2. LOAD PEGAWAI
+  // 2. Load pegawai
   await loadPegawai();
   
-  // 3. MULAI CEK JAM
+  // 3. Mulai cek jam
   cekJamOperasional();
-
-  // 4. EVENT LISTENER
-  document.getElementById('pegawai-select').addEventListener('change', () => {
-    setTimeout(async () => {
-      onSelectPegawai();
-      await cekSudahAbsen();
-    }, 100);
-  });
-
-  // 5. CEK STATUS ABSEN AWAL
+  
+  // 4. Cek status absen
   setTimeout(cekSudahAbsen, 500);
+  
+  console.log('✅ Init selesai');
 }
 
 // Jalankan
