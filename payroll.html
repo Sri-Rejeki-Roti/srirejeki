@@ -3407,14 +3407,25 @@ async function toggleAbsen(pegawaiId) {
     } else {
       // Tandai Hadir -> langsung simpan ke Supabase (sama seperti absen via barcode/QR),
       // otomatis masuk hitungan rekap tanpa perlu tombol Simpan.
-      const jamMasuk = new Date().toISOString();
-      const { error } = await sb.from('absensi').insert({
-        pegawai_id: pegawaiId, tanggal: date, status: 'hadir', lembur_jam: 0, jam_masuk: jamMasuk
-      });
-      if (error) throw error;
-      const row = { pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date, jam_masuk: jamMasuk };
-      if (idx >= 0) absCache[date][idx] = row; else absCache[date].push(row);
-      showToast(`✅ ${namaPegawai} — Hadir (tersimpan otomatis)`);
+      // BUG FIX: cek dulu ke DB (bukan cuma cache lokal) supaya kalau ada device/tab
+      // lain yang baru saja menandai Hadir untuk pegawai+tanggal yang sama, tidak
+      // sampai ke-insert dobel jadi 2 baris absensi.
+      const { data: cekExisting } = await sb.from('absensi')
+        .select('id, jam_masuk').eq('pegawai_id', pegawaiId).eq('tanggal', date).eq('status', 'hadir').maybeSingle();
+      if (cekExisting) {
+        const row = { pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date, jam_masuk: cekExisting.jam_masuk };
+        if (idx >= 0) absCache[date][idx] = row; else absCache[date].push(row);
+        showToast(`✅ ${namaPegawai} — sudah tercatat Hadir sebelumnya`, 'warn');
+      } else {
+        const jamMasuk = new Date().toISOString();
+        const { error } = await sb.from('absensi').insert({
+          pegawai_id: pegawaiId, tanggal: date, status: 'hadir', lembur_jam: 0, jam_masuk: jamMasuk
+        });
+        if (error) throw error;
+        const row = { pegawai_id: pegawaiId, status: 'hadir', lembur_jam: 0, tanggal: date, jam_masuk: jamMasuk };
+        if (idx >= 0) absCache[date][idx] = row; else absCache[date].push(row);
+        showToast(`✅ ${namaPegawai} — Hadir (tersimpan otomatis)`);
+      }
     }
     const cacheKey = 'absensi_' + selectedCabangId + '_' + date;
     saveCache(cacheKey, absCache[date]);
