@@ -1037,7 +1037,7 @@ function closeLoginModal() {
 
 async function loginKasir() {
   var cabangId = document.getElementById('login-cabang').value;
-  var password = document.getElementById('login-password').value.trim();
+  var password = document.getElementById('login-password').value.trim().toUpperCase();
 
   if (!cabangId) {
     showToast('Pilih cabang terlebih dahulu');
