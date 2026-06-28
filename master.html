@@ -3833,7 +3833,14 @@ async function submitRetur() {
   try {
     const { error: e1 } = await sb.from('retur').insert({ produk_id: produkId, cabang_id: cabangId, qty, alasan, catatan });
     if (e1) throw e1;
-    if (stokEntry) { const newStok = currentStok - qty; const { error: e2 } = await sb.from('stok_cabang').update({ stok: newStok }).eq('id', stokEntry.id); if (e2) throw e2; stokEntry.stok = newStok; }
+    // BUG FIX: baca stok terkini dari DB dulu (bukan cache lokal) sebelum dikurangi,
+    // supaya tidak menimpa perubahan stok yang terjadi bersamaan dari kasir.html
+    const { data: stokFresh } = await sb.from('stok_cabang').select('id, stok').eq('produk_id', produkId).eq('cabang_id', cabangId).maybeSingle();
+    if (stokFresh) {
+      const newStok = Math.max(0, stokFresh.stok - qty);
+      const { error: e2 } = await sb.from('stok_cabang').update({ stok: newStok }).eq('id', stokFresh.id); if (e2) throw e2;
+      if (stokEntry) stokEntry.stok = newStok;
+    }
     else { const { error: e2 } = await sb.from('stok_cabang').insert({ produk_id: produkId, cabang_id: cabangId, stok: 0 }); if (e2) throw e2; }
     showToast('Retur berhasil disimpan', 'success');
     document.getElementById('retur-produk-select').value = '';
@@ -3890,8 +3897,16 @@ async function submitRestok() {
   try {
     const { error: e1 } = await sb.from('restok').insert({ produk_id: produkId, cabang_id: cabangId, qty: qty, keterangan: 'Restok manual' });
     if (e1) throw e1;
-    const existing = stokCabangAll.find(s => s.produk_id === produkId && s.cabang_id === cabangId);
-    if (existing) { const newStok = existing.stok + qty; const { error: e2 } = await sb.from('stok_cabang').update({ stok: newStok }).eq('id', existing.id); if (e2) throw e2; existing.stok = newStok; }
+    // BUG FIX: baca stok terkini dari DB dulu (bukan cache lokal) — supaya kalau ada
+    // kasir yang baru saja transaksi (mengurangi stok via kasir.html), restok ini
+    // tidak menimpa pengurangan tersebut dengan angka cache yang sudah basi.
+    const { data: stokFresh } = await sb.from('stok_cabang').select('id, stok').eq('produk_id', produkId).eq('cabang_id', cabangId).maybeSingle();
+    if (stokFresh) {
+      const newStok = stokFresh.stok + qty;
+      const { error: e2 } = await sb.from('stok_cabang').update({ stok: newStok }).eq('id', stokFresh.id); if (e2) throw e2;
+      const existing = stokCabangAll.find(s => s.produk_id === produkId && s.cabang_id === cabangId);
+      if (existing) existing.stok = newStok;
+    }
     else { const { error: e2 } = await sb.from('stok_cabang').insert({ produk_id: produkId, cabang_id: cabangId, stok: qty }); if (e2) throw e2; stokCabangAll.push({ produk_id: produkId, cabang_id: cabangId, stok: qty }); }
     showToast('Restok berhasil disimpan', 'success');
     resetRestokProduk();
@@ -4181,7 +4196,11 @@ async function submitPengambilan() {
     });
     if (e1) throw e1;
 
-    const newStok = bahan.stok - jumlah;
+    // BUG FIX: baca stok bahan terkini dari DB dulu (bukan cache lokal) sebelum
+    // dikurangi, supaya tidak menimpa pengambilan lain yang terjadi bersamaan
+    const { data: bahanFresh } = await sb.from('bahan_baku').select('stok').eq('id', bahanId).single();
+    const stokTerkini = bahanFresh?.stok ?? bahan.stok;
+    const newStok = stokTerkini - jumlah;
     const { error: e2 } = await sb.from('bahan_baku').update({ stok: newStok }).eq('id', bahanId);
     if (e2) throw e2;
     bahan.stok = newStok;
@@ -4241,7 +4260,12 @@ function konfirmHapusPengambilan(id, bahanId, jumlah) {
   document.getElementById('btn-confirm-del').onclick = async () => {
     try {
       const bahan = bahanList.find(b => b.id === bahanId);
-      if (bahan) { const newStok = bahan.stok + jumlah; await sb.from('bahan_baku').update({ stok: newStok }).eq('id', bahanId); bahan.stok = newStok; }
+      // BUG FIX: baca stok terkini dari DB dulu sebelum dikembalikan (bukan cache lokal)
+      const { data: bahanFresh } = await sb.from('bahan_baku').select('stok').eq('id', bahanId).single();
+      const stokTerkini = bahanFresh?.stok ?? (bahan ? bahan.stok : 0);
+      const newStok = stokTerkini + jumlah;
+      await sb.from('bahan_baku').update({ stok: newStok }).eq('id', bahanId);
+      if (bahan) bahan.stok = newStok;
       const { error } = await sb.from('pengambilan_bahan').delete().eq('id', id);
       if (error) throw error;
       showToast('Pengambilan dihapus, stok dikembalikan', 'success');
