@@ -1981,12 +1981,52 @@ async function prosesTransaksi() {
 
     } else {
       // ── MODE ONLINE: langsung ke Supabase ──
-      const { data: trx, error: e1 } = await sb.from('transaksi').insert(trxPayload).select().single();
-      if (e1) throw e1;
+      let trx, items;
+      try {
+        const { data: trxData, error: e1 } = await sb.from('transaksi').insert(trxPayload).select().single();
+        if (e1) throw e1;
+        trx = trxData;
 
-      const items = itemsPayload.map(i => ({ ...i, transaksi_id: trx.id }));
-      const { error: e2 } = await sb.from('transaksi_item').insert(items);
-      if (e2) throw e2;
+        items = itemsPayload.map(i => ({ ...i, transaksi_id: trx.id }));
+        const { error: e2 } = await sb.from('transaksi_item').insert(items);
+        if (e2) {
+          // BUG FIX: rollback header transaksi supaya tidak jadi "orphan" tanpa item
+          await sb.from('transaksi').delete().eq('id', trx.id);
+          throw e2;
+        }
+      } catch (saveErr) {
+        // BUG FIX: kalau penyimpanan inti (header+item) gagal di tengah jalan
+        // (mis. koneksi putus), jangan biarkan transaksi hilang — fallback ke
+        // offline queue, sama seperti mode offline biasa.
+        console.error('Gagal simpan transaksi online, fallback ke offline queue:', saveErr);
+        await OQ.add({ trx: trxPayload, items: itemsPayload, cartSnapshot: { ...cart } });
+        await refreshPendingBadge();
+
+        for (const [id, item] of Object.entries(cart)) {
+          const p = produkList.find(x => x.id == id);
+          if (p) p.stok = Math.max(0, p.stok - item.qty);
+        }
+
+        nomorUrut++;
+        closeModalBayar();
+        const printOtomatis = document.getElementById('chk-print').checked;
+        if (printOtomatis) {
+          printStrukLangsung(trxPayload, itemsPayload, bayar, kembalian);
+        }
+        cart = {}; renderCart(); selectPelanggan('');
+        tipeTransaksi = 'umum';
+        document.querySelectorAll('.tipe-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.tipe-btn')?.classList.add('active');
+        document.getElementById('pelanggan-row').classList.remove('show');
+        document.getElementById('pelanggan-diskon-badge').style.display = 'none';
+        renderProduk(produkList);
+        showToast('Koneksi bermasalah — transaksi disimpan offline, akan disync otomatis', 'warn');
+        return;
+      }
+
+      // Transaksi inti (header + item) sudah tersimpan dengan aman.
+      // Langkah di bawah ini best-effort (stok & kredit) — kalaupun gagal,
+      // transaksi TIDAK di-fallback ke offline queue lagi supaya tidak duplikat.
 
       // Update stok per cabang secara atomic (server-side decrement via RPC)
       for (const [id, item] of Object.entries(cart)) {
@@ -1996,13 +2036,27 @@ async function prosesTransaksi() {
           p_qty: item.qty
         });
         if (e3) {
+          // BUG FIX: jangan pakai cache lokal (bisa basi kalau kasir lain sudah
+          // transaksi duluan) — baca ulang stok terkini dari DB dulu baru dikurangi
           const p = produkList.find(x => x.id == id);
-          if (p) {
+          try {
+            const { data: stokRow, error: eRead } = await sb.from('stok_cabang')
+              .select('stok')
+              .eq('produk_id', parseInt(id))
+              .eq('cabang_id', CABANG_ID)
+              .single();
+            if (eRead) throw eRead;
+            const stokTerkini = stokRow?.stok ?? (p ? p.stok : 0);
+            const stokBaru = Math.max(0, stokTerkini - item.qty);
             await sb.from('stok_cabang')
-              .update({ stok: Math.max(0, p.stok - item.qty) })
+              .update({ stok: stokBaru })
               .eq('produk_id', parseInt(id))
               .eq('cabang_id', CABANG_ID);
-            p.stok -= item.qty;
+            if (p) p.stok = stokBaru;
+          } catch (eFallback) {
+            console.error('Fallback update stok gagal:', eFallback);
+            // Tetap update cache lokal agar UI tidak macet, walau DB mungkin belum sinkron
+            if (p) p.stok = Math.max(0, p.stok - item.qty);
           }
         } else {
           const p = produkList.find(x => x.id == id);
@@ -2012,9 +2066,18 @@ async function prosesTransaksi() {
 
       // Update kredit pelanggan jika kredit
       if (metodeBayar === 'kredit' && pelangganId) {
-        const pel = pelangganList.find(p => p.id == pelangganId);
-        if (pel) {
-          await sb.from('pelanggan').update({ total_kredit: (pel.total_kredit || 0) + totalFinal }).eq('id', pelangganId);
+        // BUG FIX: baca total_kredit terkini langsung dari DB (bukan cache lokal
+        // pelangganList) sesaat sebelum update, untuk memperkecil race condition
+        // kalau ada transaksi kredit pelanggan yang sama terjadi nyaris bersamaan
+        // (mis. dari device kasir lain).
+        try {
+          const { data: pelFresh, error: ePel } = await sb.from('pelanggan')
+            .select('total_kredit').eq('id', pelangganId).single();
+          if (ePel) throw ePel;
+          const kreditLama = pelFresh?.total_kredit ?? 0;
+          await sb.from('pelanggan').update({ total_kredit: kreditLama + totalFinal }).eq('id', pelangganId);
+        } catch (eKredit) {
+          console.error('Gagal update total kredit pelanggan:', eKredit);
         }
       }
 
